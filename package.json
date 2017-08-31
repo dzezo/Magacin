@@ -12,7 +12,8 @@
   	"bcryptjs": "*",
   	"cors": "*",
   	"jsonwebtoken": "*",
-  	"body-parser": "*"
+  	"body-parser": "*",
+    "neo4j-driver": "*"
   },
   "author": "NBP Team",
   "license": "ISC"
