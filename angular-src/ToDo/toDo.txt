@@ -1,0 +1,24 @@
+*home page simple view kao:
+	https://getbootstrap.com/docs/4.0/examples/cover/
+	https://github.com/
+
+*dashboard i after logIn:
+	https://getbootstrap.com/docs/4.0/examples/dashboard/
+	Navigacija + tabla
+
+*Iz dashborda preko navigacije na:
+
+	Arhiva:
+		Navigacija + tabla
+
+	Magacin:
+		Navigacija + tabla
+
+	Input:
+		
+
+	Outpu:
+		
+*misc:
+	Na Srpskom sve!
+	icon
