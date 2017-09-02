@@ -7,6 +7,8 @@ var app = express();
 
 // Routers
 var users = require('./routes/users');
+var items = require('./routes/items');
+var invoices = require('./routes/invoices');
 
 // Port Number
 var port = 3000;
@@ -23,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
 app.use('/users', users);
+app.use('/items', items);
+app.use('/invoices', invoices);
 
 // Index Route
 app.get('/', function (req, res) {

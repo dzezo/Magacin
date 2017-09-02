@@ -15,9 +15,9 @@ Ulaz
 
 Izlaz
 
-{ success: false, msg: 'Username already taken.' }
-{ success: false, msg: 'Failed to register user.' }
-{ success: true, msg: 'User registered.' }
+{ success: false, msg: 'Korisnik vec postoji.' }
+{ success: false, msg: 'Neuspesno registrovanje.' }
+{ success: true, msg: 'Korisnik registrovan.' }
 ```
 
 ```
@@ -32,13 +32,12 @@ Ulaz
 
 Izlaz
 
-{ success: false, msg: 'User not found.' }
-{ success: false, msg: 'Wrong password.' }
+{ success: false, msg: 'Korisnik nije pronadjen.' }
+{ success: false, msg: 'Pogresna Lozinka.' }
 {
     "success": true,
     "token": "JWT eyJhbGciO...",
     "user": {
-        "id": 20,
         "name": "Petar Petrovic",
         "username": "petar",
         "email": "petarp@gmail.com"

@@ -17,7 +17,7 @@ router.post('/register', function (req, res, next) {
 	// Check username
 	User.getUserByUsername(newUser.username, function(user){
 		if(user)
-			return res.json({ success: false, msg: 'Username already taken.' });
+			return res.json({ success: false, msg: 'Korisnik vec postoji.' });
 		// Add new user
 		User.addUser(newUser, res);
 	});
@@ -30,7 +30,7 @@ router.post('/authenticate', function (req, res, next) {
 
 	User.getUserByUsername(username, function (user) {
 		if(!user){
-			return res.json({ success: false, msg: 'User not found.' });
+			return res.json({ success: false, msg: 'Korisnik nije pronadjen.' });
 		}
 
 		User.comparePassword(password, user.properties.password, function (err, isMatch) {
@@ -46,7 +46,6 @@ router.post('/authenticate', function (req, res, next) {
 					token: 'JWT ' + token,
 					// Return user without password
 					user: {
-						id: user.identity.low,
 						name: user.properties.name,
 						username: user.properties.username,
 						email: user.properties.email
@@ -54,7 +53,7 @@ router.post('/authenticate', function (req, res, next) {
 				});
 			}
 			else {
-				return res.json({ success: false, msg: 'Wrong password.' });
+				return res.json({ success: false, msg: 'Pogresna Lozinka.' });
 			}
 		})
 	});

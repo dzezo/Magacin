@@ -21,15 +21,11 @@ module.exports.getUserByUsername = function (username, callback) {
 				callback(result.records[0]._fields[0]);
 			else
 				callback(null);
-
-			driver.close();
 		})
 		.catch(function(err){
 			session.close();
 
 			console.log(err);
-
-			driver.close();
 		});
 	// Session End
 }
@@ -52,17 +48,13 @@ module.exports.addUser = function (newUser, res) {
 				.then((result)=>{
 					session.close();
 
-					res.json({ success: true, msg: 'User registered.' });
-
-					driver.close();
+					res.json({ success: true, msg: 'Korisnik registrovan.' });
 				})
 				.catch(function(err){
 					session.close();
 
-					res.json({ success: false, msg: 'Failed to register user.' });
+					res.json({ success: false, msg: 'Neuspesno registrovanje.' });
 					console.log(err);
-
-					driver.close();
 				});
 			// Session End
 		});
