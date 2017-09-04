@@ -1,20 +1,13 @@
-*dashboard = after logIn:
-	https://getbootstrap.com/docs/4.0/examples/dashboard/
-	Navigacija + tabla
+Prepravi u znacenje:
+	nCena
+	pCena
 
-*Iz dashborda preko navigacije na:
 
-	Arhiva:
-		Navigacija + tabla
 
-	Magacin:
-		Navigacija + tabla
-
+Kako da izlegdaju:
 	Input:
-		
-
 	Outpu:
 		
-*misc:
-	Na Srpskom sve!
-	icon
+
+*Ubaci glyphicon-e
+*Na Srpskom sve!

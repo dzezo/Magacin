@@ -12,13 +12,17 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ArhivaComponent } from './components/arhiva/arhiva.component';
 import { MagacinComponent } from './components/magacin/magacin.component';
 import { NavigacijaComponent } from './components/navigacija/navigacija.component';
+import { IzlazComponent } from './components/izlaz/izlaz.component';
+import { UlazComponent } from './components/ulaz/ulaz.component';
 
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
-{path: 'dashboard', component: DashboardComponent},
+{path: 'fakture', component: DashboardComponent},
 {path: 'arhiva', component: ArhivaComponent},
-{path: 'magacin', component: MagacinComponent}
+{path: 'magacin', component: MagacinComponent},
+{path: 'ulaz', component: UlazComponent},
+{path: 'izlaz', component: IzlazComponent}
 ]
 
 @NgModule({
@@ -30,7 +34,9 @@ const appRoutes: Routes = [
     DashboardComponent,
     ArhivaComponent,
     MagacinComponent,
-    NavigacijaComponent
+    NavigacijaComponent,
+    IzlazComponent,
+    UlazComponent
   ],
   imports: [
     BrowserModule,

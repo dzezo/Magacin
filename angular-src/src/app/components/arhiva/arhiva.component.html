@@ -1,3 +1,32 @@
-<p>
-  arhiva works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <app-navigacija></app-navigacija>
+    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+      <h1>Arhiva</h1>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Šifra</th>
+              <th>Ime</th>
+              <th>Količina</th>
+              <th>nCena</th>
+              <th>pCena</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor = "let arhiva of arhive">
+              <td><a (click)="getArhiviranDoc(arhiva.id)">{{arhiva.sifra}}</a></td>
+              <td>{{arhiva.ime}}</td>
+              <td>{{arhiva.kolicina}}</td>
+              <td>{{arhiva.nCena}}</td>
+              <td>{{arhiva.pCena}}</td>
+              <td><a (click)="deleteFacture(arhiva.id)"><span class="glyphicon"></span></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
