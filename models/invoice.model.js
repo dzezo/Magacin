@@ -10,7 +10,9 @@ var session = driver.session();
 module.exports.getInputInvoices = function (username, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:INPUT]-(b:User) RETURN { id: ID(a), supplier: a.supplier, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE'
+			'MATCH (a:Invoice)-[r:INPUT]-(b:User {username: $username}) ' +
+			'RETURN { id: ID(a), supplier: a.supplier, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE',
+			{ username: username }
 		)
 		.then((result)=>{
 			session.close();
@@ -31,7 +33,9 @@ module.exports.getInputInvoices = function (username, callback){
 module.exports.getOutputInvoices = function (username, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:OUTPUT]-(b:User) RETURN { id: ID(a), purchaser: a.purchaser, total: a.total, issueDate: a.issueDate } AS INVOICE'
+			'MATCH (a:Invoice)-[r:OUTPUT]-(b:User {username: $username}) ' +
+			'RETURN { id: ID(a), purchaser: a.purchaser, total: a.total, issueDate: a.issueDate } AS INVOICE',
+			{ username: username }
 		)
 		.then((result)=>{
 			session.close();

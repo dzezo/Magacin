@@ -6,78 +6,147 @@ var driver = neo4j.driver(config.database, neo4j.auth.basic(config.username, con
 var session = driver.session();
 
 // GET
-module.exports.getItemByName = function (name, callback) {
-	// Session
+
+module.exports.getItem = function (username, code, callback){
 	session
 		.run(
-			'MATCH (n:Item {name: $name}) RETURN n',
-			{name: name}
-		)
-		.then((result)=>{
-			session.close();
-			
-			if(result.records[0])
-				callback(result.records[0]._fields[0]);
-			else
-				callback(null);
-		})
-		.catch(function(err){
-			session.close();
-
-			console.log(err);
-		});
-	// Session End
-}
-// POST
-module.exports.addItem = function (newItem, username, res) {
-	// Session
-	session
-		.run(
-			'CREATE (a: Item {code: $code, name: $name, quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP})',
-			{
-				code: newItem.code, 
-				name: newItem.name, 
-				quantity: newItem.quantity, 
-				purchaseP: newItem.purchaseP, 
-				sellingP: newItem.sellingP
-			}
-		)
-		.then((result)=>{
-			session.close();
-
-			inStock(newItem.name, username, res);
-		})
-		.catch(function(err){
-			session.close();
-
-			res.json({ success: false, msg: 'Neuspesno kreiranje.' });
-			console.log(err);
-		});
-	// Session End
-}
-// PUT
-// DELETE
-// OTHER
-function inStock(itemName, username, res) {
-	// Session
-	session
-		.run(
-			'MATCH (a:User {username: $username}), (b: Item {name: $name}) MERGE (a)-[r:inStock]-(b) RETURN a,b',
+			'MATCH (a:Item {code: $code})-[]-(:User {username: $username}) ' +
+			'WITH a ' +
+			'MATCH (b)-[r1:IN]-(a) ' +
+			'WITH a, COLLECT({rel: r1, inv: b}) AS INPUT ' +
+			'MATCH (a)-[r2:OUT]-(c) ' +
+			'WITH a, INPUT, COLLECT({rel: r2, inv: c}) AS OUTPUT ' +
+			'RETURN a, INPUT, OUTPUT',
 			{
 				username: username,
-				name: itemName
+				code: parseInt(code)
 			}
 		)
 		.then((result)=>{
 			session.close();
+			var item = result.records[0].get(0);
+			var inputs = result.records[0].get(1);
+			var outputs = result.records[0].get(2);
 
-			res.json({ success: true, msg: 'Artikl kreiran.' });
+			var itemProfile = {};
+			itemProfile.details = item.properties;
+			itemProfile.inputs = [];
+			itemProfile.outputs = [];
+
+			inputs.forEach((input)=>{
+				itemProfile.inputs.push({
+					in: input.rel.properties,
+					details: input.inv.properties
+				});
+			});
+			outputs.forEach((output)=>{
+				itemProfile.outputs.push({
+					out: output.rel.properties,
+					details: output.inv.properties
+				});
+			});
+			callback(null, itemProfile);
 		})
-		.catch(function(err){
+		.catch((err)=>{
 			session.close();
-
-			res.json({ success: false, msg: 'Neuspesno kreiranje.' });
 			console.log(err);
+			callback(err, null);
 		});
-	// Session End
+}
+
+module.exports.getItems = function (username, callback){
+	session
+		.run(
+			'MATCH (a:User {username: $username})-[r:IN_STOCK]-(b:Item) ' +
+			'RETURN { id: ID(b), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			{ username: $username }
+		)
+		.then((result)=>{
+			session.close();
+			var items = [];
+			for(var i=0; i<result.records.length; i++)
+			{
+				items.push(result.records[i].get(0));	
+			}
+			callback(null, items);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err, null);
+		});
+}
+
+module.exports.getArchivedItems = function (username, callback){
+	session
+		.run(
+			'MATCH (a:User {username: $username})-[r:ARCHIVED]-(b:Item) ' +
+			'RETURN { id: ID(b), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			{ username: $username }
+		)
+		.then((result)=>{
+			session.close();
+			var items = [];
+			for(var i=0; i<result.records.length; i++)
+			{
+				items.push(result.records[i].get(0));	
+			}
+			callback(null, items);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err, null);
+		});
+}
+
+// PUT
+
+module.exports.updateItem = function (username, code, update, callback){
+	session
+		.run(
+			'MATCH (a:Item {code: $code})-[]-(:User {username: $username}) SET a.code= $newCode, a.name= $newName ' +
+			'RETURN a',
+			{
+				code: parseInt(code),
+				username: username,
+				newCode: update.newCode,
+				newName: update.newName
+			}
+		)
+		.then((result)=>{
+			session.close();
+			var singleRecord = result.records[0];
+			var node = singleRecord.get(0);
+			callback(null, node.properties);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err, null);
+		});
+}
+
+// DELETE
+
+module.exports.moveToArchive = function (username, code, callback){
+	session
+		.run(
+			'MATCH (a:Item {code: $code})-[r:IN_STOCK]-(b:User {username: $username}) ' +
+			'MERGE (a)-[:ARCHIVED]-(b) ' +
+			'DELETE r',
+			{
+				code: parseInt(code),
+				username: username
+			}
+		)
+		.then((result)=>{
+			session.close();
+			callback(null);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err);
+		});
 }
