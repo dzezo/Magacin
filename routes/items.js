@@ -2,36 +2,53 @@ var express = require('express');
 var router = express.Router();
 var Item = require('../models/item.model');
 
-// Add Item
-router.post('/add/:username', function (req, res, next) {
-	// Create item
-	var newItem = {
-		code: req.body.code,
-		name: req.body.name,
-		quantity: req.body.quantity,
-		purchaseP: req.body.purchaseP,
-		sellingP: req.body.sellingP
-	}
-	// Check for item
-	Item.getItemByName(newItem.name, function(item){
-		// Exists
-		if(item)
-			return res.json({ success: false });
-		// Add new item
-		Item.addItem(newItem, req.params.username, res);
+// Get Item
+router.get('/get/item/:username/:code', function (req, res, next) {
+	Item.getItem(req.params.username, req.params.code, (err, result)=>{
+		if(err)
+			return res.json({ success:false, msg:"Dobavljanje neuspesno" });
+		res.json({ success: true, item: result });
 	});
 });
 
-// Get Item
-
-// Get Items from Stack
+// Get Items
+router.get('/get/instock/:username', function (req, res, next) {
+	Item.getItems(req.params.username, (err, result)=>{
+		if(err)
+			return res.json({ success:false, msg:"Dobavljanje artikala neuspesno" });
+		res.json({ success: true, items: result });
+	});
+});
 
 // Get Items from Archive
+router.get('/get/archive/:username', function (req, res, next) {
+	Item.getArchivedItems(req.params.username, (err, result)=>{
+		if(err)
+			return res.json({ success:false, msg:"Dobavljanje arhiviranih artikala neuspesno" });
+		res.json({ success: true, items: result });
+	});
+});
 
 // Update Item
+router.put('/update/item/:username/:code', function (req, res, next) {
+	var update = {
+		newCode: req.body.code,
+		newName: req.body.newName
+	};
+	Item.updateItem(req.params.username, req.params.code, update, (err, newItem)=>{
+		if(err)
+			return res.json({ success:false, msg:"Azuriranje neuspesno" });
+		res.json({ success: true, msg:"Azuriranje uspesno", item: newItem });
+	});
+});
 
 // Move to Archive
-
-// Delete Item
+router.delete('/archive/item/:username/:code', function (req, res, next) {
+	Item.moveToArchive(req.params.username, req.params.code, (err)=>{
+		if(err)
+			return res.json({ success:false, msg:"Arhiviranje neuspesno" });
+		res.json({ success: true, msg:"Arhiviranje uspesno" });
+	});
+});
 
 module.exports = router;
