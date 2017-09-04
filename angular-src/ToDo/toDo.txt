@@ -1,8 +1,4 @@
-*home page simple view kao:
-	https://getbootstrap.com/docs/4.0/examples/cover/
-	https://github.com/
-
-*dashboard i after logIn:
+*dashboard = after logIn:
 	https://getbootstrap.com/docs/4.0/examples/dashboard/
 	Navigacija + tabla
 

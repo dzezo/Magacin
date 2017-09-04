@@ -1,3 +1,37 @@
-<p>
-  home works!
-</p>
+<div class="container">
+     <div id="banner-sec" class="col-md-8">
+        <div>
+            <h1>Napravljeno za preduzetnike</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+        </div>           
+     </div>
+     <div class="col-md-4 signUp-sec">
+        <form (submit)="onRegisterSubmit()" class="form-group">
+            <div *ngIf="error" class="input">
+                <label class="error-label">{{errorMsg}}</label>
+            </div>
+            <div class="input">
+                <label>Ime</label>
+                <input [(ngModel)]="name" type="name" class="form-control" name="name" placeholder="Unesite Vaše puno ime">
+            </div>
+            <div class="input">
+                <label>Korisnicko ime</label>
+                <input [(ngModel)]="username" type="username" class="form-control" name="username" placeholder="Izaberite Vaše korisničko ime">
+            </div>
+            <div class="input">
+                <label>Email</label>
+                <input [(ngModel)]="email" type="email" class="form-control" name="email" placeholder="nešto@primer.com">
+            </div>
+            <div class="input">
+                <label>Sifra</label>
+                <input [(ngModel)]="password" type="password" class="form-control" name="password" placeholder="Kreirajte šifru">
+            </div>
+            <div class="form">
+                <input type="submit" class="btn btn-primary btn-success btn-block btn-signUp" value="Kreiraj nalog"> 
+            </div>
+        </form>
+        <div>Ukoliko već imate nalog  <a [routerLink]="['/login']">uđite</a></div>
+     </div>
+</div>
+
+
