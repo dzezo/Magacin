@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { LogInComponent } from './components/log-in/log-in.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FaktureComponent } from './components/fakture/fakture.component';
 import { ArhivaComponent } from './components/arhiva/arhiva.component';
 import { MagacinComponent } from './components/magacin/magacin.component';
 import { NavigacijaComponent } from './components/navigacija/navigacija.component';
@@ -18,7 +18,7 @@ import { UlazComponent } from './components/ulaz/ulaz.component';
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
-{path: 'fakture', component: DashboardComponent},
+{path: 'fakture', component: FaktureComponent},
 {path: 'arhiva', component: ArhivaComponent},
 {path: 'magacin', component: MagacinComponent},
 {path: 'ulaz', component: UlazComponent},
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
     HomeComponent,
     NavBarComponent,
     LogInComponent,
-    DashboardComponent,
+    FaktureComponent,
     ArhivaComponent,
     MagacinComponent,
     NavigacijaComponent,
