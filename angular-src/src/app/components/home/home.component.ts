@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../../services/validate.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +18,9 @@ export class HomeComponent implements OnInit {
 	error: Boolean = false;
 	errorMsg: String;
 
-  constructor(private validateService: ValidateService) { }
+  constructor(private validateService: ValidateService,
+  			  private authService: AuthService,
+  			  private router: Router) { }
 
   ngOnInit() {
   }
@@ -32,18 +36,18 @@ export class HomeComponent implements OnInit {
 		 // Required Fields
 		if(!this.validateService.validateRegister(user)){
 			this.error = true;
-			this.errorMsg = 'Please fill in all the fields.';
+			this.errorMsg = 'Popunite sva polja!';
 			return false;
 		}
 
 		// Validate Email
 		if(!this.validateService.validateEmail(user.email)){
 			this.error = true;
-			this.errorMsg = 'Please use a valid e-mail.';
+			this.errorMsg = 'E-mail adresa nije validna!';
 			return false;
 		}
 
-		/* Register User
+		// Register User
 		this.authService.registerUser(user).subscribe((data) => {
 			if(data.success){
 				this.router.navigate(['/login']);
@@ -51,10 +55,8 @@ export class HomeComponent implements OnInit {
 			else{
 				this.error = true;
 				this.errorMsg = data.msg;
-				this.router.navigate(['/register']);
+				this.router.navigate(['']);
 			}
-		});*/
-
+		});
 	}
-
 }

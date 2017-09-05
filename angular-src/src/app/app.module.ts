@@ -17,6 +17,9 @@ import { IzlazComponent } from './components/izlaz/izlaz.component';
 import { UlazComponent } from './components/ulaz/ulaz.component';
 
 import { ValidateService } from './services/validate.service';
+import { AuthService } from './services/auth.service';
+import { AuthGuard } from './guards/auth.guard';
+
 
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
@@ -49,7 +52,9 @@ const appRoutes: Routes = [
     FlashMessagesModule
   ],
   providers: [
-    ValidateService
+    ValidateService,
+    AuthService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })
