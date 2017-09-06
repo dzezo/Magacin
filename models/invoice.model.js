@@ -243,13 +243,15 @@ module.exports.addOutputInvoice = function (username, newInvoice, callback) {
 // DELETE
 
 module.exports.undoInputInvoice = function (invoiceId, callback){
-	// DELETE INVOICE & RETURN ID OF CONNECTED ITEMS
+	// DELETE INVOICE & RETURN ITEMS
 	session
 		.run(
 			'MATCH (:User)-[mr:INPUT]-(inv:Invoice) WHERE ID(inv)=$invId ' +
 			'OPTIONAL MATCH (itm:Item)-[in:IN]-(inv) ' +
 			'SET itm.quantity = itm.quantity - in.quantity ' +
-			'WITH mr,inv,in,ID(itm) AS items ' +
+			'WITH mr,inv,in,itm ' +
+			'OPTIONAL MATCH (oinv:Invoice)-[oin:IN]-(itm) WHERE ID(oinv)<>$invId ' +
+			'WITH mr,inv,in,{id: ID(itm), rels: COLLECT(oin)} AS items ' +
 			'OPTIONAL MATCH (ii:InvoiceItem)-[hi:HAS_ITEM]-(inv) ' +
 			'WITH mr,inv,in,items,ii,hi ' +
 			'DELETE mr,hi,in,ii,inv ' +
@@ -260,8 +262,10 @@ module.exports.undoInputInvoice = function (invoiceId, callback){
 		)
 		.then((result)=>{
 			session.close();
-			var idArr = result.records[0].get(0);
-			undoInputItems(invoiceId, idArr);
+			// itemArr [{ id, rel [ {} ] }]
+			var itemArr = result.records[0].get(0);
+			if(itemArr[0].id)
+				undoInputItems(itemArr);
 			callback(null);
 		})
 		.catch((err)=>{
@@ -271,65 +275,48 @@ module.exports.undoInputInvoice = function (invoiceId, callback){
 		});
 }
 
-function undoInputItems(invoiceId, items){
+function undoInputItems(items){
 	items.forEach((item)=>{
-		session
-			.run(
-				'MATCH (itm:Item)-[in:IN]-(inv:Invoice) WHERE ID(itm)=$itmId AND ID(inv)<>$invId ' +
-				'WITH in AS relationship RETURN {relationships: collect(relationship)}',
-				{
-					itmId: item,
-					invId: neo4j.int(invoiceId)
-				}
-			)
-			.then((result)=>{
-				session.close();
-				var arrOfRels = result.records[0].get(0).relationships;
-
-				if(arrOfRels.length > 0){
-					// FIND LATEST RELATIONSHIP
-					var latest = arrOfRels[0]
-					for(var i=1; i<arrOfRels.length; i++){
-						if(latest.timestamp < arrOfRels[i].timestamp)
-							latest = arrOfRels[i];
+		arrOfRels = item.rels;
+		if(arrOfRels.length > 0){
+			// FIND LATEST RELATIONSHIP
+			var latest = arrOfRels[0].properties;
+			for(var i=1; i<arrOfRels.length; i++){
+				if(latest.timestamp < arrOfRels[i].properties.timestamp)
+					latest = arrOfRels[i].properties;
+			}
+			// UPDATE ITEM WITH LATEST
+			session
+				.run(
+					'MATCH (itm:Item) WHERE ID(itm)=$itmId SET itm.purchaseP = $latestPurchaseP, itm.sellingP = $latestSellingP',
+					{ 
+						itmId: item.id,
+						latestPurchaseP: latest.purchaseP,
+						latestSellingP: latest.sellingP
 					}
-					// UPDATE ITEM WITH LATEST
-					session
-						.run(
-							'MATCH (itm:Item) WHERE ID(itm)=$itmId SET itm.purchaseP = $latestPurchaseP, itm.sellingP = $latestSellingP',
-							{ 
-								itmId: item,
-								latestPurchaseP: latest.properties.purchaseP,
-								latestSellingP: latest.properties.sellingP
-							}
-						)
-						.then((result)=>{
-							session.close();
-						})
-						.catch((err)=>{
-							session.close();
-							console.log(err);
-						});
-				}
-				else{
-					// DELETE ITEM
-					session
-						.run(
-							'MATCH (itm:Item)-[r]-() WHERE ID(itm)=$itmId DELETE r,itm', { itmId: item }
-						)
-						.then((result)=>{
-							session.close();
-						})
-						.catch((err)=>{
-							session.close();
-							console.log(err);
-						});
-				}
-			})
-			.catch((err)=>{
-				session.close();
-				console.log(err);
-			});
+				)
+				.then((result)=>{
+					session.close();
+				})
+				.catch((err)=>{
+					session.close();
+					console.log(err);
+				});
+		}
+		else{
+			// DELETE ITEM
+			session
+				.run(
+					'MATCH (itm:Item)-[r]-() WHERE ID(itm)=$itmId DELETE r,itm', { itmId: item.id }
+				)
+				.then((result)=>{
+					session.close();
+				})
+				.catch((err)=>{
+					session.close();
+					console.log(err);
+				});
+		}
 	});
 }
 
