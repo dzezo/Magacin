@@ -45,7 +45,7 @@ router.post('/add/output/:username', function (req, res, next) {
 router.get('/get/input/:username', function(req, res, next) {
 	Invoice.getInputInvoices(req.params.username, (err, result) => {
 		if(err)
-			return res.json({ success:false, msg:"Dobavljanje ulaznih faktura neuspesno" })
+			return res.json({ success: false, msg:"Dobavljanje ulaznih faktura neuspesno" })
 		res.json({ success: true, invoices: result })
 	});
 });
@@ -54,7 +54,7 @@ router.get('/get/input/:username', function(req, res, next) {
 router.get('/get/output/:username', function(req, res, next) {
 	Invoice.getOutputInvoices(req.params.username, (err, result) => {
 		if(err)
-			return res.json({ success:false, msg:"Dobavljanje izlaznih faktura neuspesno" })
+			return res.json({ success: false, msg:"Dobavljanje izlaznih faktura neuspesno" })
 		res.json({ success: true, invoices: result })
 	});
 });
@@ -63,7 +63,7 @@ router.get('/get/output/:username', function(req, res, next) {
 router.get('/get/input/invoice/:invoiceId', function(req, res, next) {
 	Invoice.getInputInvoice(req.params.invoiceId, (err, result) => {
 		if(err)
-			return res.json({ success:false, msg:"Dobavljanje ulazne fakture neuspesno" })
+			return res.json({ success: false, msg:"Dobavljanje ulazne fakture neuspesno" })
 		res.json({ success: true, invoice: result })
 	});
 });
@@ -72,7 +72,7 @@ router.get('/get/input/invoice/:invoiceId', function(req, res, next) {
 router.get('/get/output/invoice/:invoiceId', function(req, res, next) {
 	Invoice.getOutputInvoice(req.params.invoiceId, (err, result) => {
 		if(err)
-			return res.json({ success:false, msg:"Dobavljanje izlazne fakture neuspesno" })
+			return res.json({ success: false, msg:"Dobavljanje izlazne fakture neuspesno" })
 		res.json({ success: true, invoice: result })
 	});
 });
@@ -81,7 +81,7 @@ router.get('/get/output/invoice/:invoiceId', function(req, res, next) {
 router.delete('/undo/input/invoice/:invoiceId', function(req, res, next) {
 	Invoice.undoInputInvoice(req.params.invoiceId, (err) => {
 		if(err)
-			return res.json({ success:false, msg:"Ukidanje ulazne fakture neuspesno" })
+			return res.json({ success: false, msg:"Ukidanje ulazne fakture neuspesno" })
 		res.json({ success: true, msg:"Ukidanje ulazne fakture uspesno" })
 	});
 });
@@ -90,7 +90,7 @@ router.delete('/undo/input/invoice/:invoiceId', function(req, res, next) {
 router.delete('/undo/output/invoice/:invoiceId', function(req, res, next) {
 	Invoice.undoOutputInvoice(req.params.invoiceId, (err) => {
 		if(err)
-			return res.json({ success:false, msg:"Ukidanje izlazne fakture neuspesno" })
+			return res.json({ success: false, msg:"Ukidanje izlazne fakture neuspesno" })
 		res.json({ success: true, msg:"Ukidanje izlazne fakture uspesno" })
 	});
 });
