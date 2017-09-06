@@ -31,6 +31,14 @@
           </tbody>
         </table>
       </div>
+      <div class="container desno">
+        <div class="row">
+          <label>Ukupno po n:</label>
+          <p class="prikazPolje">{{ukupnoPoN}}</p>
+          <label>Ukupno po prod:</label>
+          <p class="prikazPolje">{{ukupnoPoProd}}</p>
+        </div>
+      </div>
     </main>
   </div>
 </div>
@@ -66,7 +74,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button (click)="updateArtikl(modSifra.value, modIme.value, modKolicina.value, modPCena.value)" type="button" class="btn btn-primary">
-          <span class="fa fa-floppy-o" aria-hidden="true"></span> Promeni
+          <span class="fa fa-floppy-o" aria-hidden="true"></span>Sačuvaj promene
         </button>
       </div>
     </div>

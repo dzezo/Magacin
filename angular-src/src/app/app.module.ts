@@ -15,20 +15,23 @@ import { MagacinComponent } from './components/magacin/magacin.component';
 import { NavigacijaComponent } from './components/navigacija/navigacija.component';
 import { IzlazComponent } from './components/izlaz/izlaz.component';
 import { UlazComponent } from './components/ulaz/ulaz.component';
+import { IzlazfaktureComponent } from './components/izlazfakture/izlazfakture.component';
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
 
 
+
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
-{path: 'fakture', component: FaktureComponent},
+{path: 'ulazfakture', component: FaktureComponent},
 {path: 'arhiva', component: ArhivaComponent},
 {path: 'magacin', component: MagacinComponent},
 {path: 'ulaz', component: UlazComponent},
-{path: 'izlaz', component: IzlazComponent}
+{path: 'izlaz', component: IzlazComponent},
+{path: 'izlazfakture', component: IzlazfaktureComponent}
 ]
 
 @NgModule({
@@ -42,7 +45,8 @@ const appRoutes: Routes = [
     MagacinComponent,
     NavigacijaComponent,
     IzlazComponent,
-    UlazComponent
+    UlazComponent,
+    IzlazfaktureComponent
   ],
   imports: [
     BrowserModule,

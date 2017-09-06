@@ -1,14 +1,30 @@
-3) ukupno po N i ukupno po Prod.... ?
-	to treba da se ubaci funkcija koja sracunava sumu (artikal  (kolicina*nabavna)) + (drugi artikal) +++ (artikaln)
-znaci to su samo dva polja u kojima ce da pise neki broj
-4) sto se tice outputa samo tabela + ukupno u donjem desnom uglu kao vrednost cega?
-5) input je cela strana jedna forma iz dva dela + na kraju tabela?
-	output i input su ti forme za ulaznu i izlaznu fakturu
-isto ovo sto mislis za input to je i output jedna posebna stranica na kojoj imas u gornjem uglu da popunjavas detalje dole bi trebalo da imas nesto nalik na tabelu gde dodajes stavke (robu koju si nabavio) tipa kliknes neki plusic ceo red se prebaci u edit mode i ti popunis i pretisnes plusic za sledeci red on postane edit ti popunis itd... znaci dinamicki
-za output nisam napisao sto se tice detalja, znaci u gornjem delu treba da imas: kupac, brRacuna i datumIzdavanjaRacuna
+*Ulazne i izlazne fakture:
+	- Klik na konkretnu fakturu otvara pop-up (modal) sa svim atributima koje ima tabela i ima dva dugmeta EDIT i DELETE?
 
-ovo dole ukupno stoji ispod tabele (float right) i tu funkcija sracunava broj isto kao i za magacin znaci tu mozes da stavis neki random broj kao placeholder
+*Nova ulazna faktura:
+	-Input forma sa:
+		1) Naziv dobavljaca
+		2) pib
+		3) Poziv na broj
+		4) Broj racuna
+		5) Datum dospeca
+		6) Datum isteka
+	-Input tabela sa kolonama:
+		1) Sifra
+		2) Ime
+		3) Prodajna cena
+		4) Nabavna cena
+		5) Kolicina
+	-Rezultat sume
 
-
-* Komenatrisi sta radis otprilike u html stavljaj ovako <!-- NEKIDEO START --> neki divovi <!-- NEKIDEO ENDS -->
-* login/register mora startujes backend i bazu
+*Nova izlazna faktura:
+	-Input forma sa:
+		1) Kupac
+		2) Broj racuna
+		3) Datum izdavanja racuna
+	-Input tabela sa kolonama:
+		1) Sifra
+		2) Ime
+		3) Prodajna cena
+		4) Kolicina
+	-Rezultat sume

@@ -1,3 +1,7 @@
+hr {
+  border: 1px dashed #007bff;
+}
+
 .sidebar {
   position: fixed;
   top: 51px;

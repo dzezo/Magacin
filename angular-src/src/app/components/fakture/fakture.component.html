@@ -2,23 +2,25 @@
   <div class="row">
     <app-navigacija></app-navigacija>
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Fakture</h1>
+      <h1>Ulazne fakture</h1>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Broj Računa</th>
-              <th>Naziv dobavljača</th>
+              <th>Dobavljač</th>
+              <th>Vrednost</th>
+              <th>Datum prijema</th>
               <th>Datum isteka</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor = "let facture of factures">
-              <td><a (click)="getFacture(facture.id)">{{facture.brojRacuna}}</a></td>
-              <td>{{facture.nazivDobavljaca}}</td>
-              <td>{{facture.datumIsteka}}</td>
-              <td><a (click)="deleteFacture(facture.id)"><span class="fa fa-trash"></span></a></td>
+            <tr *ngFor = "let inputfacture of inputfactures">
+              <td><a (click)="getInputFacture(inputFacture.id)">{{inputFacture.dobavljac}}</a></td>
+              <td>{{inputFacture.vrednost}}</td>
+              <td>{{inputFacture.datumPrijema}}</td>
+              <td>{{inputFacture.datumIsteka}}</td>
+              <td><a (click)="deleteInputFacture(inputFacture.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
         </table>

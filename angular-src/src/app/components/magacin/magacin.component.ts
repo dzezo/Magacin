@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MagacinComponent implements OnInit {
 
+	ukupnoPoN: String = "0";
+	ukupnoPoProd: String = "0";
+
   constructor() { }
 
   ngOnInit() {

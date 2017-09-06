@@ -8,11 +8,31 @@ h1 {
 }
 
 /*
+ * Prikaz zbira
+ */
+
+.prikazPolje {
+  line-height: 1.5;
+  margin: 0 4px;
+  padding: 0 4px;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #007bff;
+  min-width: 30px;
+  text-align: right;
+}
+
+.desno {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/*
  * Modal
  */
 
 .modal-dialog{
-  width: 400px;
+  max-width: 450px;
 }
 
 .modal-content{
@@ -22,11 +42,11 @@ h1 {
 .modal-header{
   background-color: #001029 !important;
   border-color: #001029 !important;
-  color: #00caf6 !important;
+  color: #007bff !important;
 }
 
 .modal-header .close{
-  color: #00caf6 !important;
+  color: #007bff !important;
   opacity: 1;
 }
 
@@ -54,18 +74,6 @@ h1 {
 
 .form-group .input-group .input-group-addon:active{
   background-color: #dfd7ca;
-}
-
-.dropdown-menu{
-  max-height: 250px;
-  min-width: stretch;
-  text-align: center;
-  overflow: auto;
-}
-
-.dropdown-menu li a:hover{
-  background-color: #001029;
-  color: #00caf6;
 }
 
 .modal-footer > button {
