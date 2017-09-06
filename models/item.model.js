@@ -7,10 +7,10 @@ var session = driver.session();
 
 // GET
 
-module.exports.getItem = function (username, code, callback){
+module.exports.getItem = function (itemId, callback){
 	session
 		.run(
-			'MATCH (a:Item {code: $code})-[]-(:User {username: $username}) ' +
+			'MATCH (a:Item)-[]-(:User) WHERE ID(a)=$itemId ' +
 			'WITH a ' +
 			'MATCH (b)-[r1:IN]-(a) ' +
 			'WITH a, COLLECT({rel: r1, inv: b}) AS INPUT ' +
@@ -18,8 +18,7 @@ module.exports.getItem = function (username, code, callback){
 			'WITH a, INPUT, COLLECT({rel: r2, inv: c}) AS OUTPUT ' +
 			'RETURN a, INPUT, OUTPUT',
 			{
-				username: username,
-				code: parseInt(code)
+				itemId: neo4j.int(itemId)
 			}
 		)
 		.then((result)=>{
@@ -58,8 +57,10 @@ module.exports.getItems = function (username, callback){
 	session
 		.run(
 			'MATCH (a:User {username: $username})-[r:IN_STOCK]-(b:Item) ' +
-			'RETURN { id: ID(b), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
-			{ username: $username }
+			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			{ 
+				username: username
+			}
 		)
 		.then((result)=>{
 			session.close();
@@ -81,8 +82,8 @@ module.exports.getArchivedItems = function (username, callback){
 	session
 		.run(
 			'MATCH (a:User {username: $username})-[r:ARCHIVED]-(b:Item) ' +
-			'RETURN { id: ID(b), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
-			{ username: $username }
+			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			{ username: username }
 		)
 		.then((result)=>{
 			session.close();
@@ -100,44 +101,16 @@ module.exports.getArchivedItems = function (username, callback){
 		});
 }
 
-// PUT
-
-module.exports.updateItem = function (username, code, update, callback){
-	session
-		.run(
-			'MATCH (a:Item {code: $code})-[]-(:User {username: $username}) SET a.code= $newCode, a.name= $newName ' +
-			'RETURN a',
-			{
-				code: parseInt(code),
-				username: username,
-				newCode: update.newCode,
-				newName: update.newName
-			}
-		)
-		.then((result)=>{
-			session.close();
-			var singleRecord = result.records[0];
-			var node = singleRecord.get(0);
-			callback(null, node.properties);
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-			callback(err, null);
-		});
-}
-
 // DELETE
 
-module.exports.moveToArchive = function (username, code, callback){
+module.exports.moveToArchive = function (itemId, callback){
 	session
 		.run(
-			'MATCH (a:Item {code: $code})-[r:IN_STOCK]-(b:User {username: $username}) ' +
-			'MERGE (a)-[:ARCHIVED]-(b) ' +
+			'MATCH (itm:Item)-[r:IN_STOCK]-(u:User) WHERE ID(itm)=$itemId ' +
+			'MERGE (itm)-[:ARCHIVED]-(u) ' +
 			'DELETE r',
 			{
-				code: parseInt(code),
-				username: username
+				itemId: neo4j.int(itemId)
 			}
 		)
 		.then((result)=>{

@@ -11,7 +11,7 @@ module.exports.getInputInvoices = function (username, callback){
 	session
 		.run(
 			'MATCH (a:Invoice)-[r:INPUT]-(b:User {username: $username}) ' +
-			'RETURN { id: ID(a), supplier: a.supplier, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE',
+			'RETURN { id: toString(ID(a)), supplier: a.supplier, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE',
 			{ username: username }
 		)
 		.then((result)=>{
@@ -34,7 +34,7 @@ module.exports.getOutputInvoices = function (username, callback){
 	session
 		.run(
 			'MATCH (a:Invoice)-[r:OUTPUT]-(b:User {username: $username}) ' +
-			'RETURN { id: ID(a), purchaser: a.purchaser, total: a.total, issueDate: a.issueDate } AS INVOICE',
+			'RETURN { id: toString(ID(a)), purchaser: a.purchaser, total: a.total, issueDate: a.issueDate } AS INVOICE',
 			{ username: username }
 		)
 		.then((result)=>{
@@ -132,78 +132,50 @@ module.exports.addInputInvoice = function (username, newInvoice, callback) {
 		)
 		.then((result)=>{
 			session.close();
-			// NODE - NEW INVOICE
-			var singleRecord = result.records[0];
-			var node = singleRecord.get(0);
+			var createdInvoice = result.records[0].get(0);
 			newInvoice.items.forEach((item)=>{
-				connectInputItems(node.identity.low, item);
-				inputUpdate(username, node.identity.low, item);
+				session
+					.run(
+						'MATCH (u:User {username: $username}) ' +
+						'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
+						'CREATE (ii:InvoiceItem {code: $code, name: $name, quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}) ' +
+						'MERGE (inv)-[:HAS_ITEM]-(ii) ' +
+						'MERGE (u)-[:IN_STOCK]-(itm:Item {code: $code}) ' +
+						'ON CREATE SET itm.name= $name, itm.quantity= $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
+						'ON MATCH SET itm.quantity = itm.quantity + $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
+						'MERGE (inv)-[r:IN {quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}]-(itm) ' +
+						'ON CREATE SET r.timestamp = timestamp()',
+						{
+							// USER NODE
+							username: username,
+							// INVOICE NODE
+							invId: createdInvoice.identity,
+							// ITEM NODE
+							code: item.code,
+							name: item.name,
+							quantity: item.quantity, 
+							purchaseP: item.purchaseP, 
+							sellingP: item.sellingP
+						}
+					)
+					.then((result)=>{
+						session.close();
+					})
+					.catch((err)=>{
+						session.close();
+						console.log(err);
+
+						callback(err);
+					});
 			});
+
 			callback(null);
 		})
 		.catch((err)=>{
 			session.close();
 			console.log(err);
+
 			callback(err);
-		});
-}
-
-function connectInputItems(invId, item){
-	session
-		.run(
-			'MATCH (a: Invoice) WHERE ID(a)=$invId ' +
-			'CREATE (b: InvoiceItem {code: $code, name: $name, quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}) ' +
-			'MERGE (a)-[r:HAS_ITEM]-(b)',
-			{
-				// Invoice node
-				invId: invId,
-				// Item node
-				code: item.code,
-				name: item.name,
-				quantity: item.quantity, 
-				purchaseP: item.purchaseP, 
-				sellingP: item.sellingP
-			}
-		)
-		.then(()=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
-function inputUpdate(username, invId, item){
-	session
-		.run(
-			'MATCH (a:User {username: $username}) ' +
-			'MATCH (b:Invoice) WHERE ID(b)=$invId ' +
-			'MERGE (c:Item {code: $code}) ' + 
-			'ON CREATE SET c.name= $name, c.quantity= $quantity, c.purchaseP= $purchaseP, c.sellingP= $sellingP ' +
-			'ON MATCH SET c.quantity = c.quantity + $quantity, c.purchaseP= $purchaseP, c.sellingP= $sellingP ' +
-			'MERGE (a)-[r1:IN_STOCK]-(c) ' +
-			'MERGE (b)-[r2:IN {quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}]-(c) '+
-			'ON CREATE SET r2.timestamp = timestamp()',
-			{
-				// USER NODE
-				username: username,
-				// INVOICE NODE
-				invId: invId,
-				// ITEM NODE
-				code: item.code,
-				name: item.name,
-				quantity: item.quantity, 
-				purchaseP: item.purchaseP, 
-				sellingP: item.sellingP
-			}
-		)
-		.then(()=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
 		});
 }
 
@@ -227,12 +199,37 @@ module.exports.addOutputInvoice = function (username, newInvoice, callback) {
 		)
 		.then((result)=>{
 			session.close();
-			// NODE - NEW INVOICE
-			var singleRecord = result.records[0];
-			var node = singleRecord.get(0);
+			var createdInvoice = result.records[0].get(0);
 			newInvoice.items.forEach((item)=>{
-				connectOutputItems(node.identity.low, item);
-				outputUpdate(node.identity.low, item);
+				session
+					.run(
+						'MATCH (:User {username: $username})-[:IN_STOCK]-(itm:Item {code: $code}) ' +
+						'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
+						'SET itm.quantity = itm.quantity - $quantity ' +
+						'CREATE (ii:InvoiceItem {code: $code, name: $name, quantity: $quantity, sellingP: $sellingP}) ' +
+						'MERGE (inv)-[:HAS_ITEM]-(ii) ' +
+						'MERGE (inv)-[:OUT {quantity: $quantity, sellingP: $sellingP}]-(itm)',
+						{
+							// USER NODE
+							username: username,
+							// INVOICE NODE
+							invId: createdInvoice.identity,
+							// ITEM NODE
+							code: item.code,
+							name: item.name,
+							quantity: item.quantity,
+							sellingP: item.sellingP
+						}
+					)
+					.then((result)=>{
+						session.close();
+					})
+					.catch((err)=>{
+						session.close();
+						console.log(err);
+
+						callback(err);
+					});
 			});
 			callback(null);
 		})
@@ -243,75 +240,28 @@ module.exports.addOutputInvoice = function (username, newInvoice, callback) {
 		});
 }
 
-function connectOutputItems(invId, item){
-	session
-		.run(
-			'MATCH (a: Invoice) WHERE ID(a)=$invId ' +
-			'CREATE (b: InvoiceItem {code: $code, name: $name, quantity: $quantity, sellingP: $sellingP}) ' +
-			'MERGE (a)-[r:HAS_ITEM]-(b)',
-			{
-				// Invoice node
-				invId: invId,
-				// Item node
-				code: item.code,
-				name: item.name,
-				quantity: item.quantity,
-				sellingP: item.sellingP
-			}
-		)
-		.then(()=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
-function outputUpdate(invId, item){
-	session
-		.run(
-			'MATCH (a:Invoice) WHERE ID(a)=$invId ' +
-			'MATCH (b:Item {code: $code}) SET b.quantity = b.quantity - $quantity ' +
-			'MERGE (a)-[r:OUT {quantity: $quantity, sellingP: $sellingP}]-(b)',
-			{
-				// INVOICE NODE
-				invId: invId,
-				// ITEM NODE
-				code: item.code,
-				quantity: item.quantity,
-				sellingP: item.sellingP
-			}
-		)
-		.then(()=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
 // DELETE
 
 module.exports.undoInputInvoice = function (invoiceId, callback){
-	// RETURN CONNECTED ITEMS
+	// DELETE INVOICE & RETURN ID OF CONNECTED ITEMS
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:IN]-(b:Item) WHERE ID(a)=$invId WITH b.code AS ITEM ' +
-			'RETURN {items: COLLECT(ITEM)}',
-			{invId: neo4j.int(invoiceId)}
+			'MATCH (:User)-[mr:INPUT]-(inv:Invoice) WHERE ID(inv)=$invId ' +
+			'OPTIONAL MATCH (itm:Item)-[in:IN]-(inv) ' +
+			'SET itm.quantity = itm.quantity - in.quantity ' +
+			'WITH mr,inv,in,ID(itm) AS items ' +
+			'OPTIONAL MATCH (ii:InvoiceItem)-[hi:HAS_ITEM]-(inv) ' +
+			'WITH mr,inv,in,items,ii,hi ' +
+			'DELETE mr,hi,in,ii,inv ' +
+			'RETURN COLLECT(DISTINCT items)',
+			{
+				invId: neo4j.int(invoiceId)
+			}
 		)
 		.then((result)=>{
 			session.close();
-			var arrOfCodes = result.records[0].get(0).items;
-			// IF INVOICE NOT EMPTY
-			if(arrOfCodes.length > 0){
-				subtractQuantityBack(invoiceId);
-				undoInputUpdate(invoiceId, arrOfCodes);
-			}
-			// DELETE INVOICE
-			undoInvoice(invoiceId);
+			var idArr = result.records[0].get(0);
+			undoInputItems(invoiceId, idArr);
 			callback(null);
 		})
 		.catch((err)=>{
@@ -321,27 +271,60 @@ module.exports.undoInputInvoice = function (invoiceId, callback){
 		});
 }
 
-function undoInputUpdate(invoiceId, codes){
-	// GET RELATIONSHIPS WITH OTHER INVOICES
-	// AND UPDATE ITEM WITH LATEST DATA
-	// IF NO RELATIONSHIPS DELETE ITEM
-	codes.forEach((code)=>{
+function undoInputItems(invoiceId, items){
+	items.forEach((item)=>{
 		session
 			.run(
-				'MATCH (a:Item {code: $code})-[r:IN]-(b:Invoice) WHERE ID(b)<>$invId ' +
-				'WITH r AS relationship RETURN {relationships: collect(relationship)}',
+				'MATCH (itm:Item)-[in:IN]-(inv:Invoice) WHERE ID(itm)=$itmId AND ID(inv)<>$invId ' +
+				'WITH in AS relationship RETURN {relationships: collect(relationship)}',
 				{
-					invId: neo4j.int(invoiceId),
-					code: code
+					itmId: item,
+					invId: neo4j.int(invoiceId)
 				}
 			)
 			.then((result)=>{
 				session.close();
 				var arrOfRels = result.records[0].get(0).relationships;
-				if(arrOfRels.length > 0)
-					findLatestInvoice(code, arrOfRels);
-				else
-					deleteItem(code);
+
+				if(arrOfRels.length > 0){
+					// FIND LATEST RELATIONSHIP
+					var latest = arrOfRels[0]
+					for(var i=1; i<arrOfRels.length; i++){
+						if(latest.timestamp < arrOfRels[i].timestamp)
+							latest = arrOfRels[i];
+					}
+					// UPDATE ITEM WITH LATEST
+					session
+						.run(
+							'MATCH (itm:Item) WHERE ID(itm)=$itmId SET itm.purchaseP = $latestPurchaseP, itm.sellingP = $latestSellingP',
+							{ 
+								itmId: item,
+								latestPurchaseP: latest.properties.purchaseP,
+								latestSellingP: latest.properties.sellingP
+							}
+						)
+						.then((result)=>{
+							session.close();
+						})
+						.catch((err)=>{
+							session.close();
+							console.log(err);
+						});
+				}
+				else{
+					// DELETE ITEM
+					session
+						.run(
+							'MATCH (itm:Item)-[r]-() WHERE ID(itm)=$itmId DELETE r,itm', { itmId: item }
+						)
+						.then((result)=>{
+							session.close();
+						})
+						.catch((err)=>{
+							session.close();
+							console.log(err);
+						});
+				}
 			})
 			.catch((err)=>{
 				session.close();
@@ -350,93 +333,28 @@ function undoInputUpdate(invoiceId, codes){
 	});
 }
 
-function subtractQuantityBack(invoiceId){
-	session
-		.run(
-			'MATCH (a:Invoice)-[r:IN]-(b:Item) WHERE ID(a)=$invId SET b.quantity = b.quantity - r.quantity',
-			{invId: neo4j.int(invoiceId)}
-		)
-		.then((result)=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
-function findLatestInvoice(code, relationships){
-	var latest = relationships[0]
-	for(var i=1; i<relationships.length; i++){
-		if(latest.timestamp < relationships[i].timestamp)
-			latest = relationships[i];
-	}
-	session
-		.run(
-			'MATCH (a:Item {code: $code}) SET a.purchaseP = $latestPurchaseP, a.sellingP = $latestSellingP',
-			{ 
-				code: code,
-				latestPurchaseP: latest.properties.purchaseP,
-				latestSellingP: latest.properties.sellingP
-			}
-		)
-		.then((result)=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
-function deleteItem(code){
-	session
-		.run(
-			'MATCH (a:Item {code: $code})-[r]-() DELETE r,a',{ code: code }
-		)
-		.then((result)=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
-		});
-}
-
 module.exports.undoOutputInvoice = function (invoiceId, callback){
 	// ADD QUANTITY BACK AND DELETE
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:OUT]-(b:Item) WHERE ID(a)=$invId ' +
-			'SET b.quantity = b.quantity + r.quantity',
-			{invId: neo4j.int(invoiceId)}
+			'MATCH (inv:Invoice)-[r:OUTPUT]-(:User) WHERE ID(inv)=$invId ' +
+			'OPTIONAL MATCH (inv)-[out:OUT]-(itm:Item) ' +
+			'SET itm.quantity = itm.quantity + out.quantity ' +
+			'WITH inv,r,out ' +
+			'OPTIONAL MATCH (inv)-[hi:HAS_ITEM]-(ii:InvoiceItem) ' +
+			'WITH inv,r,out,hi,ii ' +
+			'DELETE hi,out,r,ii,inv',
+			{
+				invId: neo4j.int(invoiceId)
+			}
 		)
 		.then((result)=>{
 			session.close();
-			undoInvoice(invoiceId);
 			callback(null);
 		})
 		.catch((err)=>{
 			session.close();
 			console.log(err);
 			callback(err);
-		});
-}
-
-function undoInvoice(invoiceId){
-	session
-		.run(
-			'MATCH ()-[r1]-(a:Invoice) ' + 
-			'WHERE ID(a)=$invId ' +
-			'OPTIONAL MATCH ()-[r1]-(a:Invoice)-[r0:HAS_ITEM]-(b:InvoiceItem) ' +
-			'DELETE r0,b,r1,a',  
-			{invId: neo4j.int(invoiceId)}
-		)
-		.then((result)=>{
-			session.close();
-		})
-		.catch((err)=>{
-			session.close();
-			console.log(err);
 		});
 }
