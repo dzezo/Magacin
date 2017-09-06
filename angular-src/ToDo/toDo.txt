@@ -2,29 +2,16 @@
 	- Klik na konkretnu fakturu otvara pop-up (modal) sa svim atributima koje ima tabela i ima dva dugmeta EDIT i DELETE?
 
 *Nova ulazna faktura:
-	-Input forma sa:
-		1) Naziv dobavljaca
-		2) pib
-		3) Poziv na broj
-		4) Broj racuna
-		5) Datum dospeca
-		6) Datum isteka
 	-Input tabela sa kolonama:
 		1) Sifra
 		2) Ime
 		3) Prodajna cena
 		4) Nabavna cena
 		5) Kolicina
-	-Rezultat sume
 
 *Nova izlazna faktura:
-	-Input forma sa:
-		1) Kupac
-		2) Broj racuna
-		3) Datum izdavanja racuna
 	-Input tabela sa kolonama:
 		1) Sifra
 		2) Ime
 		3) Prodajna cena
 		4) Kolicina
-	-Rezultat sume

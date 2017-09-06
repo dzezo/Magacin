@@ -2,10 +2,32 @@
   <div class="row">
     <app-navigacija></app-navigacija>
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Kreiraj novu izlaznu fakturu</h1>
-      <div>
-
+      <h1>Kreiraj novu ulaznu fakturu</h1>
+<!-- START Input Forma za Dovavljaca-->
+      <div class="pt-3 inputForm">
+	      <div class="form-group">
+	        <input type="text" class="form-control" value="" placeholder="Kupac">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control" value="" placeholder="Broj računa">
+	      </div>
+	      <div class="form-group date">
+	        <input type="text" class="form-control" value="" placeholder="Datum izdavanja računa">
+	      </div>
       </div>
+<!-- END Input Forma za Dovavljaca-->
+
+<!-- START Input Dinamicna Tabela -->
+<!-- END Input Dinamicna Tabela -->
+
+<!-- START Suma -->
+		<div class="container desno">
+	        <div class="row">
+	          <label>Suma:</label>
+	          <p class="prikazPolje">{{bla}}</p>
+	        </div>
+     	</div>
+<!-- END Suma --> 
     </main>
   </div>
 </div>

@@ -8,26 +8,6 @@ h1 {
 }
 
 /*
- * Prikaz zbira
- */
-
-.prikazPolje {
-  line-height: 1.5;
-  margin: 0 4px;
-  padding: 0 4px;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #007bff;
-  min-width: 30px;
-  text-align: right;
-}
-
-.desno {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/*
  * Modal
  */
 
