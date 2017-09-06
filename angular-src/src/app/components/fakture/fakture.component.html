@@ -4,8 +4,8 @@
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
       <h1>Ulazne fakture</h1>
       <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
+        <table class="table table-hover">
+          <thead class="thead-inverse">
             <tr>
               <th>Dobavljač</th>
               <th>Vrednost</th>
@@ -20,6 +20,13 @@
               <td>{{inputFacture.vrednost}}</td>
               <td>{{inputFacture.datumPrijema}}</td>
               <td>{{inputFacture.datumIsteka}}</td>
+              <td><a (click)="deleteInputFacture(inputFacture.id)"><span class="fa fa-trash"></span></a></td>
+            </tr>
+            <tr>
+              <td>Dobavljac</td>
+              <td>Vrednost</td>
+              <td>Datum Prijema</td>
+              <td>Datum Isteka</td>
               <td><a (click)="deleteInputFacture(inputFacture.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>

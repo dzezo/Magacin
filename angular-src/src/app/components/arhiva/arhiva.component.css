@@ -6,3 +6,7 @@ h1 {
   margin-bottom: 15px;
   padding-bottom: 7px;
 }
+
+.fa:focus, .fa:hover {
+  color: #007bff;
+}

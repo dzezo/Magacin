@@ -4,8 +4,8 @@
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
       <h1>Magacin</h1>
       <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
+        <table class="table table-hover">
+          <thead class="thead-inverse">
             <tr>
               <th>Šifra</th>
               <th>Ime</th>
@@ -23,9 +23,16 @@
               <td>{{artikl.kolicina}}</td>
               <td>{{artikl.nCena}}</td>
               <td>{{artikl.pCena}}</td>
-              <td>
-                <a data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a>
-              </td>
+              <td><a data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
+              <td><a (click)="deleteFacture(artikl.id)"><span class="fa fa-trash"></span></a></td>
+            </tr>
+            <tr>
+              <td>sifra</td>
+              <td>ime</td>
+              <td>kolicina</td>
+              <td>nCena</td>
+              <td>pCena</td>
+              <td><a data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
               <td><a (click)="deleteFacture(artikl.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
