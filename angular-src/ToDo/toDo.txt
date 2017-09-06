@@ -15,3 +15,10 @@
 		2) Ime
 		3) Prodajna cena
 		4) Kolicina
+
+*Misc
+	-sto se tice navbara unutar app mora da se napravi da ne dozvoljava vracanje nazad na home i login, za to treba da povezes log i register i da iskoristis ono sto smo vec radili
+	-sto se tice datuma dospeca i isteka imas date plugin sa yourgym
+zamalo da ga povezes uspesno
+	-unesi po jedan red za svaku tabelu kao placeholder
+	- izmeni ovaj prozor za err msg ne uklapa se u tvoj dizajn i gura conent na skrol

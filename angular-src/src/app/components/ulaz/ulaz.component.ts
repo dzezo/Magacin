@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UlazComponent implements OnInit {
 
+	bla: String = "0";
+
   constructor() { }
 
   ngOnInit() {

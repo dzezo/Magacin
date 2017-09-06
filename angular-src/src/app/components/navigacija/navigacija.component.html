@@ -13,7 +13,7 @@
       <a [routerLink]="['/magacin']" class="nav-link"><span class="fa fa-archive"></span> Magacin</a>
     </li>
     <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
-      <a [routerLink]="['/arhiva']" class="nav-link"><span class="fa fa-tags"></span> Arhiva</a>
+      <a [routerLink]="['/arhiva']" class="nav-link"><span class="fa fa-book"></span> Arhiva</a>
     </li>
   </ul>
 
@@ -21,10 +21,10 @@
 
   <ul class="nav nav-pills flex-column">
     <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
-      <a [routerLink]="['/ulaz']" class="nav-link">Nova ulazna faktura</a>
+      <a [routerLink]="['/ulaz']" class="nav-link"><span class="fa fa-plus-circle fa-lg"></span> Nova ulazna faktura</a>
     </li>
     <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
-      <a [routerLink]="['/izlaz']" class="nav-link">Nova izlazna faktura</a>
+      <a [routerLink]="['/izlaz']" class="nav-link"><span class="fa fa-plus-circle fa-lg"></span> Nova izlazna faktura</a>
     </li>
   </ul>
 </nav>

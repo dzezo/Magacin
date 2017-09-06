@@ -35,3 +35,19 @@ hr {
 .sidebar .nav-link {
   border-radius: 0;
 }
+
+/* Sidebar Color */
+
+.nav-link:focus, .nav-link:hover {
+  color: rgba(255,255,255,.75);
+}
+
+.nav-link {
+  color: rgba(255,255,255,.5);
+}
+
+.active > .nav-link {
+  background: #007bff;
+  color: #fff;
+
+}
