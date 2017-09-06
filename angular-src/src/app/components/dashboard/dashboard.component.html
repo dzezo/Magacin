@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <div class="row">
+    <app-navigacija></app-navigacija>
+    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+      <h1>Fakture</h1>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Broj Računa</th>
+              <th>Naziv dobavljača</th>
+              <th>Datum isteka</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor = "let facture of factures">
+              <td><a (click)="getFacture(facture.id)">{{facture.brojRacuna}}</a></td>
+              <td>{{facture.nazivDobavljaca}}</td>
+              <td>{{facture.datumIsteka}}</td>
+              <td><a (click)="deleteFacture(facture.id)"><span class="fa fa-trash"></span></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>

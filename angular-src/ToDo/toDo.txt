@@ -1,0 +1,12 @@
+Prepravi u znacenje:
+	nCena
+	pCena
+
+
+
+Kako da izlegdaju:
+	Input:
+	Outpu:
+		
+
+*Na Srpskom sve!

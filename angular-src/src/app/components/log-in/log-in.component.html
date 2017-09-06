@@ -1,0 +1,21 @@
+<div class="container">
+  <div id="logIn-sec">
+      <form (submit)="onLoginSubmit()" class="form-group">
+          <div *ngIf="error" class="input">
+              <label class="error-label">{{errorMsg}}</label>
+          </div>
+          <div class="input">
+              <label>Korisnicko ime</label>
+              <input [(ngModel)]="username" type="username" class="form-control" name="username" placeholder="Unesite Vaše korisničko ime">
+          </div>
+          <div class="input">
+              <label>Sifra</label>
+              <input [(ngModel)]="password" type="password" class="form-control" name="password" placeholder="Unesite Vašu šifru">
+          </div>
+          <div class="form">
+              <input type="submit" class="btn btn-primary btn-success btn-block btn-signUp" value="Ulaz"> 
+          </div>
+      </form>
+      <div>Ukoliko nemate nalog <a [routerLink]="['/']">kreirajte ga</a></div>
+   </div>
+</div>
