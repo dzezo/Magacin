@@ -1,10 +1,7 @@
 var bcrypt = require('bcryptjs');
-var neo4j = require('neo4j-driver').v1;
-var config = require('../config/database');
+var neo4j = require('../config/neo4j/dbUtils');
 
-// Database
-var driver = neo4j.driver(config.database, neo4j.auth.basic(config.username, config.password));
-var session = driver.session();
+var session = neo4j.getSession();
 
 // GET
 module.exports.getUserByUsername = function (username, callback) {

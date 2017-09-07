@@ -3,6 +3,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+// Init app
 var app = express();
 
 // Routers

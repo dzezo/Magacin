@@ -13,7 +13,8 @@
   	"cors": "*",
   	"jsonwebtoken": "*",
   	"body-parser": "*",
-    "neo4j-driver": "*"
+    "neo4j-driver": "*",
+    "redis": "*"
   },
   "author": "NBP Team",
   "license": "ISC"
