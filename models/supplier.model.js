@@ -12,8 +12,8 @@ module.exports.addSupplier = function(username, supplier, callback){
 			callback(err, "Dodavanje dobavljaca neuspesno");
 		}
 		if(newSupplier){
-			// user:name:supplier name supplier taxId 000111222
-			client.hmset('user:' + username + ':' + supplier.name, 'name', supplier.name, 'taxId', supplier.taxId, (err, reply)=>{
+			// user:name:supplier name supplier taxId 000111222 collabCount 0
+			client.hmset('user:' + username + ':' + supplier.name, 'name', supplier.name, 'taxId', supplier.taxId, 'collabCount', 0, (err, reply)=>{
 				if(err){
 					console.log(err);
 					callback(err, "Dodavanje dobavljaca neuspesno");
@@ -23,6 +23,35 @@ module.exports.addSupplier = function(username, supplier, callback){
 		}
 		else
 			callback(null, "Dobavljac vec postoji")
+	});
+}
+
+module.exports.addSupplierFromInvoice = function(username, supplier, callback){
+	// user:name:suppliers supplier
+	client.sadd('user:' + username + ':suppliers', supplier.name, (err, newSupplier)=>{
+		if(err){
+			console.log(err);
+			callback(err);
+		}
+		if(newSupplier){
+			// user:name:supplier name supplier taxId 000111222 collabCount 0
+			client.hmset('user:' + username + ':' + supplier.name, 'name', supplier.name, 'taxId', supplier.taxId, 'collabCount', 1, (err, reply)=>{
+				if(err){
+					console.log(err);
+					callback(err);
+				}
+				callback(null);
+			});
+		}
+		else{
+			client.hincrby('user:' + username + ':' + supplier.name, 'collabCount', 1, (err, reply)=>{
+				if(err){
+					console.log(err);
+					callback(err);
+				}
+				callback(null);
+			});
+		}
 	});
 }
 
@@ -75,18 +104,22 @@ module.exports.getSuppliers = function(username, callback){
 // DELETE
 
 module.exports.deleteSupplier = function(username, supplierName, callback){
-	client.srem('user:' + username + ':suppliers', supplierName, (err, reply)=>{
+	client.hincrby('user:' + username + ':' + supplierName, 'collabCount', -1, (err, reply)=>{
 		if(err){
 			console.log(err);
 			callback(err);
 		}
-		client.del('user:' + username + ':' + supplierName, (err, reply)=>{
-			if(err){
-				console.log(err);
-				callback(err);
-			}
+		if(reply == 0){
+			client.del('user:' + username + ':' + supplierName, (err, reply)=>{
+				if(err){
+					console.log(err);
+					callback(err);
+				}
+				callback(null);
+			});
+		}
+		else
 			callback(null);
-		});
 	});
 }
 

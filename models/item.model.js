@@ -53,7 +53,7 @@ module.exports.getItem = function (itemId, callback){
 module.exports.getItems = function (username, callback){
 	session
 		.run(
-			'MATCH (a:User {username: $username})-[r:IN_STOCK]-(b:Item) ' +
+			'MATCH (a:User {username: $username})-[r:WAREHOUSE]-(b:Item) ' +
 			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
 			{ 
 				username: username
@@ -103,7 +103,7 @@ module.exports.getArchivedItems = function (username, callback){
 module.exports.moveToArchive = function (itemId, callback){
 	session
 		.run(
-			'MATCH (itm:Item)-[r:IN_STOCK]-(u:User) WHERE ID(itm)=$itemId ' +
+			'MATCH (itm:Item)-[r:WAREHOUSE]-(u:User) WHERE ID(itm)=$itemId ' +
 			'MERGE (itm)-[:ARCHIVED]-(u) ' +
 			'DELETE r',
 			{

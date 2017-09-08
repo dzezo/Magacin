@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Supplier = require('../models/supplier.model');
 
-// Add Supplier
+// Add Supplier Manual
 router.post('/add/:username', function(req, res, next) {
 	var supplier = {
 		name: req.body.name,
@@ -12,6 +12,19 @@ router.post('/add/:username', function(req, res, next) {
 		if(err)
 			return res.json({ success: false, msg: message });
 		res.json({ success: true, msg: message });
+	});
+});
+
+// Add Supplier Auto
+router.post('/invoice/add/:username', function(req, res, next) {
+	var supplier = {
+		name: req.body.name,
+		taxId: req.body.taxId
+	};
+	Supplier.addSupplierFromInvoice(req.params.username, supplier, (err)=>{
+		if(err)
+			return res.json({ success: false });
+		res.json({ success: true });
 	});
 });
 
