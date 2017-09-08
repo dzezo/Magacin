@@ -38,4 +38,17 @@ router.delete('/archive/item/:itemId', function (req, res, next) {
 	});
 });
 
+// Update Item
+router.put('/update/item/:itemId', function (req, res, next) {
+	var update = {
+		newCode: req.body.newCode,
+		newName: req.body.newName
+	}
+	Item.updateItem(req.params.itemId, (err, updatedItem)=>{
+		if(err)
+			return res.json({ success: false, msg:"Azuriranje neuspesno" });
+		res.json({ success: true, msg:"Azuriranje uspesno", item: updatedItem });
+	});
+});
+
 module.exports = router;

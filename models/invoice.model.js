@@ -53,9 +53,9 @@ module.exports.getOutputInvoices = function (username, callback){
 module.exports.getInputInvoice = function (invoiceId, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:HAS_ITEM]-(b:InvoiceItem) ' +
+			'MATCH (a:Invoice)-[r:IN]-(b:Item) ' +
 			'WHERE ID(a)=$invId ' + 
-			'WITH a, {code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP} AS item '+
+			'WITH a, {code: b.code, name: b.name, quantity: r.quantity, purchaseP: r.purchaseP, sellingP: r.sellingP} AS item '+
 			'RETURN {invoice: a, items: COLLECT(item)}', 
 			{
 				invId: neo4j.int(invoiceId)
@@ -80,9 +80,9 @@ module.exports.getInputInvoice = function (invoiceId, callback){
 module.exports.getOutputInvoice = function (invoiceId, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:HAS_ITEM]-(b:InvoiceItem) ' +
+			'MATCH (a:Invoice)-[r:OUT]-(b:Item) ' +
 			'WHERE ID(a)=$invId ' + 
-			'WITH a, {code: b.code, name: b.name, quantity: b.quantity, sellingP: b.sellingP} AS ITEM '+
+			'WITH a, {code: b.code, name: b.name, quantity: r.quantity, sellingP: r.sellingP} AS ITEM '+
 			'RETURN {invoice: a, items: COLLECT(ITEM)}', 
 			{
 				invId: neo4j.int(invoiceId)
@@ -135,9 +135,7 @@ module.exports.addInputInvoice = function (username, newInvoice, callback) {
 					.run(
 						'MATCH (u:User {username: $username}) ' +
 						'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
-						'CREATE (ii:InvoiceItem {code: $code, name: $name, quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}) ' +
-						'MERGE (inv)-[:HAS_ITEM]-(ii) ' +
-						'MERGE (u)-[:IN_STOCK]-(itm:Item {code: $code}) ' +
+						'MERGE (u)-[:WAREHOUSE]-(itm:Item {code: $code}) ' +
 						'ON CREATE SET itm.name= $name, itm.quantity= $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
 						'ON MATCH SET itm.quantity = itm.quantity + $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
 						'MERGE (inv)-[r:IN {quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}]-(itm) ' +
@@ -200,11 +198,9 @@ module.exports.addOutputInvoice = function (username, newInvoice, callback) {
 			newInvoice.items.forEach((item)=>{
 				session
 					.run(
-						'MATCH (:User {username: $username})-[:IN_STOCK]-(itm:Item {code: $code}) ' +
+						'MATCH (:User {username: $username})-[:WAREHOUSE]-(itm:Item {code: $code}) ' +
 						'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
 						'SET itm.quantity = itm.quantity - $quantity ' +
-						'CREATE (ii:InvoiceItem {code: $code, name: $name, quantity: $quantity, sellingP: $sellingP}) ' +
-						'MERGE (inv)-[:HAS_ITEM]-(ii) ' +
 						'MERGE (inv)-[:OUT {quantity: $quantity, sellingP: $sellingP}]-(itm)',
 						{
 							// USER NODE
@@ -249,9 +245,7 @@ module.exports.undoInputInvoice = function (invoiceId, callback){
 			'WITH mr,inv,in,itm ' +
 			'OPTIONAL MATCH (oinv:Invoice)-[oin:IN]-(itm) WHERE ID(oinv)<>$invId ' +
 			'WITH mr,inv,in,{id: ID(itm), rels: COLLECT(oin)} AS items ' +
-			'OPTIONAL MATCH (ii:InvoiceItem)-[hi:HAS_ITEM]-(inv) ' +
-			'WITH mr,inv,in,items,ii,hi ' +
-			'DELETE mr,hi,in,ii,inv ' +
+			'DELETE mr,in,inv ' +
 			'RETURN COLLECT(DISTINCT items)',
 			{
 				invId: neo4j.int(invoiceId)
@@ -325,9 +319,7 @@ module.exports.undoOutputInvoice = function (invoiceId, callback){
 			'OPTIONAL MATCH (inv)-[out:OUT]-(itm:Item) ' +
 			'SET itm.quantity = itm.quantity + out.quantity ' +
 			'WITH inv,r,out ' +
-			'OPTIONAL MATCH (inv)-[hi:HAS_ITEM]-(ii:InvoiceItem) ' +
-			'WITH inv,r,out,hi,ii ' +
-			'DELETE hi,out,r,ii,inv',
+			'DELETE out,r,inv',
 			{
 				invId: neo4j.int(invoiceId)
 			}

@@ -300,7 +300,7 @@ Izlaz
 ```
 
 ```
-/get/instock/:username
+/get/warehouse/:username
 
 Izlaz
 
@@ -364,4 +364,13 @@ Izlaz
 
 { success: false, msg:"Arhiviranje neuspesno" }
 { success: true, msg:"Arhiviranje uspesno" }
+```
+
+```
+/update/item/:itemId
+
+Ulaz
+
+Izlaz
+
 ```

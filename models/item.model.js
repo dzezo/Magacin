@@ -120,3 +120,31 @@ module.exports.moveToArchive = function (itemId, callback){
 			callback(err);
 		});
 }
+
+// PUT
+
+module.exports.updateItem = function(itemId, update, callback){
+	session
+		.run(
+			'MATCH (itm:Item) WHERE ID(itm)=$itemId ' +
+			'SET itm.code = $newCode, itm.name = $newName ' +
+			'RETURN itm',
+			{
+				itemId: neo4j.int(itemId),
+				newCode: update.newCode,
+				newName: update.newName
+			}
+		)
+		.then((result)=>{
+			session.close();
+			var updatedItem = result.records[0].get(0);
+			console.log(updatedItem);
+			console.log(updateItem.properties);
+			//callback(null, updatedItem);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err, null);
+		});
+}
