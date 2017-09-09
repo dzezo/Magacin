@@ -37,14 +37,24 @@
               </thead>
               <tbody>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td>
+                      <input type="text" class="form-control" ng-model="artikl.sifra" placeholder="Unesite šifru">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" ng-model="artikl.ime" placeholder="Unesite ime">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" ng-model="artikl.pCena" placeholder="Unesite prodajnu cenu">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" ng-model="artikl.nCena" placeholder="Unesite nabavnu cenu">
+                    </td>             
+                    <td>
+                      <input type="text" class="form-control" ng-model="artikl.kolicina" placeholder="Unesite količinu">
+                    </td>
+                    <td>
+                      <a (click)="addFaktura()"><span class="fa fa-plus-square fa-2x"></span></a>
                       <a (click)="removeArtikl()"><span class="fa fa-minus-square fa-2x"></span></a>
-                      <a (click)="addArtikl()"><span class="fa fa-plus-square fa-2x"></span></a>
                     </td>
                   </tr>
               </tbody>

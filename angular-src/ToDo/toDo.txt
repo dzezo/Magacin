@@ -1,9 +1,6 @@
 
 *Ulazne i izlazne fakture:
 	- Klik na konkretnu fakturu otvara pop-up (modal sa njenim proflilom) sa svim atributima koje ima tabela i ima dva dugmeta EDIT i DELETE?
-
-*Wraper REDO! : 
-	- tabele posele samo copy paste u main-wrapper
 		
 *Misc
 	- Datuma dospeca i isteka -> Date plugin sa yourgym
