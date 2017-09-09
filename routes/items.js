@@ -12,7 +12,7 @@ router.get('/get/item/:itemId', function (req, res, next) {
 });
 
 // Get Items
-router.get('/get/instock/:username', function (req, res, next) {
+router.get('/get/warehouse/:username', function (req, res, next) {
 	Item.getItems(req.params.username, (err, result)=>{
 		if(err)
 			return res.json({ success: false, msg:"Dobavljanje artikala neuspesno" });
@@ -35,6 +35,19 @@ router.delete('/archive/item/:itemId', function (req, res, next) {
 		if(err)
 			return res.json({ success: false, msg:"Arhiviranje neuspesno" });
 		res.json({ success: true, msg:"Arhiviranje uspesno" });
+	});
+});
+
+// Update Item
+router.put('/update/item/:itemId', function (req, res, next) {
+	var update = {
+		newCode: req.body.newCode,
+		newName: req.body.newName
+	}
+	Item.updateItem(req.params.itemId, update, (err, updatedItem)=>{
+		if(err)
+			return res.json({ success: false, msg:"Azuriranje neuspesno" });
+		res.json({ success: true, msg:"Azuriranje uspesno", item: updatedItem });
 	});
 });
 

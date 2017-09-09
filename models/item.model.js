@@ -1,9 +1,7 @@
-var neo4j = require('neo4j-driver').v1;
-var config = require('../config/database');
+var Neo4j = require('../config/neo4j/dbUtils');
 
-// Database
-var driver = neo4j.driver(config.database, neo4j.auth.basic(config.username, config.password));
-var session = driver.session();
+var neo4j = Neo4j.getDriver();
+var session = Neo4j.getSession();
 
 // GET
 
@@ -12,17 +10,18 @@ module.exports.getItem = function (itemId, callback){
 		.run(
 			'MATCH (a:Item)-[]-(:User) WHERE ID(a)=$itemId ' +
 			'WITH a ' +
-			'MATCH (b)-[r1:IN]-(a) ' +
-			'WITH a, COLLECT({rel: r1, inv: b}) AS INPUT ' +
-			'MATCH (a)-[r2:OUT]-(c) ' +
-			'WITH a, INPUT, COLLECT({rel: r2, inv: c}) AS OUTPUT ' +
-			'RETURN a, INPUT, OUTPUT',
+			'MATCH (b)-[in:IN]-(a) ' +
+			'WITH a, in, COLLECT({rel: in, inv: b}) AS INPUT ' +
+			'OPTIONAL MATCH (a)-[out:OUT]-(c) ' +
+			'WITH a, in, out, INPUT, COLLECT({rel: out, inv: c}) AS OUTPUT ' +
+			'RETURN a, CASE WHEN in IS NOT NULL THEN INPUT ELSE NULL END, CASE WHEN out IS NOT NULL THEN OUTPUT ELSE NULL END',
 			{
 				itemId: neo4j.int(itemId)
 			}
 		)
 		.then((result)=>{
 			session.close();
+
 			var item = result.records[0].get(0);
 			var inputs = result.records[0].get(1);
 			var outputs = result.records[0].get(2);
@@ -31,19 +30,25 @@ module.exports.getItem = function (itemId, callback){
 			itemProfile.details = item.properties;
 			itemProfile.inputs = [];
 			itemProfile.outputs = [];
+			
+			if(inputs){
+				inputs.forEach((input)=>{
+					itemProfile.inputs.push({
+						in: input.rel.properties,
+						details: input.inv.properties
+					});
+				});
+			}
 
-			inputs.forEach((input)=>{
-				itemProfile.inputs.push({
-					in: input.rel.properties,
-					details: input.inv.properties
+			if(outputs){
+				outputs.forEach((output)=>{
+					itemProfile.outputs.push({
+						out: output.rel.properties,
+						details: output.inv.properties
+					});
 				});
-			});
-			outputs.forEach((output)=>{
-				itemProfile.outputs.push({
-					out: output.rel.properties,
-					details: output.inv.properties
-				});
-			});
+			}
+
 			callback(null, itemProfile);
 		})
 		.catch((err)=>{
@@ -56,7 +61,7 @@ module.exports.getItem = function (itemId, callback){
 module.exports.getItems = function (username, callback){
 	session
 		.run(
-			'MATCH (a:User {username: $username})-[r:IN_STOCK]-(b:Item) ' +
+			'MATCH (a:User {username: $username})-[r:WAREHOUSE]-(b:Item) ' +
 			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
 			{ 
 				username: username
@@ -106,7 +111,7 @@ module.exports.getArchivedItems = function (username, callback){
 module.exports.moveToArchive = function (itemId, callback){
 	session
 		.run(
-			'MATCH (itm:Item)-[r:IN_STOCK]-(u:User) WHERE ID(itm)=$itemId ' +
+			'MATCH (itm:Item)-[r:WAREHOUSE]-(u:User) WHERE ID(itm)=$itemId ' +
 			'MERGE (itm)-[:ARCHIVED]-(u) ' +
 			'DELETE r',
 			{
@@ -121,5 +126,31 @@ module.exports.moveToArchive = function (itemId, callback){
 			session.close();
 			console.log(err);
 			callback(err);
+		});
+}
+
+// PUT
+
+module.exports.updateItem = function(itemId, update, callback){
+	session
+		.run(
+			'MATCH (itm:Item) WHERE ID(itm)=$itemId ' +
+			'SET itm.code = $newCode, itm.name = $newName ' +
+			'RETURN itm',
+			{
+				itemId: neo4j.int(itemId),
+				newCode: update.newCode,
+				newName: update.newName
+			}
+		)
+		.then((result)=>{
+			session.close();
+			var updatedItem = result.records[0].get(0);
+			callback(null, updatedItem.properties);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+			callback(err, null);
 		});
 }

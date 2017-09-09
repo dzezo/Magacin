@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-var config = require('../config/database');
+var config = require('../config/neo4j/dbConfig');
 var User = require('../models/user.model');
 
 

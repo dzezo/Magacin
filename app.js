@@ -3,12 +3,16 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+// Init app
 var app = express();
 
-// Routers
+// Routers Neo4j
 var users = require('./routes/users');
 var items = require('./routes/items');
 var invoices = require('./routes/invoices');
+// Routers Redis
+var suppliers = require('./routes/suppliers');
+var warehouses = require('./routes/warehouses');
 
 // Port Number
 var port = 3000;
@@ -23,10 +27,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Routes
+// Routes Neo4j
 app.use('/users', users);
 app.use('/items', items);
 app.use('/invoices', invoices);
+// Routes Redis
+app.use('/suppliers', suppliers);
+app.use('/warehouses', warehouses);
 
 // Index Route
 app.get('/', function (req, res) {
