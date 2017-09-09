@@ -9,13 +9,13 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { LogInComponent } from './components/log-in/log-in.component';
-import { FaktureComponent } from './components/fakture/fakture.component';
+import { UlazneFaktureComponent } from './components/ulaznefakture/ulaznefakture.component';
 import { ArhivaComponent } from './components/arhiva/arhiva.component';
 import { MagacinComponent } from './components/magacin/magacin.component';
 import { NavigacijaComponent } from './components/navigacija/navigacija.component';
 import { IzlazComponent } from './components/izlaz/izlaz.component';
 import { UlazComponent } from './components/ulaz/ulaz.component';
-import { IzlazfaktureComponent } from './components/izlazfakture/izlazfakture.component';
+import { IzlazneFaktureComponent } from './components/izlaznefakture/izlaznefakture.component';
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
@@ -26,12 +26,12 @@ import { AuthGuard } from './guards/auth.guard';
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
-{path: 'ulazfakture', component: FaktureComponent},
+{path: 'ulaznefakture', component: UlazneFaktureComponent},
 {path: 'arhiva', component: ArhivaComponent},
 {path: 'magacin', component: MagacinComponent},
 {path: 'ulaz', component: UlazComponent},
 {path: 'izlaz', component: IzlazComponent},
-{path: 'izlazfakture', component: IzlazfaktureComponent}
+{path: 'izlaznefakture', component: IzlazneFaktureComponent}
 ]
 
 @NgModule({
@@ -40,13 +40,13 @@ const appRoutes: Routes = [
     HomeComponent,
     NavBarComponent,
     LogInComponent,
-    FaktureComponent,
+    UlazneFaktureComponent,
     ArhivaComponent,
     MagacinComponent,
     NavigacijaComponent,
     IzlazComponent,
     UlazComponent,
-    IzlazfaktureComponent
+    IzlazneFaktureComponent
   ],
   imports: [
     BrowserModule,

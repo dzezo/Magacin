@@ -8,6 +8,28 @@ body {
   color: #fff;
 }
 
+
+/*
+ *  Formatiranje tabele
+ */
+
+table  {
+  table-layout: fixed;
+}
+
+table  td {
+  word-wrap: break-word;
+}
+
+@media (max-width: 965px) {
+    table  {
+    table-layout:auto; 
+  }
+  table  td {
+    word-wrap: normal;
+  }
+}
+
 /*
  *  Polje za rezultate suma
  */
