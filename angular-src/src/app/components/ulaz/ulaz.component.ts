@@ -9,6 +9,14 @@ export class UlazComponent implements OnInit {
 
 	bla: String = "0";
 
+	// ngModel
+	nazivDobavljaca: String;
+	pib: String;
+	pozivNaBroj: String;
+	brojRacuna: String;
+	datumDospeca: String;
+	datumIsteka: String;
+
   constructor() { }
 
   ngOnInit() {

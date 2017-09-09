@@ -9,6 +9,11 @@ export class IzlazComponent implements OnInit {
 
 	bla: String = "0";
 
+	// ngModel
+  kupac: String;
+  brojRacuna: String;
+  datumIzdavanjaRacuna: String;
+
   constructor() { }
 
   ngOnInit() {

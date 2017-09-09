@@ -15,19 +15,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor = "let inputfacture of inputfactures">
-              <td><a (click)="getInputFacture(inputFacture.id)">{{inputFacture.dobavljac}}</a></td>
-              <td>{{inputFacture.vrednost}}</td>
-              <td>{{inputFacture.datumPrijema}}</td>
-              <td>{{inputFacture.datumIsteka}}</td>
-              <td><a (click)="deleteInputFacture(inputFacture.id)"><span class="fa fa-trash"></span></a></td>
+            <tr *ngFor = "let inputinvoice of inputinvoices">
+              <td><a (click)="getInputinvoice(inputinvoice.id)">{{inputinvoice.dobavljac}}</a></td>
+              <td>{{inputinvoice.vrednost}}</td>
+              <td>{{inputinvoice.datumPrijema}}</td>
+              <td>{{inputinvoice.datumIsteka}}</td>
+              <td><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
-            <tr>
-              <td>Dobavljac</td>
-              <td>Vrednost</td>
-              <td>Datum Prijema</td>
-              <td>Datum Isteka</td>
-              <td><a (click)="deleteInputFacture(inputFacture.id)"><span class="fa fa-trash"></span></a></td>
+              <tr>
+                <td>DobavljacPH</td>
+                <td>VrednostPH</td>
+                <td>Datum prijemaPH</td>
+                <td>Datum istekaPH</td>
+                <td><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
         </table>

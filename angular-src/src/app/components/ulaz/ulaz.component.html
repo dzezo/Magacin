@@ -1,37 +1,69 @@
 <div class="container-fluid">
   <div class="row">
     <app-navigacija></app-navigacija>
-    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+    <main class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3" role="main">
       <h1>Kreiraj novu ulaznu fakturu</h1>
+      <form (submit)="ulaznaFakturaSubmit()">
 <!-- START Input Forma za Dovavljaca-->
-      <div class="pt-3 inputForm">
-	      <div class="form-group form-inline input-group">		  
-			  <input type="text" class="form-control" value="" placeholder="Naziv dobavljača">	 
-			  <input type="text" class="form-control" value="" placeholder="PIB">		        
-	      </div>
-		  <hr style="border-color: #FFF;">
-		  <div class="form-group form-inline input-group">
-		    <input type="text" class="form-control" value="" placeholder="Poziv na broj">
-		    <input type="text" class="form-control" value="" placeholder="Broj računa">
-		  </div>
-		  <div class="form-group date form-inline input-group">
-		    <input type="text" class="form-control" value="" placeholder="Datum dospeća">
-		    <input type="text" class="form-control" value="" placeholder="Datum isteka">
-		  </div>
-      </div>
+  	    <div class="pt-3 inputForm">
+  		    <div class="form-group form-inline input-group"> 
+  				  <input [(ngModel)]="nazivDobavljaca" type="text" class="form-control" name="nazivDobavljaca" placeholder="Naziv dobavljača"> 
+  			    <input [(ngModel)]="pib" type="text" class="form-control" name="pib" placeholder="PIB">		        
+  		    </div>
+  		    <hr style="border-color: #FFF;">
+  		    <div class="form-group form-inline input-group">
+  		        <input [(ngModel)]="pozivNaBroj" type="text" class="form-control" name="pozivNaBroj" placeholder="Poziv na broj">
+  				    <input [(ngModel)]="brojRacuna" type="text" class="form-control" name="brojRacuna" placeholder="Broj računa">
+  			  </div>
+    			<div class="form-group form-inline input-group">
+        				<input [(ngModel)]="datumDospeca" type="text" class="form-control" name="datumDospeca" placeholder="Datum dospeća">
+        				<input [(ngModel)]="datumIsteka" type="text" class="form-control" name="datumIsteka" placeholder="Datum isteka">
+    			</div>
+  	    </div>
 <!-- END Input Forma za Dovavljaca-->
 
 <!-- START Input Dinamicna Tabela -->
-<!-- END Input Dinamicna Tabela -->
+    		<div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="thead-inverse">
+                <tr>
+                  <th>Šifra</th>
+                  <th>Ime</th>              
+                  <th>Prodajna cena</th>
+                  <th>Nabavna cena</th>
+                  <th>Količina</th>             
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <a (click)="removeArtikl()"><span class="fa fa-minus-square fa-2x"></span></a>
+                      <a (click)="addArtikl()"><span class="fa fa-plus-square fa-2x"></span></a>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+<!-- END Input za novi artikl --> 
 
-<!-- START Suma -->
-		<div class="container desno">
-	        <div class="row">
-	          <label>Suma:</label>
-	          <p class="prikazPolje">{{bla}}</p>
-	        </div>
-     	</div>
-<!-- END Suma --> 
+<!-- END Input Dinamicna Tabela -->
+<hr>
+<!-- START Add i suma -->
+    		<div class="spread">
+          <input class="btn btn-primary" type="submit" value="Dodaj fakturu">
+          <div class="row">
+            <label>Suma:</label>
+            <p class="prikazPolje">{{bla}}</p>
+          </div>
+        </div>
+<!-- END Add i suma --> 
+      </form>
     </main>
   </div>
 </div>
