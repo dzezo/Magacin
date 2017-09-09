@@ -15,3 +15,7 @@ driver.onError = function (error) {
 module.exports.getSession = function(){
 	return driver.session();
 }
+
+module.exports.getDriver = function(){
+	return neo4j;
+}

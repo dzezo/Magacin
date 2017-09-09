@@ -22,7 +22,7 @@ module.exports.addSupplier = function(username, supplier, callback){
 			});
 		}
 		else
-			callback(null, "Dobavljac vec postoji")
+			callback("ERR - Allready exists", "Dobavljac vec postoji");
 	});
 }
 
@@ -31,26 +31,34 @@ module.exports.addSupplierFromInvoice = function(username, supplier, callback){
 	client.sadd('user:' + username + ':suppliers', supplier.name, (err, newSupplier)=>{
 		if(err){
 			console.log(err);
-			callback(err);
+			return callback(err);
 		}
 		if(newSupplier){
 			// user:name:supplier name supplier taxId 000111222 collabCount 0
 			client.hmset('user:' + username + ':' + supplier.name, 'name', supplier.name, 'taxId', supplier.taxId, 'collabCount', 1, (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
-				callback(null);
+				return callback(null);
 			});
 		}
 		else{
 			client.hincrby('user:' + username + ':' + supplier.name, 'collabCount', 1, (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
-				callback(null);
 			});
+			// UPDATE TAXID ALLOWED
+			client.hset('user:' + username + ':' + supplier.name, 'taxId', supplier.taxId, (err, reply)=>{
+				if(err){
+					console.log(err);
+					return callback(err);
+				}
+			});
+			// RETURN BACK
+			return callback(null);
 		}
 	});
 }
@@ -74,7 +82,10 @@ module.exports.getSupplier = function(username, supplierName, callback){
 			console.log(err);
 			callback(err, null);
 		}
-		callback(null, supplier);
+		if(supplier)
+			callback(null, supplier);
+		else
+			callback("ERR - None found", null);
 	});
 }
 
@@ -104,18 +115,44 @@ module.exports.getSuppliers = function(username, callback){
 // DELETE
 
 module.exports.deleteSupplier = function(username, supplierName, callback){
+	// remove from set
+	client.srem('user:' + username + ':suppliers', supplierName, (err, reply)=>{
+		if(err){
+			console.log(err);
+			callback(err);
+		}
+		// remove hash
+		client.del('user:' + username + ':' + supplierName, (err, reply)=>{
+			if(err){
+				console.log(err);
+				callback(err);
+			}
+			callback(null);
+		});
+	});
+}
+
+module.exports.undoSupplier = function(username, supplierName, callback){
 	client.hincrby('user:' + username + ':' + supplierName, 'collabCount', -1, (err, reply)=>{
 		if(err){
 			console.log(err);
 			callback(err);
 		}
 		if(reply == 0){
-			client.del('user:' + username + ':' + supplierName, (err, reply)=>{
+			// remove from set
+			client.srem('user:' + username + ':suppliers', supplierName, (err, reply)=>{
 				if(err){
 					console.log(err);
 					callback(err);
 				}
-				callback(null);
+				// remove hash
+				client.del('user:' + username + ':' + supplierName, (err, reply)=>{
+					if(err){
+						console.log(err);
+						callback(err);
+					}
+					callback(null);
+				});
 			});
 		}
 		else
@@ -128,7 +165,7 @@ module.exports.deleteSupplier = function(username, supplierName, callback){
 function ignoreCasePattern(searchString){
 	var pattern = '';
 	for(var i=0; i<searchString.length; i++){
-		pattern = pattern + '[' + searchString[i].toLowerCase() + searchString[i].toUpperCase() + ']*'
+		pattern = pattern + '[' + searchString[i].toLowerCase() + searchString[i].toUpperCase() + ']'
 	}
-	return pattern;
+	return pattern = pattern + '*';
 }

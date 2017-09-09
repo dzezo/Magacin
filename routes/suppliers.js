@@ -59,8 +59,17 @@ router.get('/user/:username', function(req, res, next) {
 router.delete('/delete/:name/user/:username', function(req, res, next) {
 	Supplier.deleteSupplier(req.params.username, req.params.name, (err)=>{
 		if(err)
-			return res.json({ success: false, msg: "Brisanje dobavljaca neuspesno" });
-		res.json({ success: true, msg: "Brisanje dobavljaca uspesno" });
+			return res.json({ success: false, msg: "Brisanje neuspesno" });
+		res.json({ success: true, msg: "Brisanje uspesno" });
+	});
+});
+
+// Undo Supplier
+router.delete('/undo/:name/user/:username', function(req, res, next) {
+	Supplier.undoSupplier(req.params.username, req.params.name, (err)=>{
+		if(err)
+			return res.json({ success: false });
+		res.json({ success: true });
 	});
 });
 

@@ -1,4 +1,10 @@
 ### Magacin
+
+#### NEO4J
+
+
+
+
 #### USER API
 
 ```
@@ -54,7 +60,7 @@ Izlaz
 #### INVOICE API
 
 ```
-/add/input/:username
+(POST) /add/input/:username
 
 Ulaz
 
@@ -84,7 +90,7 @@ Izlaz
 ```
 
 ```
-/add/output/:username
+(POST) /add/output/:username
 
 Ulaz
 
@@ -110,7 +116,7 @@ Izlaz
 ```
 
 ```
-/get/input/:username
+(GET) /get/input/:username
 
 Izlaz
 
@@ -130,7 +136,7 @@ Izlaz
 ```
 
 ```
-/get/output/:username
+(GET) /get/output/:username
 
 Izlaz
 
@@ -149,7 +155,7 @@ Izlaz
 ```
 
 ```
-/get/input/invoice/:invoiceId
+(GET) /get/input/invoice/:invoiceId
 
 Izlaz
 
@@ -190,10 +196,26 @@ Izlaz
         ]
     }
 }
+
+Ukoliko je faktura bez artikala
+
+{
+    "success": true,
+    "invoice": {
+        "total": 20000,
+        "refNumber": "97 54 11080017",
+        "invNumber": "FAOS-11080-0/17",
+        "taxId": "100171520",
+        "supplier": "CTC",
+        "recvDate": "2017-09-20T00:00:00Z",
+        "expDate": "2017-10-19T00:00:00Z",
+        "items": null
+    }
+}
 ```
 
 ```
-/get/output/invoice/:invoiceId
+(GET) /get/output/invoice/:invoiceId
 
 Izlaz
 
@@ -216,10 +238,23 @@ Izlaz
         ]
     }
 }
+
+Ukoliko je faktura bez artikala
+
+{
+    "success": true,
+    "invoice": {
+        "total": 0,
+        "invNumber": "ISECAK004",
+        "purchaser": "KUPAC ler",
+        "issueDate": "2017-08-20T00:00:00Z",
+        "items": null
+    }
+}
 ```
 
 ```
-/undo/input/invoice/:invoiceId
+(DELETE) /undo/input/invoice/:invoiceId
 
 Izlaz
 
@@ -228,7 +263,7 @@ Izlaz
 ```
 
 ```
-/undo/output/invoice/:invoiceId
+(DELETE) /undo/output/invoice/:invoiceId
 
 Izlaz
 
@@ -241,14 +276,15 @@ Izlaz
 
 
 
-#### USER API
+#### ITEM API
 
 ```
-/get/item/:itemId
+(GET) /get/item/:itemId
 
 Izlaz
 
 { success: false, msg:"Dobavljanje neuspesno" }
+
 {
     "success": true,
     "item": {
@@ -297,14 +333,17 @@ Izlaz
         ]
     }
 }
+
+*U slucaju da nema output vraca prazan niz
 ```
 
 ```
-/get/warehouse/:username
+(GET) /get/warehouse/:username
 
 Izlaz
 
 { success: false, msg:"Dobavljanje artikala neuspesno" }
+
 {
     "success": true,
     "items": [
@@ -337,11 +376,12 @@ Izlaz
 ```
 
 ```
-/get/archive/:username
+(GET) /get/archive/:username
 
 Izlaz
 
 { success: false, msg:"Dobavljanje arhiviranih artikala neuspesno" }
+
 {
     "success": true,
     "items": [
@@ -358,7 +398,7 @@ Izlaz
 ```
 
 ```
-/archive/item/:itemId
+(DELETE) /archive/item/:itemId
 
 Izlaz
 
@@ -367,10 +407,273 @@ Izlaz
 ```
 
 ```
-/update/item/:itemId
+(PUT) /update/item/:itemId
 
 Ulaz
 
+{
+    "newCode": "3310",
+    "newName": "Nokia 3310"
+}
+
 Izlaz
+
+{ success: false, msg:"Azuriranje neuspesno" }
+{ success: true, msg:"Azuriranje uspesno", item: updatedItem }
+*Vraca azurirani artikal
+
+```
+
+
+
+#### REDIS
+
+
+
+
+
+
+
+
+
+
+#### SUPPLIER API
+
+
+```
+(POST) /suppliers/add/:username
+
+ulaz
+{
+    "name": "VOX",
+    "taxId": "134654122"
+}
+
+izlaz
+{ "success": false, "msg": "Dodavanje dobavljaca neuspesno" }
+{ "success": false, "msg": "Dobavljac vec postoji" }
+{ "success": true, "msg": "Dodavanje dobavljaca uspesno" }
+
+```
+
+```
+(POST) /suppliers/invoice/add/:username
+
+ulaz
+{
+    "name": "VOX",
+    "taxId": "134654122"
+}
+
+izlaz
+{ "success": false }
+{ "success": true }
+
+```
+
+```
+(GET) /suppliers/search/:search/user/:username
+
+izlaz za input ( v )
+{
+    "success": true,
+    "suggestion": [
+        "VOX",
+        "VITEL"
+    ]
+}
+```
+
+```
+(GET) /suppliers/get/:name/user/:username
+
+izlaz
+{
+    "success": true,
+    "supplier": {
+        "name": "VOX",
+        "taxId": "134654122",
+        "collabCount": "3"
+    }
+}
+```
+
+```
+(GET) /suppliers/user/:username
+
+izlaz
+{
+    "success": true,
+    "suppliers": [
+        {
+            "name": "DUDI",
+            "taxId": "944654122",
+            "collabCount": "1"
+        },
+        {
+            "name": "GP",
+            "taxId": "354654122",
+            "collabCount": "1"
+        },
+        {
+            "name": "VITEL",
+            "taxId": "344654122",
+            "collabCount": "1"
+        },
+        {
+            "name": "VOX",
+            "taxId": "134654122",
+            "collabCount": "3"
+        },
+        {
+            "name": "CTC",
+            "taxId": "244654122",
+            "collabCount": "1"
+        }
+    ]
+}
+```
+
+```
+(DELETE) /suppliers/delete/:name/user/:username
+
+izlaz
+
+{ success: false, msg: "Brisanje neuspesno" }
+{ success: true, msg: "Brisanje uspesno" }
+
+* Instant brisanje (za tabelu)
+```
+
+```
+(DELETE) /suppliers/undo/:name/user/:username
+
+izlaz
+
+{ "success": false }
+{ "success": true }
+
+*Brise dobavljaca samo ukoliko nije imao saradnju pre toga 
+```
+
+
+
+
+#### WAREHOUSE API
+
+```
+(POST) /warehouses/add/:username
+
+ulaz
+{
+    "items": [
+        {
+            "code": 500,
+            "name": "PANASONIC KT500",
+            "purchaseP": 1000,
+            "sellingP": 2000    
+        },
+        {
+            "code": 501,
+            "name": "PANASONIC BEZICNI",
+            "purchaseP": 2000,
+            "sellingP": 3000
+        },
+        {
+            "code": 750,
+            "name": "ALCATEL 750",
+            "purchaseP": 3000,
+            "sellingP": 4000    
+        },
+        {
+            "code": 1780,
+            "name": "NOKIA 1780",
+            "purchaseP": 2500,
+            "sellingP": 3500
+        }
+    ]
+}
+
+izlaz
+{ success: false }
+{ success: true }
+
+```
+
+```
+(GET) /warehouses/search/:search/user/:username
+
+izlaz
+{ success: false, error: err }
+{ success: true, suggestion: [suggestions] }
+
+```
+
+```
+(GET) /warehouses/code/:code/user/:username
+
+izlaz
+{ success: false, error: err }
+
+{
+    "success": true,
+    "item": {
+        "code": "500",
+        "name": "PANASONIC KT500",
+        "purchaseP": "1000",
+        "sellingP": "2000",
+        "count": "1"
+    }
+}
+```
+
+```
+(GET) /warehouses/name/:name/user/:username
+
+izlaz
+{ success: false, error: err }
+
+{
+    "success": true,
+    "item": {
+        "code": "500",
+        "name": "PANASONIC KT500",
+        "purchaseP": "1000",
+        "sellingP": "2000",
+        "count": "1"
+    }
+}
+```
+
+```
+(DELETE) /warehouses/delete/:name/user/:username
+
+izlaz
+{ success: false }
+{ success: true }
+
+```
+
+```
+(DELETE) /warehouses/undo/:name/user/:username
+
+izlaz
+{ success: false }
+{ success: true }
+
+```
+
+```
+(PUT) /warehouses/update/:name/user/:username
+
+ulaz
+{
+    "newCode": "3310",
+    "newName": "Nokia 3310"
+}
+
+izlaz
+{ success: false }
+{ success: true }
 
 ```

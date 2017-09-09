@@ -10,14 +10,14 @@ module.exports.AddItems = function(username, items, callback) {
 		client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
 			if(err){
 				console.log(err);
-				callback(err);
+				return callback(err);
 			}
 			if(newItem){
 				// user:name:codes itemCode itemName
 				client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
 					if(err){
 						console.log(err);
-						callback(err);
+						return callback(err);
 					}
 					// user:name:itemName code itemCode name itemName purchaseP itemPurchaseP sellingP itemSellingP count 1
 					client.hmset('user:' + username + ':' + item.name, [
@@ -29,9 +29,8 @@ module.exports.AddItems = function(username, items, callback) {
 					], (err, reply)=>{
 						if(err){
 							console.log(err);
-							callback(err);
+							return callback(err);
 						}
-						callback(null);
 					});
 				});
 			}
@@ -39,18 +38,19 @@ module.exports.AddItems = function(username, items, callback) {
 				client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
 					if(err){
 						console.log(err);
-						callback(err);
+						return callback(err);
 					}
-					callback(null);
 				});
 			}
 		});
 	});
+	// RETURN
+	return callback(null);
 }
 
 // GET
 
-module.exports.searchForItem = function(username, serachString, callback) {
+module.exports.searchForItem = function(username, searchString, callback) {
 	searchPattern = ignoreCasePattern(searchString);
 	client.sscan('user:' + username + ':warehouse', 0, 'MATCH', searchPattern, 'COUNT', 1000, (err, suggestion)=>{
 		if(err){
@@ -98,20 +98,25 @@ module.exports.deleteItem = function(username, itemName, callback) {
 }
 
 module.exports.undoItem = function(username, itemName, callback) {
-	client.hincrby('user:' + username + ':' + itemName, 'count', -1, (err, reply)=>{
-		if(err){
-			console.log(err);
-			callback(err);
-		}
-		if(reply == 0){
-			deleteItem(username, itemName, (err)=>{
-				if(err)
+	client.sismember('user:' + username + ':warehouse', itemName, (err, exists)=>{
+		if(exists)
+			client.hincrby('user:' + username + ':' + itemName, 'count', -1, (err, reply)=>{
+				if(err){
+					console.log(err);
 					callback(err);
-				callback(null);
+				}
+				if(reply == 0){
+					deleteItem(username, itemName, (err)=>{
+						if(err)
+							callback(err);
+						callback(null);
+					});
+				}
+				else
+					callback(null);
 			});
-		}
 		else
-			callback(null);
+			callback("ERR - Not found");
 	});
 }
 
@@ -122,42 +127,41 @@ module.exports.updateItem = function(username, itemName, update, callback) {
 	client.srem('user:' + username + ':warehouse', itemName, (err,reply)=>{
 		if(err){
 			console.log(err);
-			callback(err);
+			return callback(err);
 		}
 		// get code,purchaseP, sellingP & count
-		client.hmget('user:' + username + ':' + item.name, 'code', 'purchaseP', 'sellingP', 'count', (err, oldItem)=>{
+		client.hmget('user:' + username + ':' + itemName, 'code', 'purchaseP', 'sellingP', 'count', (err, oldItem)=>{
 			if(err){
 				console.log(err);
-				callback(err);
+				return callback(err);
 			}
 			// delete from hash
-			client.del('user:' + username + ':' + item.name, (err, reply)=>{
+			client.del('user:' + username + ':' + itemName, (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
 			});
 			// delete from codes
-			client.hdel('user:' + username + ':codes', code, (err, reply)=>{
+			client.hdel('user:' + username + ':codes', oldItem[0], (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
-				callback(null);
 			});
 
 			// Add update
 			client.sadd('user:' + username + ':warehouse', update.newName, (err, newItem)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
 			});
 			// user:name:codes itemCode itemName
-			client.hset('user:' + username + ':codes', update.newName, update.newCode, (err, reply)=>{
+			client.hset('user:' + username + ':codes', update.newCode, update.newName, (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
 			});
 			// user:name:itemName code itemCode name itemName purchaseP itemPurchaseP sellingP itemSellingP count 1
@@ -170,9 +174,9 @@ module.exports.updateItem = function(username, itemName, update, callback) {
 			], (err, reply)=>{
 				if(err){
 					console.log(err);
-					callback(err);
+					return callback(err);
 				}
-				callback(null);
+				return callback(null);
 			});
 		});
 	});
@@ -183,9 +187,9 @@ module.exports.updateItem = function(username, itemName, update, callback) {
 function ignoreCasePattern(searchString){
 	var pattern = '';
 	for(var i=0; i<searchString.length; i++){
-		pattern = pattern + '[' + searchString[i].toLowerCase() + searchString[i].toUpperCase() + ']*'
+		pattern = pattern + '[' + searchString[i].toLowerCase() + searchString[i].toUpperCase() + ']'
 	}
-	return pattern;
+	return pattern = pattern + '*';
 }
 
 function deleteItem(username, itemName, callback){
@@ -196,13 +200,13 @@ function deleteItem(username, itemName, callback){
 			callback(err);
 		}
 		// get code
-		client.hget('user:' + username + ':' + item.name, 'code', (err, code)=>{
+		client.hget('user:' + username + ':' + itemName, 'code', (err, code)=>{
 			if(err){
 				console.log(err);
 				callback(err);
 			}
 			// delete from hash
-			client.del('user:' + username + ':' + item.name, (err, reply)=>{
+			client.del('user:' + username + ':' + itemName, (err, reply)=>{
 				if(err){
 					console.log(err);
 					callback(err);

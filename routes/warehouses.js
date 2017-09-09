@@ -22,7 +22,7 @@ router.get('/search/:search/user/:username', function(req, res, next) {
 
 // Get Item (Code)
 router.get('/code/:code/user/:username', function(req, res, next) {
-	Warehouse.getItemCode(req.params.username, req.params.search, (err, item)=>{
+	Warehouse.getItemCode(req.params.username, req.params.code, (err, item)=>{
 		if(err)
 			return res.json({ success: false, error: err });
 		res.json({ success: true, item: item });
@@ -31,7 +31,7 @@ router.get('/code/:code/user/:username', function(req, res, next) {
 
 // Get Item (Name)
 router.get('/name/:name/user/:username', function(req, res, next) {
-	Warehouse.getItemName(req.params.username, req.params.search, (err, item)=>{
+	Warehouse.getItemName(req.params.username, req.params.name, (err, item)=>{
 		if(err)
 			return res.json({ success: false, error: err });
 		res.json({ success: true, item: item });

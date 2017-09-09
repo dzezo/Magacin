@@ -1,6 +1,7 @@
-var neo4j = require('../config/neo4j/dbUtils');
+var Neo4j = require('../config/neo4j/dbUtils');
 
-var session = neo4j.getSession();
+var neo4j = Neo4j.getDriver();
+var session = Neo4j.getSession();
 
 // GET
 
@@ -9,17 +10,18 @@ module.exports.getItem = function (itemId, callback){
 		.run(
 			'MATCH (a:Item)-[]-(:User) WHERE ID(a)=$itemId ' +
 			'WITH a ' +
-			'MATCH (b)-[r1:IN]-(a) ' +
-			'WITH a, COLLECT({rel: r1, inv: b}) AS INPUT ' +
-			'MATCH (a)-[r2:OUT]-(c) ' +
-			'WITH a, INPUT, COLLECT({rel: r2, inv: c}) AS OUTPUT ' +
-			'RETURN a, INPUT, OUTPUT',
+			'MATCH (b)-[in:IN]-(a) ' +
+			'WITH a, in, COLLECT({rel: in, inv: b}) AS INPUT ' +
+			'OPTIONAL MATCH (a)-[out:OUT]-(c) ' +
+			'WITH a, in, out, INPUT, COLLECT({rel: out, inv: c}) AS OUTPUT ' +
+			'RETURN a, CASE WHEN in IS NOT NULL THEN INPUT ELSE NULL END, CASE WHEN out IS NOT NULL THEN OUTPUT ELSE NULL END',
 			{
 				itemId: neo4j.int(itemId)
 			}
 		)
 		.then((result)=>{
 			session.close();
+
 			var item = result.records[0].get(0);
 			var inputs = result.records[0].get(1);
 			var outputs = result.records[0].get(2);
@@ -28,19 +30,25 @@ module.exports.getItem = function (itemId, callback){
 			itemProfile.details = item.properties;
 			itemProfile.inputs = [];
 			itemProfile.outputs = [];
+			
+			if(inputs){
+				inputs.forEach((input)=>{
+					itemProfile.inputs.push({
+						in: input.rel.properties,
+						details: input.inv.properties
+					});
+				});
+			}
 
-			inputs.forEach((input)=>{
-				itemProfile.inputs.push({
-					in: input.rel.properties,
-					details: input.inv.properties
+			if(outputs){
+				outputs.forEach((output)=>{
+					itemProfile.outputs.push({
+						out: output.rel.properties,
+						details: output.inv.properties
+					});
 				});
-			});
-			outputs.forEach((output)=>{
-				itemProfile.outputs.push({
-					out: output.rel.properties,
-					details: output.inv.properties
-				});
-			});
+			}
+
 			callback(null, itemProfile);
 		})
 		.catch((err)=>{
@@ -138,9 +146,7 @@ module.exports.updateItem = function(itemId, update, callback){
 		.then((result)=>{
 			session.close();
 			var updatedItem = result.records[0].get(0);
-			console.log(updatedItem);
-			console.log(updateItem.properties);
-			//callback(null, updatedItem);
+			callback(null, updatedItem.properties);
 		})
 		.catch((err)=>{
 			session.close();

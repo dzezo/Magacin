@@ -1,6 +1,7 @@
-var neo4j = require('../config/neo4j/dbUtils');
+var Neo4j = require('../config/neo4j/dbUtils');
 
-var session = neo4j.getSession();
+var neo4j = Neo4j.getDriver();
+var session = Neo4j.getSession();
 
 // GET
 
@@ -53,10 +54,10 @@ module.exports.getOutputInvoices = function (username, callback){
 module.exports.getInputInvoice = function (invoiceId, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:IN]-(b:Item) ' +
-			'WHERE ID(a)=$invId ' + 
-			'WITH a, {code: b.code, name: b.name, quantity: r.quantity, purchaseP: r.purchaseP, sellingP: r.sellingP} AS item '+
-			'RETURN {invoice: a, items: COLLECT(item)}', 
+			'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
+			'OPTIONAL MATCH (inv)-[in:IN]-(itm:Item) ' +
+			'WITH inv, itm, {code: itm.code, name: itm.name, quantity: in.quantity, purchaseP: in.purchaseP, sellingP: in.sellingP} AS item '+
+			'RETURN {invoice: inv, items: CASE WHEN itm IS NOT NULL THEN COLLECT(item) ELSE NULL END}', 
 			{
 				invId: neo4j.int(invoiceId)
 			}
@@ -68,7 +69,7 @@ module.exports.getInputInvoice = function (invoiceId, callback){
 			var node = singleRecord.get(0);
 			var invoice = node.invoice.properties;
 			invoice.items = node.items;
-			callback(null, invoice)
+			callback(null, invoice);
 		})
 		.catch((err)=>{
 			session.close();
@@ -80,10 +81,10 @@ module.exports.getInputInvoice = function (invoiceId, callback){
 module.exports.getOutputInvoice = function (invoiceId, callback){
 	session
 		.run(
-			'MATCH (a:Invoice)-[r:OUT]-(b:Item) ' +
-			'WHERE ID(a)=$invId ' + 
-			'WITH a, {code: b.code, name: b.name, quantity: r.quantity, sellingP: r.sellingP} AS ITEM '+
-			'RETURN {invoice: a, items: COLLECT(ITEM)}', 
+			'MATCH (a:Invoice) WHERE ID(a)=$invId ' +
+			'OPTIONAL MATCH (a)-[r:OUT]-(b:Item) ' +
+			'WITH a, b, {code: b.code, name: b.name, quantity: r.quantity, sellingP: r.sellingP} AS ITEM '+
+			'RETURN {invoice: a, items: CASE WHEN b IS NOT NULL THEN COLLECT(ITEM) ELSE NULL END}', 
 			{
 				invId: neo4j.int(invoiceId)
 			}
