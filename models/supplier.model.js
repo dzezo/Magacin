@@ -163,7 +163,7 @@ module.exports.undoSupplier = function(username, supplierName, callback){
 // OTHER
 
 function ignoreCasePattern(searchString){
-	var pattern = '';
+	var pattern = '*';
 	for(var i=0; i<searchString.length; i++){
 		pattern = pattern + '[' + searchString[i].toLowerCase() + searchString[i].toUpperCase() + ']'
 	}

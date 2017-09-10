@@ -1,6 +1,4 @@
-/*
- * Typography
- */
+/* Naslov */
 
 h1 {
   margin-bottom: 15px;
@@ -8,23 +6,84 @@ h1 {
   border-bottom: 1px solid #e9ecef;
 }
 
-hr {
-  border: 1px solid #007bff;
+/* Detalji */
+.info-wrapper{
+	display: inline-flex;
+    width: 100%;
+    margin-bottom: 20px;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #212529;
 }
 
-.inputForm {
-	border: 2px solid #007bff;
-	padding: 5px 20px;
-	border-radius: 10px;
-	background-color: #444;
-	margin: 30px 20px;
+.form-group .form-control {
+	border: 0;
 }
 
-.fa:focus, .fa:hover {
+.form-group .input-group .input-group-addon{
+	border-left: 1px solid #8e8e8e;
+	padding: 0;
+}
+
+.form-group .input-group .input-group-addon:hover{
+	background-color: #ceccc8;
+}
+
+.form-group .input-group .input-group-addon:active{
+	background-color: #dfd7ca;
+}
+
+
+/* Tabela */
+table
+{
+    table-layout: fixed !important;
+}
+
+table tbody tr td input {
+	width: 100%;
+	border-radius: .25rem;
+}
+
+table tbody tr td a:hover {
 	color: #007bff;
 }
 
-.btn {
-	margin-right: 20px;
-	background-image: linear-gradient(-180deg, #527bff 0%, #007bff 90%);
+table button {
+	margin-top: 16px;
+	min-width: 135px;
+	padding: 8px 10px;
+}
+
+/* Tranzicija */
+
+hr {
+  border: 1px solid #e9ecef;
+}
+
+/* Akcije */
+
+.actions{
+	display: inline-flex;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 50px;
+}
+
+.actions button {
+	min-width: 135px;
+	padding: 8px 10px;
+}
+
+.sum {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 100%
+}
+
+.sum label{
+	margin: 0;
+    color: #ffffff;
+    font-size: 20px;
 }

@@ -6,20 +6,55 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ulaz.component.css']
 })
 export class UlazComponent implements OnInit {
+	// Tabela
+	// Redovi u tabeli
+	rowData = [];
+	rowId = 0;
+	// Faktura
+	sum = 0;
 
-	bla: String = "0";
+	constructor() { }
 
-	// ngModel
-	nazivDobavljaca: String;
-	pib: String;
-	pozivNaBroj: String;
-	brojRacuna: String;
-	datumDospeca: String;
-	datumIsteka: String;
+	ngOnInit() {
+	}
 
-  constructor() { }
+	// Metode za tabelu
+	// Svaki red po kreiranju dobija samo id
+	addRow(id){
+		this.rowData.push({
+			id: id
+		});
+		this.rowId++;
+	}
 
-  ngOnInit() {
-  }
+	removeRow(id){
+		for(var i=0; i<this.rowData.length; i++){
+			if(this.rowData[i].id == id)
+				this.rowData.splice(i,1);
+		}
+		// Azuriraj sumu
+		this.sumInvoice();
+	}
 
+	// Metode za fakturu
+	// Sumiraj fakturu
+	sumInvoice(){
+		this.sum = 0;
+		var quantity;
+		var purchaseP;
+		for(var i=0; i<this.rowData.length; i++){
+			// isNaN vraca false ako je broj
+			quantity = this.rowData[i].quantity;
+			purchaseP = this.rowData[i].purchaseP;
+			if(! (isNaN(quantity) || isNaN(purchaseP)) ){
+				this.sum += (parseInt(quantity) * parseInt(purchaseP));
+			}
+		}
+	}
+
+	// Predaj fakturu
+	submitInvoice(){
+		for(var i=0; i<this.rowData.length; i++)
+			console.log(this.rowData[i]);
+	}
 }

@@ -11,7 +11,7 @@
   	"express": "*",
   	"bcryptjs": "*",
   	"cors": "*",
-  	"jsonwebtoken": "*",
+  	"jsonwebtoken": "^7.4.3",
   	"body-parser": "*",
     "neo4j-driver": "*",
     "redis": "*"
