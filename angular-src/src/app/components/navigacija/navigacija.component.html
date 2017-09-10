@@ -27,4 +27,12 @@
       <a [routerLink]="['/izlaz']" class="nav-link"><span class="fa fa-plus-circle fa-lg"></span> Nova izlazna faktura</a>
     </li>
   </ul>
+
+<hr>
+
+  <ul class="nav nav-pills flex-column">
+    <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
+      <a [routerLink]="['/dobavljaci']" class="nav-link"><span class="fa fa-truck fa-lg"></span> Dobavljači</a>
+    </li>
+  </ul>
 </nav>

@@ -5,6 +5,3 @@
 *Misc
 	- Datuma dospeca i isteka -> Date plugin sa yourgym
 	- Error msg redo
-
-*Dobavljaci
-	- opis na poslednjem komitu ([BACKEND] - Spremno za povezivanje)

@@ -30,8 +30,13 @@ table  td {
   }
 }
 
+.modal {
+  z-index: 1200;
+  color: #111;
+}
+
 /*
- *  Polje za rezultate suma
+ *  Polja za rezultate suma
  */
 
 .prikazPolje {
