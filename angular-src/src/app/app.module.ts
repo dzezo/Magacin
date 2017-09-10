@@ -17,10 +17,19 @@ import { IzlazComponent } from './components/izlaz/izlaz.component';
 import { UlazComponent } from './components/ulaz/ulaz.component';
 import { IzlazneFaktureComponent } from './components/izlaznefakture/izlaznefakture.component';
 import { DobavljaciComponent } from './components/dobavljaci/dobavljaci.component';
+import { FakturaComponent } from './components/faktura/faktura.component';
+import { ArtikalComponent } from './components/artikal/artikal.component';
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { DateService } from './services/date.service';
+import { InvoiceService } from './services/neo4j/invoice.service';
+import { ItemService } from './services/neo4j/item.service';
+import { SupplierService } from './services/redis/supplier.service';
+import { WarehouseService } from './services/redis/warehouse.service';
+
+
 
 
 const appRoutes: Routes = [
@@ -48,7 +57,9 @@ const appRoutes: Routes = [
     IzlazComponent,
     UlazComponent,
     IzlazneFaktureComponent,
-    DobavljaciComponent
+    DobavljaciComponent,
+    FakturaComponent,
+    ArtikalComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +71,11 @@ const appRoutes: Routes = [
   providers: [
     ValidateService,
     AuthService,
+    DateService,
+    InvoiceService,
+    ItemService,
+    SupplierService,
+    WarehouseService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

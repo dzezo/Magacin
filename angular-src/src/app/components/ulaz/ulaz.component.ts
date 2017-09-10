@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
+
+declare var $: any;
 
 @Component({
   selector: 'app-ulaz',
@@ -12,10 +14,18 @@ export class UlazComponent implements OnInit {
 	rowId = 0;
 	// Faktura
 	sum = 0;
+	// Datumi
+	recvDate: any;
+	expDate: any;
 
-	constructor() { }
+	constructor(private elRef: ElementRef) { }
 
 	ngOnInit() {
+		// DATE PLUG-IN INIT
+		this.recvDate = $(this.elRef.nativeElement).find('#supplier-recvDate');
+		this.recvDate.datepicker();
+		this.expDate = $(this.elRef.nativeElement).find('#supplier-expDate');
+		this.expDate.datepicker();
 	}
 
 	// Metode za tabelu
