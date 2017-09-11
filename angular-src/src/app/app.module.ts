@@ -17,7 +17,6 @@ import { IzlazComponent } from './components/izlaz/izlaz.component';
 import { UlazComponent } from './components/ulaz/ulaz.component';
 import { IzlazneFaktureComponent } from './components/izlaznefakture/izlaznefakture.component';
 import { DobavljaciComponent } from './components/dobavljaci/dobavljaci.component';
-import { FakturaComponent } from './components/faktura/faktura.component';
 import { ArtikalComponent } from './components/artikal/artikal.component';
 import { UlaznaFakturaComponent } from './components/ulazna-faktura/ulazna-faktura.component';
 import { IzlaznaFakturaComponent } from './components/izlazna-faktura/izlazna-faktura.component';
@@ -61,7 +60,6 @@ const appRoutes: Routes = [
     UlazComponent,
     IzlazneFaktureComponent,
     DobavljaciComponent,
-    FakturaComponent,
     ArtikalComponent,
     UlaznaFakturaComponent,
     IzlaznaFakturaComponent

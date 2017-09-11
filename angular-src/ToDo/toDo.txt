@@ -1,7 +1,4 @@
-*Artikal
-	- Napravi da bude profil artikla, samo da ispise ono sto dobije na izlazu?
-
-* arhiva 
+*Arhiva 
  	- to mozes i sam da povezes samo u item Service moras da dodas get request (GET) /get/archive/:username izgled rezultata imas na README
 
 *Misc
