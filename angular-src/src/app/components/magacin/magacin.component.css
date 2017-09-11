@@ -7,12 +7,17 @@ h1 {
   padding-bottom: 7px;
 }
 
+.row label {
+  color: #fff; 
+  font-size: 20px;
+}
+
 .fa:focus, .fa:hover {
   color: #007bff;
 }
 
 /*
- * Modal
+ * Modal START
  */
 
 .modal-dialog{
@@ -63,3 +68,7 @@ h1 {
 .modal-footer > button {
   padding: 8px 16px !important;
 }
+
+/*
+ * Modal END
+ */
