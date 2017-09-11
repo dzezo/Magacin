@@ -19,6 +19,8 @@ import { IzlazneFaktureComponent } from './components/izlaznefakture/izlaznefakt
 import { DobavljaciComponent } from './components/dobavljaci/dobavljaci.component';
 import { FakturaComponent } from './components/faktura/faktura.component';
 import { ArtikalComponent } from './components/artikal/artikal.component';
+import { UlaznaFakturaComponent } from './components/ulazna-faktura/ulazna-faktura.component';
+import { IzlaznaFakturaComponent } from './components/izlazna-faktura/izlazna-faktura.component';
 
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
@@ -30,8 +32,6 @@ import { SupplierService } from './services/redis/supplier.service';
 import { WarehouseService } from './services/redis/warehouse.service';
 
 
-
-
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
@@ -41,7 +41,10 @@ const appRoutes: Routes = [
 {path: 'ulaz', component: UlazComponent},
 {path: 'izlaz', component: IzlazComponent},
 {path: 'izlaznefakture', component: IzlazneFaktureComponent},
-{path: 'dobavljaci', component: DobavljaciComponent}
+{path: 'dobavljaci', component: DobavljaciComponent},
+{path: 'izlaznafaktura', component: IzlaznaFakturaComponent},
+{path: 'ulaznafaktura', component: UlaznaFakturaComponent},
+{path: 'artikal', component: ArtikalComponent}
 ]
 
 @NgModule({
@@ -59,7 +62,9 @@ const appRoutes: Routes = [
     IzlazneFaktureComponent,
     DobavljaciComponent,
     FakturaComponent,
-    ArtikalComponent
+    ArtikalComponent,
+    UlaznaFakturaComponent,
+    IzlaznaFakturaComponent
   ],
   imports: [
     BrowserModule,

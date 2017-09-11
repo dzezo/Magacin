@@ -8,32 +8,40 @@
           <thead class="thead-inverse">
             <tr>
               <th>Dobavljač</th>
+              <th>Broj fakture</th>
               <th>Vrednost</th>
               <th>Datum prijema</th>
               <th>Datum isteka</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <colgroup>
-             <col style="width: 24%;">
-             <col style="width: 24%;">
-             <col style="width: 24%;">
-             <col style="width: 24%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 4%;">
              <col style="width: 4%;">
           </colgroup>
           <tbody>
             <tr *ngFor = "let inputinvoice of inputinvoices">
               <td><a (click)="getInputinvoice(inputinvoice.id)">{{inputinvoice.dobavljac}}</a></td>
+              <td>{{inputinvoice.brojFakture}}</td>
               <td>{{inputinvoice.vrednost}}</td>
               <td>{{inputinvoice.datumPrijema}}</td>
               <td>{{inputinvoice.datumIsteka}}</td>
+              <td><a (click)="getInputInvoice(inputInvoice.id)"><span class="fa fa-pencil"></span></a></td>
               <td><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
               <tr>
                 <td>DobavljacPH</td>
+                <td>BrojFakturePH</td>
                 <td>VrednostPH</td>
                 <td>Datum prijemaPH</td>
                 <td>Datum istekaPH</td>
+                <td><a><span class="fa fa-pencil"></span></a></td>
                 <td><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>

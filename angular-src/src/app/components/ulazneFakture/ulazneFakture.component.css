@@ -7,6 +7,10 @@ h1 {
   padding-bottom: 7px;
 }
 
-.fa:focus, .fa:hover {
+a .fa {
+	color: #fff;
+}
+
+a .fa:focus, a .fa:hover {
   color: #007bff;
 }

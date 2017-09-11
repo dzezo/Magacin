@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fakture',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UlazneFaktureComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  getInputInvoice (inputInvoiceId){
+  	localStorage.setItem('inputInvoice', inputInvoiceId);
+  	this.router.navigate(['/ulaznafaktura'])
   }
 
 }

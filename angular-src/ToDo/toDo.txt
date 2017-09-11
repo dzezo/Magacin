@@ -1,7 +1,8 @@
+*Artikal
+	- Napravi da bude profil artikla, samo da ispise ono sto dobije na izlazu?
 
-*Ulazne i izlazne fakture:
-	- Klik na konkretnu fakturu otvara pop-up (modal sa njenim proflilom) sa svim atributima koje ima tabela i ima dva dugmeta EDIT i DELETE?
-		
+* arhiva 
+ 	- to mozes i sam da povezes samo u item Service moras da dodas get request (GET) /get/archive/:username izgled rezultata imas na README
+
 *Misc
-	- Datuma dospeca i isteka -> Date plugin sa yourgym
 	- Error msg redo

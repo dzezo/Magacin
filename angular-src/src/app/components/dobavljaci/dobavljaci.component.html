@@ -18,10 +18,9 @@
             </tr>
           </thead>
           <colgroup>  
-             <col style="width: 31%;">
-             <col style="width: 31%;">
-             <col style="width: 31%;">
-             <col style="width: 3%;">
+             <col style="width: 32%;">
+             <col style="width: 32%;">
+             <col style="width: 32%;">
              <col style="width: 4%;">
           </colgroup>
           <tbody>
@@ -31,31 +30,13 @@
               </td>
               <td>{{dobavljac.pib}}</td>
               <td>{{dobavljac.brojSaradnji}}</td>
-              <td>
-                <a (click)="editDobavljac(dobavljac.id, dobavljac.name, dobavljac.pib, dobavljac.brojSaradnji)" data-toggle="modal" data-target="#edit-dobavljac-modal">
-                  <span class="fa fa-pencil"></span>
-                </a>
-              </td>
-              <td>
-                <a (click)="deleteDobavljac(dobavljac.id)">
-                  <span class="fa fa-trash"></span>
-                </a>
-              </td>
+              <td><a (click)="deleteDobavljac(dobavljac.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
               <tr>
                 <td>ImePH</td>
                 <td>pibPH</td>
                 <td>Broj SaradnjiPH</td>
-                <td>
-                  <a (click)="editDobavljac(dobavljac.id, dobavljac.name, dobavljac.pib, dobavljac.brojSaradnji)" data-toggle="modal" data-target="#edit-dobavljac-modal">
-                    <span class="fa fa-pencil"></span>
-                  </a>
-                </td>
-                <td>
-                  <a (click)="deleteDobavljac(dobavljac.id)">
-                    <span class="fa fa-trash"></span>
-                  </a>
-                </td>
+                <td><a (click)="deleteDobavljac(dobavljac.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
         </table>

@@ -8,28 +8,36 @@
           <thead class="thead-inverse">
             <tr>
               <th>Kupac</th>
+              <th>Broj fakture</th>
               <th>Vrednost</th>
               <th>Datum izdavanja</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
           <colgroup>  
-             <col style="width: 32%;">
-             <col style="width: 32%;">
-             <col style="width: 32%;">
+             <col style="width: 23%;">
+             <col style="width: 23%;">
+             <col style="width: 23%;">
+             <col style="width: 23%;">
+             <col style="width: 4%;">
              <col style="width: 4%;">
           </colgroup>
           <tbody>
             <tr *ngFor = "let outputinvoice of outputinvoices">
               <td><a (click)="getOutputinvoice(outputinvoice.id)">{{outputinvoice.kupac}}</a></td>
+              <td>{{outputinvoice.brojFakture}}</td>
               <td>{{outputinvoice.vrednost}}</td>
               <td>{{outputinvoice.datumIzdavanja}}</td>
-              <td><a (click)="deleteOutputinvoice(outputinvoice.id)"><span class="fa fa-trash"></span></a></td>
+              <td><a (click)="getOutputInvoice(outputInvoice.id)"><span class="fa fa-pencil"></span></a></td>
+              <td><a (click)="deleteOutputinvoice(outputInvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
             <tr>
               <td>KupacPH</td>
+              <td>BrojFakturePH</td>
               <td>VrednostPH</td>
               <td>Datum izdavanjaPH</td>
+              <td><a (click)="getOutputInvoice(outputInvoice.id)"><span class="fa fa-pencil"></span></a></td>
               <td><a (click)="deleteOutputinvoice(outputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>

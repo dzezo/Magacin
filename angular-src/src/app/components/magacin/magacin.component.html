@@ -27,21 +27,21 @@
           </colgroup>
           <tbody>
             <tr *ngFor = "let artikl of artikli">
-              <td><a (click)="getArtikl(artikl.id)">{{artikl.sifra}}</a></td>
-              <td>{{artikl.ime}}</td>
+              <td>{{artikl.sifra}}</td>
+              <td><a (click)="getArtikl(artikl.id)">{{artikl.ime}}</a></td>
               <td>{{artikl.kolicina}}</td>
               <td>{{artikl.nCena}}</td>
               <td>{{artikl.pCena}}</td>
-              <td><a data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
+              <td><a (click)="clickedItem(artikl._id, artikl.sifra, artikl.ime)" data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
               <td><a (click)="deleteInvoice(artikl.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
             <tr>
               <td>sifraPH</td>
-              <td>imePH</td>
+              <td><a (click)="getArtikl(artikl.id)">imePH</a></td>
               <td>kolicinaPH</td>
               <td>nCenaPH</td>
-              <td>pCenaPH</td>
-              <td><a data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
+              <td>pCenaPHaaaaaaaaaaaaaaaaaaaaaaaaaapCenaPHaaaaaaaaaaaaaaaaaaaaaaaaaapCenaPHaaaaaaaaaaaaaaaaaaaaaaaaaapCenaPHaaaaaaaaaaaaaaaaaaaaaaaaaapCenaPHaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+              <td><a (click)="clickedItem(artikl._id, artikl.sifra, artikl.ime, artikl.kolicina, artikl.nCena, artikl.pCena)" data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
               <td><a (click)="deleteinvoice(artikl.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
@@ -63,32 +63,24 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><span class="fa fa-pencil"></span>Promena artikla</h4>
+        <h4 class="modal-title">Promena artikla<span class="fa fa-pencil pl-3"></span></h4>
       </div>
       <div class="modal-body col-md-12">
         <form (keyup.enter)="updateArtikl(modSifra.value, modIme.value, modKolicina.value, modPCena.value)" >
           <div class="form-group">
-            <label for="modal-name">Sifra: </label>
-            <input #modSifra type="text" class="form-control" id="modal-sifra" value={{artiklSifra}} placeholder="Sifra">
+            <label for="modal-name">Šifra: </label>
+            <input #modSifra type="text" class="form-control" id="modal-sifra" value={{artiklSifra}} placeholder="Šifra">
           </div>
           <div class="form-group">
             <label for="modal-ime">Ime: </label>
-            <input #modPhone type="text" class="form-control" id="modal-ime" value={{memberIme}} placeholder="Ime">
-          </div>
-          <div class="form-group">
-            <label for="modal-kolicina">Količina: </label>
-            <input #modKolicina type="text" class="form-control" id="modal-kolicina" value={{memberKolicina}} placeholder="Količina">
-          </div>
-          <div class="form-group">
-            <label for="modal-pCena">Prodajna cena: </label>
-            <input #modPCena type="text" class="form-control" id="modal-pCena" value={{memberPCena}} placeholder="Prodajna cena">
+            <input #modPhone type="text" class="form-control" id="modal-ime" value={{artiklIme}} placeholder="Ime">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Otkaži</button>
         <button (click)="updateArtikl(modSifra.value, modIme.value, modKolicina.value, modPCena.value)" type="button" class="btn btn-primary">
-          <span class="fa fa-floppy-o" aria-hidden="true"></span>Sačuvaj promene
+          Sačuvaj promene<span class="fa fa-floppy-o pl-2" aria-hidden="true"></span>
         </button>
       </div>
     </div>
