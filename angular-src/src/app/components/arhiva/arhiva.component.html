@@ -15,6 +15,14 @@
               <th></th>
             </tr>
           </thead>
+          <colgroup>  
+             <col style="width: 19.2%;">
+             <col style="width: 19.2%;">
+             <col style="width: 19.2%;">
+             <col style="width: 19.2%;">
+             <col style="width: 19.2%;">
+             <col style="width: 4%;">
+          </colgroup>
           <tbody>
             <tr *ngFor = "let arhiva of arhive">
               <td><a (click)="getArhiviranDoc(arhiva.id)">{{arhiva.sifra}}</a></td>

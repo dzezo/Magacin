@@ -1,22 +1,35 @@
 <div class="container-fluid">
   <div class="row">
     <app-navigacija></app-navigacija>
-    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+    <main class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3" role="main">
       <h1>Kreiraj novu izlaznu fakturu</h1>
-      <form (submit)="izlaznaFakturaSubmit()">
-<!-- START Input Forma za Dovavljaca-->
-  	    <div class="pt-3 inputForm">
-  		    <div class="form-group form-inline input-group">
-  		      <input [(ngModel)]="kupac" type="text" class="form-control" name="kupac" placeholder="Kupac">
+<!-- START Input Forma za Kupca-->
+  	    <div class="pt-3 columnWraper inputWraper">
+  		    <div class="form-group">
+  		        <label for="buyer-name">Kupac: </label>
+              <input class="form-control" type="text" id="buyer-name" placeholder="Naziv kupca">
   		    </div>
   		    <hr style="border-color: #FFF;">
-  		    <div class="form-group form-inline input-group">
-  		      <input [(ngModel)]="brojRacuna" type="text" class="form-control" name="brojRacuna" placeholder="Broj računa">
-  		      <input [(ngModel)]="datumIzdavanjaRacuna"  type="text" class="form-control" name="datumIzdavanjaRacuna" placeholder="Datum izdavanja računa">
-  		    </div>
+          <div class="rowWraper form-group">
+            <div class="columnWraper pr-3">
+              <label for="receipt-number-name">Broj računa: </label>
+              <input class="form-control" type="text" id="receipt-number-name" placeholder="Unesti broj računa">
+            </div>
+            <div class="columnWraper pl-3">
+<!-- START Datum izdavanja racuna -->
+              <label for="buyer-receiptDate">Datum izdavanja računa:</label>
+              <div id="buyer-receiptDate" class="input-group date">
+               <input class="form-control" placeholder="mm/dd/yyyy" type="text"/>
+               <div class="input-group-addon">
+                <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+               </div>
+              </div>
+<!-- END Datum izdavanja racuna -->
+            </div>
+          </div>
   	    </div>
-<!-- END Input Forma za Dovavljaca-->
-
+<!-- END Input Forma za Kupca-->
+              
 <!-- START Input Dinamicna Tabela -->
     		<div class="table-responsive">
             <table class="table table-hover">
@@ -29,40 +42,46 @@
                   <th></th>
                 </tr>
               </thead>
+              <colgroup>  
+                 <col style="width: 16.5%;">
+                 <col style="width: 38%;">
+                 <col style="width: 25%;">
+                 <col style="width: 16.5%;">
+                 <col style="width: 4%;">
+              </colgroup>
               <tbody>
-                <tr>
+                <tr *ngFor='let row of rowData'>
                   <td>
-                    <input [(ngModel)]="sifra" type="text" class="form-control" name="sifra" placeholder="Unesite šifru">
+                    <input [(ngModel)]="row.code" type="text" class="form-control" name="row.code" placeholder="Unesite šifru">
                   </td>
                   <td>
-                    <input [(ngModel)]="Ime" type="text" class="form-control" name="ime" placeholder="Unesite ime">
+                    <input [(ngModel)]="row.name" type="text" class="form-control" name="ime" placeholder="Unesite ime">
                   </td>
                   <td>
-                    <input [(ngModel)]="ProdajnaCena" type="text" class="form-control" name="pCena" placeholder="Unesite prodajnu cenu">
+                    <input (focusout)="sumInvoice()" [(ngModel)]="row.sellingP" type="text" class="form-control" name="row.sellingP" placeholder="Unesite prodajnu cenu">
                   </td>             
                   <td>
-                    <input [(ngModel)]="Kolicina" type="text" class="form-control" name="kolicina" placeholder="Unesite količinu">
+                    <input (focusout)="sumInvoice()" [(ngModel)]="row.quantity" type="text" class="form-control" name="row.quantity" placeholder="Unesite količinu">
                   </td>
                   <td>
-                    <a (click)="addFaktura()"><span class="fa fa-plus-square fa-2x"></span></a>
-                    <a (click)="addArtikl()"><span class="fa fa-plus-square fa-2x"></span></a>
+                    <a (click)="removeRow(row.id)">
+                      <span class="fa fa-trash"></span>
+                    </a>
                   </td>
                 </tr>
               </tbody>
+              <!-- ADD ITEM -->
+              <button (click)="addRow(rowId)" class="btn btn-primary">Novi Artikal</button>
             </table>
           </div>
 <!-- END Input Dinamicna Tabela -->
-<hr>
+          <hr>
 <!-- START Add i suma -->
           <div class="spread">
-            <input class="btn btn-primary" type="submit" value="Dodaj fakturu">
-            <div class="row">
-              <label>Suma:</label>
-              <p class="prikazPolje">{{bla}}</p>
-            </div>
+            <button (click)="submitInvoice()" class="btn btn-primary" type="submit">Dodaj fakturu</button>
+            <label>Suma: {{sum}}</label>
           </div>
 <!-- END Add i suma --> 
-      </form>
     </main>
   </div>
 </div>

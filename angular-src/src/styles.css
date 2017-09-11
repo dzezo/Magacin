@@ -8,7 +8,6 @@ body {
   color: #fff;
 }
 
-
 /*
  *  Formatiranje tabele
  */
@@ -35,6 +34,10 @@ table  td {
   color: #111;
 }
 
+.btn-primary {
+  background-image: linear-gradient(-180deg, #527bff 0%, #007bff 90%);
+}
+
 /*
  *  Polja za rezultate suma
  */
@@ -51,15 +54,33 @@ table  td {
   border-radius: 5px;
 }
 
+
+/*
+ *  Flex fast format
+ */
+
 .desno {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .spread {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  padding: 0 20px;
+  margin-bottom: 50px;
+}
+
+.rowWraper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.columnWraper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }

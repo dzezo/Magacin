@@ -14,6 +14,13 @@
               <th></th>
             </tr>
           </thead>
+          <colgroup>
+             <col style="width: 24%;">
+             <col style="width: 24%;">
+             <col style="width: 24%;">
+             <col style="width: 24%;">
+             <col style="width: 4%;">
+          </colgroup>
           <tbody>
             <tr *ngFor = "let inputinvoice of inputinvoices">
               <td><a (click)="getInputinvoice(inputinvoice.id)">{{inputinvoice.dobavljac}}</a></td>
@@ -27,7 +34,7 @@
                 <td>VrednostPH</td>
                 <td>Datum prijemaPH</td>
                 <td>Datum istekaPH</td>
-                <td><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
+                <td style="width: 5%;"><a (click)="deleteInputinvoice(inputinvoice.id)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
         </table>

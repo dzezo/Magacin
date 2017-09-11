@@ -16,6 +16,15 @@
               <th></th>
             </tr>
           </thead>
+          <colgroup>  
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 18.4%;">
+             <col style="width: 4%;">
+             <col style="width: 4%;">
+          </colgroup>
           <tbody>
             <tr *ngFor = "let artikl of artikli">
               <td><a (click)="getArtikl(artikl.id)">{{artikl.sifra}}</a></td>

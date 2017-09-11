@@ -13,6 +13,12 @@
               <th></th>
             </tr>
           </thead>
+          <colgroup>  
+             <col style="width: 32%;">
+             <col style="width: 32%;">
+             <col style="width: 32%;">
+             <col style="width: 4%;">
+          </colgroup>
           <tbody>
             <tr *ngFor = "let outputinvoice of outputinvoices">
               <td><a (click)="getOutputinvoice(outputinvoice.id)">{{outputinvoice.kupac}}</a></td>
