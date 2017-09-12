@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { FlashMessagesModule } from 'angular2-flash-messages';
+import { ClickOutsideDirective } from './directives/dropdown.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     DobavljaciComponent,
     ArtikalComponent,
     UlaznaFakturaComponent,
-    IzlaznaFakturaComponent
+    IzlaznaFakturaComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,
