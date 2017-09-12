@@ -4,7 +4,7 @@
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
     	<div class="omotac">
 	      <h1>Dobavljači</h1>
-	      <button (click)="resetErrorFlags()" class="btn btn-primary" data-toggle="modal" data-target="#add-dobavljac-modal">Dodaj dobavljača</button>
+	      <button (click)="resetErrorFlags()" class="btn btn-primary" data-toggle="modal" data-target="#add-supplier-modal">Dodaj dobavljača</button>
     	</div>   
       <div class="table-responsive">
         <table class="table table-hover">
@@ -13,7 +13,6 @@
               <th>Ime</th>
               <th>PIB</th>
               <th>Broj saradnji</th>
-              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -24,19 +23,11 @@
              <col style="width: 4%;">
           </colgroup>
           <tbody>
-            <tr *ngFor = "let dobavljac of dobavljaci">
-              <td>
-                <a (click)="getDobavljac(dobavljac.id)">{{dobavljac.ime}}</a>
-              </td>
-              <td>{{dobavljac.pib}}</td>
-              <td>{{dobavljac.brojSaradnji}}</td>
-              <td><a (click)="deleteDobavljac(dobavljac.id)"><span class="fa fa-trash"></span></a></td>
-            </tr>
-              <tr>
-                <td>ImePH</td>
-                <td>pibPH</td>
-                <td>Broj SaradnjiPH</td>
-                <td><a (click)="deleteDobavljac(dobavljac.id)"><span class="fa fa-trash"></span></a></td>
+            <tr *ngFor = "let supplier of suppliers">
+              <td>{{supplier.name}}</td>
+              <td>{{supplier.taxId}}</td>
+              <td>{{supplier.collabCount}}</td>
+              <td><a (click)="deleteSupplier(supplier.name)"><span class="fa fa-trash"></span></a></td>
             </tr>
           </tbody>
         </table>
@@ -46,73 +37,34 @@
 </div>
 
 <!-- Add Modal -->
-<div class="modal fade" id="add-dobavljac-modal" tabindex="-1" role="dialog" aria-labelledby="Dodaj dobavljaca">
+<div class="modal fade" id="add-supplier-modal" tabindex="-1" role="dialog" aria-labelledby="add supplier">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Dodaj dobavljača</h4>
-      </div>
-      <div class="modal-body col-md-12">
-        <form (keyup.enter)="addNewDobavljac(modAddIme.value, modAddPib.value, modAddBrojSaradnji.value)" >
-          <div class="form-group">
-            <label for="modal-name">Ime: </label>
-            <input #modAddIme type="text" class="form-control" id="modal-DobavljacIme" placeholder="Ime dobavljača">
-            <label *ngIf="errorIme" for="modal-ime" style="color: red; float: right; font-size: 10px;">
-            Popunite polje!
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="modal-pib">PIB dobavljača: </label>
-            <input #modAddPib type="text" class="form-control" id="modal-DobavljacPib" placeholder="Unesite PIB dobavljača">
-            <label *ngIf="errorPib" for="modal-pib" style="color: red; float: right; font-size: 10px;">
-            Popunite polje!
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="modal-cost">Broj saradnji: </label>
-            <input #modAddBrojSaradnji type="text" class="form-control" id="modal-DobavljacBrojSaradnji" placeholder="0">
-            <label *ngIf="errorBrojSaradnji" for="modal-brojaSaradnji" style="color: red; float: right; font-size: 10px;">
-            Popunite polje!
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Otkaži</button>
-        <button (click)="addNewDobavljac(modAddIme.value, modAddPib.value, modAddBrojSaradnji.value)" type="button" class="btn btn-primary">Dodaj novog dobavljača</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Modal -->
-<div class="modal fade" id="edit-dobavljac-modal" tabindex="-1" role="dialog" aria-labelledby="Edit Dobavljaca">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><span class="fa fa-pencil fa-lg" aria-hidden="true"></span> Edit Item</h4>
       </div>
       <div class="modal-body col-md-12">
-        <form (keyup.enter)="updateDobavljac(modEditIme.value, modEditPib.value, modEditBrojSaradnji.value)" >
+        <form (keyup.enter)="addSupplier(name.value, taxId.value)" >
           <div class="form-group">
             <label for="modal-name">Ime: </label>
-            <input #modEditIme type="text" class="form-control" id="modal-ItemIme" value={{dobavljacIme}} placeholder="Ime dobavljača">
+            <input #name type="text" class="form-control" id="modal-name" placeholder="Ime dobavljača">
+            <label *ngIf="errorName" for="modal-name" style="color: red; float: right; font-size: 10px;">
+            Popunite polje!
+            </label>
           </div>
           <div class="form-group">
-            <label for="modal-length">PIB: </label>
-            <input #modEditPib type="text" class="form-control" id="modal-ItemPib" value={{dobavljacPib}} placeholder="PIB dobavljača">
-          </div>
-          <div class="form-group">
-            <label for="modal-cost">Broj saradnji: </label>
-            <input #modEditBrojSaradnji type="text" class="form-control" id="modal-ItemBrojSaradnji" value={{dobavljacBrojSaradnji}} placeholder="0">
+            <label for="modal-taxId">PIB: </label>
+            <input #taxId type="text" class="form-control" id="modal-taxId" placeholder="Unesite PIB dobavljača">
+            <label *ngIf="errorTaxId" for="modal-taxId" style="color: red; float: right; font-size: 10px;">
+            Popunite polje!
+            </label>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Otkaži</button>
-        <button (click)="updateDobavljac(modEditIme.value, modEditPib.value, modEditBrojSaradnji.value)" type="button" class="btn btn-primary">Prihvati promene</button>
+        <button (click)="addSupplier(name.value, taxId.value)" type="button" class="btn btn-primary">Dodaj</button>
       </div>
     </div>
   </div>

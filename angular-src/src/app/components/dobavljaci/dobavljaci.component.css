@@ -25,19 +25,14 @@
   max-width: 450px;
 }
 
-.modal-content{
-  border-color: #001029 !important;
-}
-
 .modal-header{
-  background-color: #001029 !important;
-  border-color: #001029 !important;
-  color: #007bff !important;
+  background-color: #3d7bff !important;
+  color: white !important;
 }
 
 .modal-header .close{
-  color: #007bff !important;
   opacity: 1;
+  text-shadow: none;
 }
 
 .modal-header .close:hover{
