@@ -7,24 +7,35 @@
     	<div class="info-wrapper">
 	    	<form class="col-md-6" style="padding: 10px 15px;">
 	    		<div class="form-group">
+	    			<!-- SUPPLIER NAME -->
 	    			<label for="supplier-name">Dobavljač: </label>
-	            	<input class="form-control" type="text" id="supplier-name" placeholder="Naziv dobavljača">
+	            	<input clickOutside #supplierName 
+	            	(keyup)="searchSupplier(supplierName.value, $event)" 
+	            	(clickOutside)="hideSupplierDropdown()"
+	            	class="form-control" type="text" id="supplier-name" placeholder="Naziv dobavljača" autocomplete="off">
+	            	<!-- SUPPLIER DROPDOWN START -->
+	            	<div *ngIf="supplierDropdown" id="suppliers-dropdown" class="dropdown">
+	            		<div class="dropdown-element" 
+	            		(click)="selectSupplier(supplier)" *ngFor='let supplier of suppliers'>{{supplier}}</div>
+	            	</div>
+	            	<!-- SUPPLIER DROPDOWN END -->
+					<!-- TAXID -->
 	            	<label for="supplier-taxId">PIB: </label>
-	            	<input class="form-control" type="text" id="supplier-taxId" placeholder="PIB dobavljača">
+	            	<input #supplierTaxId class="form-control" type="text" id="supplier-taxId" placeholder="PIB dobavljača">
 	    		</div>
 	    	</form>
 	    	<form class="col-md-6" style="padding: 10px 15px;">
 	    		<div class="form-group">
 	    			<label for="supplier-refNum">Poziv na broj: </label>
-	            	<input class="form-control" type="text" id="supplier-refNum" placeholder="Poziv na broj">
+	            	<input #refNum class="form-control" type="text" id="supplier-refNum" placeholder="Poziv na broj">
 	            	<label for="supplier-invNum">Broj fakture: </label>
-	            	<input class="form-control" type="text" id="supplier-invNum" placeholder="Broj fakture">
+	            	<input #invNum class="form-control" type="text" id="supplier-invNum" placeholder="Broj fakture">
 	    		</div>
 	    		<div class="form-group">
 	    			<!-- RECIEVE DATE -->
 	    			<label for="supplier-recvDate">Datum dospeća: </label>
 		            <div id="supplier-recvDate" class="input-group date">
-		             <input class="form-control" placeholder="mm/dd/yyyy" type="text"/>
+		             <input #recvDate class="form-control" placeholder="mm/dd/yyyy" type="text"/>
 		             <div class="input-group-addon">
 		              <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
 		             </div>
@@ -33,7 +44,7 @@
 		            <!-- EXPIRATION DATE -->
 		            <label for="supplier-expDate">Datum isteka: </label>
 		            <div id="supplier-expDate" class="input-group date">
-		             <input class="form-control" placeholder="mm/dd/yyyy" type="text"/>
+		             <input #expDate class="form-control" placeholder="mm/dd/yyyy" type="text"/>
 		             <div class="input-group-addon">
 		              <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
 		             </div>
@@ -53,24 +64,44 @@
             	<th style="width:20%;">Prodajna cena</th>
             	<th style="width:10%;"></th>
           	</thead>
-          <tbody>
-            <tr *ngFor='let row of rowData'>
-            	<td style="width:10%;"><input [(ngModel)]="row.code" name="row.code"></td>
-			    <td style="width:30%;"><input [(ngModel)]="row.name" name="row.name"></td>
-			    <td style="width:10%;"><input (focusout)="sumInvoice()" [(ngModel)]="row.quantity" name="row.quantity"></td>
-			    <td style="width:20%;"><input (focusout)="sumInvoice()" [(ngModel)]="row.purchaseP" name="row.purchaseP"></td>
-			    <td style="width:20%;"><input [(ngModel)]="row.sellingP" name="row.sellingP"></td>
-			    <td style="width:10%;"><a (click)="removeRow(row.id)"><span class="fa fa-trash"></span></a></td>
-		  	</tr>
-          </tbody>
-          <!-- ADD ITEM -->
-          <button (click)="addRow(rowId)" class="btn btn-primary">Novi Artikal</button>
+          	<tbody>
+	            <tr *ngFor='let row of rowData'>
+	            	<td style="width:10%;"><input #code (keyup.enter)="getItemByCode(code.value, row.id)" [(ngModel)]="row.code" name="row.code"></td>
+				    <td style="width:30%;">
+				    	<div style="position: relative;">
+					    	<input clickOutside #itemName 
+					    	(keyup)="searchItem(itemName.value, row.id ,$event)" 
+			            	(clickOutside)="hideItemDropdown(row.id)" 
+			            	(keydown.Tab)="hideItemDropdown(row.id)"
+					    	[(ngModel)]="row.name" name="row.name" id="item-name-{{row.id}}">
+					    	<!-- ITEM DROPDOWN START -->
+			            	<div *ngIf="row.showDropdown" id="item-dropdown-{{row.id}}" class="dropdown">
+			            		<div class="dropdown-element" 
+			            		(click)="selectItem(item, row.id)" *ngFor='let item of items'>{{item}}</div>
+			            	</div>
+			            	<!-- ITEM DROPDOWN END -->
+			            </div>
+				    </td>
+				    <td style="width:10%;"><input 
+				    (focusout)="sumInvoice()" 
+				    (keyup.enter)="sumInvoice()"
+				    [(ngModel)]="row.quantity" name="row.quantity"></td>
+				    <td style="width:20%;"><input [(ngModel)]="row.purchaseP" name="row.purchaseP"></td>
+				    <td style="width:20%;"><input 
+				    (focusout)="sumInvoice()" 
+				    (keyup.enter)="sumInvoice()"
+				    [(ngModel)]="row.sellingP" name="row.sellingP"></td>
+				    <td style="width:10%;"><a (click)="removeRow(row.id)"><span class="fa fa-trash"></span></a></td>
+			  	</tr>
+          	</tbody>
+          	<!-- ADD ITEM -->
+          	<button (click)="addRow(rowId)" class="btn btn-primary">Novi Artikal</button>
         </table>
     	<!-- INVOICE ITEMS END -->
 		<hr>
 		<!-- SUBMIT START -->
     	<div class="actions">
-    		<button (click)="submitInvoice()" class="btn btn-primary" type="submit">Dodaj fakturu</button>
+    		<button (click)="submitInvoice(supplierName.value, supplierTaxId.value, refNum.value, invNum.value, recvDate.value, expDate.value)" class="btn btn-primary" type="submit" [disabled]="submited">Dodaj fakturu</button>
     		<div class="sum">
     			<label>Suma: {{sum}}</label>
     		</div>

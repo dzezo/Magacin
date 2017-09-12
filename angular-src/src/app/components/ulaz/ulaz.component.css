@@ -6,6 +6,44 @@ h1 {
   border-bottom: 1px solid #e9ecef;
 }
 
+/* Dropdown */
+.dropdown{
+	position: absolute;
+	z-index: 10;
+	
+	width: 100%;
+	min-height: 20px;
+	max-height: 260px;
+	
+	background: white;
+	border: 1px solid black;
+	border-radius: 0.25rem;
+
+	overflow: hidden;
+
+	margin-top: 1px;
+}
+
+.dropdown-element{
+	color: black;
+	cursor: pointer;
+	font-size: 0.8rem;
+	padding: 8px 12px;
+}
+
+.dropdown-element:hover{
+	background: #007bff;
+	border-radius: 0.25rem;
+	color: #fff;
+}
+
+/* Keyboard navigation */
+.selected {
+	background: #007bff;
+	border-radius: 0.25rem;
+	color: #fff;
+}
+
 /* Detalji */
 .info-wrapper{
 	display: inline-flex;
@@ -14,6 +52,10 @@ h1 {
     border-top: 1px solid #e9ecef;
     border-bottom: 1px solid #e9ecef;
     background-color: #212529;
+}
+
+.form-group{
+	position: relative;
 }
 
 .form-group .form-control {
