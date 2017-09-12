@@ -93,6 +93,7 @@ export class UlazComponent implements OnInit {
 	}
 	hideItemDropdown(rowId){
 		this.items = [];
+		this.itemName = "";
 		for(var i=0; i<this.rowData.length; i++)
 			if(this.rowData[i].id == rowId)
 				this.rowData[i].showDropdown = false;
@@ -122,7 +123,7 @@ export class UlazComponent implements OnInit {
 	}
 
 	// Metode za tabelu
-	// Svaki red po kreiranju dobija samo id
+	// Svaki red po kreiranju dobija id 
 	addRow(id){
 		this.rowData.push({
 			id: id,
