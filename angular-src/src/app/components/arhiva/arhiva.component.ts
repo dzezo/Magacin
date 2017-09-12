@@ -30,7 +30,7 @@ export class ArhivaComponent implements OnInit {
     }
 
     getArchItems(){
-      this.itemSvc.getArchItems(this.user.id).subscribe(archArtikli => {
+      this.itemSvc.getArchItems(this.user.username).subscribe(archArtikli => {
         if(archArtikli.success){
           this.arhArtikli = archArtikli.items;
         }

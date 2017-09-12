@@ -19,6 +19,8 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 	// Err flags
 	errorName = false;
 	errorTaxId = false;
+	// Onemoguci submit
+	submited = false;
 
 	constructor(private flashMessage: FlashMessagesService,
 				private supplierSvc: SupplierService,
@@ -40,6 +42,8 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 	resetErrorFlags(){
 		this.errorName = false;
 		this.errorTaxId = false;
+		// Omoguci ponovni submit
+		this.submited = false;
 	}
 
 	// Metode za tabelu
@@ -76,9 +80,13 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 	}
 
 	addSupplier(supplierName, taxId){
+		if(this.submited)
+			return false;
+		this.submited = true;
 		// Error handle
 		if(!supplierName){
 			this.errorName = true; 
+			this.submited = false; // Omoguci ponovni submit
 			return false;
 		}
 		else{
@@ -86,6 +94,7 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 		}
 		if(!taxId){
 			this.errorTaxId = true;
+			this.submited = false; // Omoguci ponovni submit
 			return false;
 		}
 		else{
@@ -96,15 +105,18 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 			name: supplierName,
 			taxId: taxId
 		};
+		// Turn off modal
+		this.addModal.modal('hide');
+
 		this.supplierSvc.addSupplier(this.user.username, newSupplier).subscribe(reply => {
-			// Turn off modal
-			this.addModal.modal('hide');
 			// Handle reply
 			if(reply.success){
 				// Osvezi tabelu
 				this.supplierSvc.getSupplier(this.user.username, newSupplier.name).subscribe(reply => {
-					if(reply.success)
+					// Handle reply
+					if(reply.success){
 						this.suppliers.unshift(reply.supplier);
+					}
 					else
 						return false;
 				}, err => {
