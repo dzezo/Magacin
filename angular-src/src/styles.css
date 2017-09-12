@@ -53,7 +53,7 @@ table  td {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .rowWraper {

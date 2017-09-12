@@ -12,7 +12,6 @@
               <th>Količina</th>
               <th>Nabavna cena</th>
               <th>Prodajna cena</th>
-              <th></th>
             </tr>
           </thead>
           <colgroup>  
@@ -24,18 +23,11 @@
           </colgroup>
           <tbody>
             <tr *ngFor = "let arhArtikl of arhArtikli">
-              <td><a>{{arhArtikl.code}}</a></td>
+              <td>{{arhArtikl.code}}</td>
               <td><a (click)="getArtikl(arhArtikl.id)">{{arhArtikl.name}}</a></td>
               <td>{{arhArtikl.quantity}}</td>
               <td>{{arhArtikl.purchaseP}}</td>
               <td>{{arhArtikl.sellingP}}</td>
-            </tr>
-            <tr>
-              <td>sifraAAAAAAAAAAAAAAAPH</td>
-              <td><a (click)="getArtikl(arhArtikl.id)">imeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPH</a></td>
-              <td>kolicAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAinaPH</td>
-              <td>nCenaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPH</td>
-              <td>pCenAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaPH</td>
             </tr>
           </tbody>
         </table>

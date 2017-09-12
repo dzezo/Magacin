@@ -31,12 +31,13 @@ export class ArhivaComponent implements OnInit {
 
     getArchItems(){
       this.itemSvc.getArchItems(this.user.id).subscribe(archArtikli => {
-        this.arhArtikli = archArtikli;
+        if(archArtikli.success){
+          this.arhArtikli = archArtikli.items;
+        }
+        else return false;
       }, err => {
         console.log(err);
         return false;
       });
-
     }
-
 }

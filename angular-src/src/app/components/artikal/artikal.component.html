@@ -2,7 +2,88 @@
   <div class="row">
     <app-navigacija></app-navigacija>
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Artikl faktura works</h1>
+      <h1>Artikl</h1>
+      <div class = "rowWraper okvir spread pl-3 pr-3">
+      	<div class="columWraper">
+	      	<label>Šifra:</label>
+	      	<p>SifraPH</p>
+      	</div>
+      	<div class="columWraper">
+	      	<label>Ime:</label>
+	      	<p>ImePH</p>
+      	</div>
+      	<div class="columWraper">
+	      	<label>Količina:</label>
+	      	<p>KoličinaPH</p>
+      	</div>
+      	<div class="columWraper">
+	      	<label>Nabavna cena:</label>
+	      	<p>NabavnaCenaPH</p>
+      	</div>
+      	<div class="columWraper">
+	      	<label>Prodajna cena:</label>
+	      	<p>ProdajnaCenaPH</p>
+      	</div>
+      </div>
+<!-- START Ulazne fakture tabela -->
+      <h3>Ulaz</h3>
+      <div class="table-responsive">
+        <table class="table table-hover" id="table_id">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Dobavljač</th>
+              <th>Broj fakture</th>
+              <th>Količina</th>
+              <th>Nabavna cena</th>
+              <th>Prodajna cena</th>
+            </tr>
+          </thead>
+          <colgroup>  
+             <col style="width: 20%;">
+             <col style="width: 20%;">
+             <col style="width: 20%;">
+             <col style="width: 20%;">
+             <col style="width: 20%;">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td>PH</td>
+              <td><a>PH</a></td>
+              <td>PH</td>
+              <td>PH</td>
+              <td>PH</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+<!-- START Izlazne fakture tabela -->
+      <h3>Izlaz</h3>
+      <div class="table-responsive">
+        <table class="table table-hover" id="table_id">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Naručilac</th>
+              <th>Broj fakture</th>
+              <th>Količina</th>
+              <th>Prodajna cena</th>
+            </tr>
+          </thead>
+          <colgroup>  
+             <col style="width: 25%;">
+             <col style="width: 25%;">
+             <col style="width: 25%;">
+             <col style="width: 25%;">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td>PH</td>
+              <td><a>PH</a></td>
+              <td>PH</td>
+              <td>PH</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
 </div>

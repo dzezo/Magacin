@@ -8,7 +8,7 @@ export class ItemService {
   constructor(private http: Http) { }
  		
 	getArchItems(userId){
-	return this.http.get('http://localhost:7474/archive/' + userId)
+	return this.http.get('http://localhost:3000/items/archive/' + userId)
 	.map(res => res.json());
 	}
 }

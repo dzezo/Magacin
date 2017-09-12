@@ -6,3 +6,18 @@ h1 {
   margin-bottom: 15px;
   padding-bottom: 7px;
 }
+
+.okvir {
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #212529;
+    justify-content: space-around;
+}
+
+.okvir label {
+	font-size: 15px;
+}
+
+.okvir p {
+	font-weight: bold;
+}
