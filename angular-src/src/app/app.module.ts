@@ -43,7 +43,7 @@ const appRoutes: Routes = [
 {path: 'dobavljaci', component: DobavljaciComponent},
 {path: 'izlaznafaktura', component: IzlaznaFakturaComponent},
 {path: 'ulaznafaktura', component: UlaznaFakturaComponent},
-{path: 'artikal', component: ArtikalComponent}
+{path: 'artikl', component: ArtikalComponent}
 ]
 
 @NgModule({
