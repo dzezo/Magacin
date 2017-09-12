@@ -23,16 +23,16 @@
              <col style="width: 20%;">
           </colgroup>
           <tbody>
-            <tr *ngFor = "let arhiva of arhive">
-              <td><a (click)="getArhiviranDoc(arhiva.id)">{{arhiva.sifra}}</a></td>
-              <td><a (click)="getArtikl(artikl.id)">{{arhiva.ime}}</a></td>
-              <td>{{arhiva.kolicina}}</td>
-              <td>{{arhiva.nCena}}</td>
-              <td>{{arhiva.pCena}}</td>
+            <tr *ngFor = "let arhArtikl of arhArtikli">
+              <td><a>{{arhArtikl.code}}</a></td>
+              <td><a (click)="getArtikl(arhArtikl.id)">{{arhArtikl.name}}</a></td>
+              <td>{{arhArtikl.quantity}}</td>
+              <td>{{arhArtikl.purchaseP}}</td>
+              <td>{{arhArtikl.sellingP}}</td>
             </tr>
             <tr>
               <td>sifraAAAAAAAAAAAAAAAPH</td>
-              <td><a (click)="getArtikl(artikl.id)">imeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPH</a></td>
+              <td><a (click)="getArtikl(arhArtikl.id)">imeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPH</a></td>
               <td>kolicAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAinaPH</td>
               <td>nCenaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPH</td>
               <td>pCenAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaPH</td>
