@@ -62,7 +62,8 @@ module.exports.getItems = function (username, callback){
 	session
 		.run(
 			'MATCH (a:User {username: $username})-[r:WAREHOUSE]-(b:Item) ' +
-			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM ' +
+			'ORDER BY b.code',
 			{ 
 				username: username
 			}
@@ -87,7 +88,8 @@ module.exports.getArchivedItems = function (username, callback){
 	session
 		.run(
 			'MATCH (a:User {username: $username})-[r:ARCHIVED]-(b:Item) ' +
-			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM',
+			'RETURN { id: toString(ID(b)), code: b.code, name: b.name, quantity: b.quantity, purchaseP: b.purchaseP, sellingP: b.sellingP } AS ITEM ' +
+			'ORDER BY b.code',
 			{ username: username }
 		)
 		.then((result)=>{

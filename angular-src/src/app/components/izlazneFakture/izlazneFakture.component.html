@@ -12,33 +12,26 @@
               <th>Vrednost</th>
               <th>Datum izdavanja</th>
               <th></th>
-              <th></th>
             </tr>
           </thead>
           <colgroup>  
-             <col style="width: 23%;">
-             <col style="width: 23%;">
-             <col style="width: 23%;">
-             <col style="width: 23%;">
-             <col style="width: 4%;">
-             <col style="width: 4%;">
+             <col style="width: 25%;">
+             <col style="width: 35%;">
+             <col style="width: 15%;">
+             <col style="width: 20%;">
+             <col style="width: 5%;">
           </colgroup>
           <tbody>
-            <tr *ngFor = "let outputinvoice of outputinvoices">
-              <td><a (click)="getOutputinvoice(outputinvoice.id)">{{outputinvoice.kupac}}</a></td>
-              <td>{{outputinvoice.brojFakture}}</td>
-              <td>{{outputinvoice.vrednost}}</td>
-              <td>{{outputinvoice.datumIzdavanja}}</td>
-              <td><a (click)="getOutputInvoice(outputInvoice.id)"><span class="fa fa-pencil"></span></a></td>
-              <td><a (click)="deleteOutputinvoice(outputInvoice.id)"><span class="fa fa-trash"></span></a></td>
-            </tr>
-            <tr>
-              <td>KupacPH</td>
-              <td>BrojFakturePH</td>
-              <td>VrednostPH</td>
-              <td>Datum izdavanjaPH</td>
-              <td><a (click)="getOutputInvoice(outputInvoice.id)"><span class="fa fa-pencil"></span></a></td>
-              <td><a (click)="deleteOutputinvoice(outputinvoice.id)"><span class="fa fa-trash"></span></a></td>
+            <tr *ngFor = "let invoice of invoices">
+              <td>{{invoice.details.purchaser}}</td>
+              <td><a (click)="getInvoice(invoice.details.id)" class="invoice-number">{{invoice.details.invNumber}}</a></td>
+              <td>{{invoice.details.total}}</td>
+              <td>{{invoice.details.issueDate | date:'shortDate'}}</td>
+              <td>
+                <a (click)="undoInvoice(invoice.details.id)" *ngIf="invoice.active"><span class="active fa fa-trash"></span></a>
+                <!-- LINK NOT ACTIVE -->
+                <a *ngIf="!invoice.active"><span class="inactive fa fa-spinner fa-spin fa-3x fa-fw"></span></a>
+              </td>
             </tr>
           </tbody>
         </table>

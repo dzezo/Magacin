@@ -34,7 +34,7 @@ module.exports.getOutputInvoices = function (username, callback){
 		.run(
 			'MATCH (a:Invoice)-[r:OUTPUT]-(b:User {username: $username}) ' +
 			'RETURN { id: toString(ID(a)), purchaser: a.purchaser, invNumber: a.invNumber, total: a.total, issueDate: a.issueDate } AS INVOICE ' +
-			'ORDER BY a.issueDate',
+			'ORDER BY a.issueDate DESC',
 			{ username: username }
 		)
 		.then((result)=>{

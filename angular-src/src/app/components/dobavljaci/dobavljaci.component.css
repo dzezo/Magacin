@@ -31,12 +31,13 @@
 }
 
 .modal-header .close{
+  color: white;
   opacity: 1;
   text-shadow: none;
 }
 
 .modal-header .close:hover{
-  color: #ffffff !important;
+  color: #dedede !important;
   opacity: 1;
 }
 
