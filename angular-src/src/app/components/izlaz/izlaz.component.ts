@@ -33,6 +33,7 @@ export class IzlazComponent implements OnInit {
   issueDate: any;
   // Iskljuci submit dugme
   submited = false;
+  addRowButton: any;
 
   constructor(private router: Router,
               private flashMessage: FlashMessagesService,
@@ -46,6 +47,8 @@ export class IzlazComponent implements OnInit {
     // DATE PLUG-IN INIT
     this.issueDate = $(this.elRef.nativeElement).find('#purchaser-issueDate');
     this.issueDate.datepicker();
+    // ADD ROW BUTTON
+    this.addRowButton = document.getElementById('add-row-button');
   }
 
   // Metode za dropdown
@@ -89,6 +92,7 @@ export class IzlazComponent implements OnInit {
   // Metode za tabelu
   // Svaki red po kreiranju dobija id 
   addRow(id){
+    this.addRowButton.scrollIntoView();
     this.rowData.push({
       id: id,
       showDropdown: false

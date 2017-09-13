@@ -35,5 +35,17 @@ export class WarehouseService {
 			.map(res => res.json());
 	}
 
+	// DELETE
+	// SEND ITEM TO ARCHIVE
+	sendToArchive(username, itemName){
+	return this.http.delete('http://localhost:3000/warehouses/delete/' + itemName + '/user/' + username)
+		.map(res => res.json());
+	}
+
+	// UNDO ITEM WITH INVOICE
+	undoItem(username, itemName){
+	return this.http.delete('http://localhost:3000/warehouses/undo/' + itemName + '/user/' + username)
+		.map(res => res.json());
+	}
 
 }

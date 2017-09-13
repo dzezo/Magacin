@@ -50,9 +50,9 @@ export class SupplierService {
 		.map(res => res.json());
 	}
 
-	// DELETE FROM INVOICE
-	invDeleteSupplier(username, supplierName){
-	return this.http.delete('http://localhost:3000/suppliers/undo/' + supplierName +' /user/' + username)
+	// UNDO WITH INVOICE
+	undoSupplier(username, supplierName){
+	return this.http.delete('http://localhost:3000/suppliers/undo/' + supplierName +'/user/' + username)
 		.map(res => res.json());
 	}
 }

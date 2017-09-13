@@ -42,6 +42,7 @@ export class UlazComponent implements OnInit {
 	expDate: any;
 	// Iskljuci submit dugme
 	submited = false;
+	addRowButton: any;
 
 	constructor(private router: Router,
 				private flashMessage: FlashMessagesService,
@@ -61,6 +62,8 @@ export class UlazComponent implements OnInit {
 		this.recvDate.datepicker();
 		this.expDate = $(this.elRef.nativeElement).find('#supplier-expDate');
 		this.expDate.datepicker();
+		// ADD ROW BUTTON
+		this.addRowButton = document.getElementById('add-row-button');
 	}
 
 	// Metode za dropdown
@@ -125,6 +128,7 @@ export class UlazComponent implements OnInit {
 	// Metode za tabelu
 	// Svaki red po kreiranju dobija id 
 	addRow(id){
+		this.addRowButton.scrollIntoView();
 		this.rowData.push({
 			id: id,
 			showDropdown: false

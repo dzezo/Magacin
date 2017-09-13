@@ -9,7 +9,8 @@ module.exports.getInputInvoices = function (username, callback){
 	session
 		.run(
 			'MATCH (a:Invoice)-[r:INPUT]-(b:User {username: $username}) ' +
-			'RETURN { id: toString(ID(a)), supplier: a.supplier, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE',
+			'RETURN { id: toString(ID(a)), supplier: a.supplier, invNumber: a.invNumber, total: a.total, recvDate: a.recvDate, expDate: a.expDate } AS INVOICE ' +
+			'ORDER BY a.expDate',
 			{ username: username }
 		)
 		.then((result)=>{
@@ -32,7 +33,8 @@ module.exports.getOutputInvoices = function (username, callback){
 	session
 		.run(
 			'MATCH (a:Invoice)-[r:OUTPUT]-(b:User {username: $username}) ' +
-			'RETURN { id: toString(ID(a)), purchaser: a.purchaser, total: a.total, issueDate: a.issueDate } AS INVOICE',
+			'RETURN { id: toString(ID(a)), purchaser: a.purchaser, invNumber: a.invNumber, total: a.total, issueDate: a.issueDate } AS INVOICE ' +
+			'ORDER BY a.issueDate',
 			{ username: username }
 		)
 		.then((result)=>{

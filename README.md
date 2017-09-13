@@ -60,7 +60,7 @@ Izlaz
 #### INVOICE API
 
 ```
-(POST) /add/input/:username
+(POST) /invoices/add/input/:username
 
 Ulaz
 
@@ -90,7 +90,7 @@ Izlaz
 ```
 
 ```
-(POST) /add/output/:username
+(POST) /invoices/add/output/:username
 
 Ulaz
 
@@ -116,7 +116,7 @@ Izlaz
 ```
 
 ```
-(GET) /get/input/:username
+(GET) /invoices/get/input/:username
 
 Izlaz
 
@@ -127,6 +127,7 @@ Izlaz
         {
             "expDate": "2017-10-19T00:00:00Z",
             "supplier": "CTC UNIT",
+            "invNumber": "FAOS-11-0892/17",
             "total": 32000,
             "id": "9",
             "recvDate": "2017-09-20T00:00:00Z"
@@ -136,7 +137,7 @@ Izlaz
 ```
 
 ```
-(GET) /get/output/:username
+(GET) /invoices/get/output/:username
 
 Izlaz
 
@@ -147,6 +148,7 @@ Izlaz
         {
             "id": "48",
             "purchaser": "STARACKI DOM",
+            "invNumber": "ISECAK003",
             "total": 30000,
             "issueDate": "2017-08-20T00:00:00Z"
         }
@@ -155,7 +157,7 @@ Izlaz
 ```
 
 ```
-(GET) /get/input/invoice/:invoiceId
+(GET) /invoices/get/input/invoice/:invoiceId
 
 Izlaz
 
@@ -215,7 +217,7 @@ Ukoliko je faktura bez artikala
 ```
 
 ```
-(GET) /get/output/invoice/:invoiceId
+(GET) /invoices/get/output/invoice/:invoiceId
 
 Izlaz
 
@@ -254,7 +256,7 @@ Ukoliko je faktura bez artikala
 ```
 
 ```
-(DELETE) /undo/input/invoice/:invoiceId
+(DELETE) /invoices/undo/input/invoice/:invoiceId
 
 Izlaz
 
@@ -263,7 +265,7 @@ Izlaz
 ```
 
 ```
-(DELETE) /undo/output/invoice/:invoiceId
+(DELETE) /invoices/undo/output/invoice/:invoiceId
 
 Izlaz
 
@@ -279,7 +281,7 @@ Izlaz
 #### ITEM API
 
 ```
-(GET) /get/item/:itemId
+(GET) /items/get/item/:itemId
 
 Izlaz
 
@@ -338,7 +340,7 @@ Izlaz
 ```
 
 ```
-(GET) /get/warehouse/:username
+(GET) /items/get/warehouse/:username
 
 Izlaz
 
@@ -376,7 +378,7 @@ Izlaz
 ```
 
 ```
-(GET) /get/archive/:username
+(GET) /items/get/archive/:username
 
 Izlaz
 
@@ -398,7 +400,7 @@ Izlaz
 ```
 
 ```
-(DELETE) /archive/item/:itemId
+(DELETE) /items/archive/item/:itemId
 
 Izlaz
 
@@ -407,7 +409,7 @@ Izlaz
 ```
 
 ```
-(PUT) /update/item/:itemId
+(PUT) /items/update/item/:itemId
 
 Ulaz
 
@@ -646,6 +648,8 @@ izlaz
 ```
 
 ```
+* poziv kada se artikal uklanja iz magacina
+* name = ime artikla
 (DELETE) /warehouses/delete/:name/user/:username
 
 izlaz
@@ -655,6 +659,7 @@ izlaz
 ```
 
 ```
+* poziv kada se ponistava artikal
 (DELETE) /warehouses/undo/:name/user/:username
 
 izlaz

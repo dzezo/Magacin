@@ -3,14 +3,35 @@
  */
 
 h1 {
-  margin-bottom: 15px;
-  padding-bottom: 7px;
+  	margin-bottom: 15px;
+  	padding-bottom: 7px;
 }
 
-a .fa {
+.invoice-number {
+	cursor: pointer;
+	color: #fff !important;
+}
+
+.invoice-number:hover {
+  	color: #007bff !important;
+}
+
+a .active {
 	color: #fff;
 }
 
-a .fa:focus, a .fa:hover {
-  color: #007bff;
+a .active:hover {
+  	color: #007bff;
+}
+
+a .inactive:hover {
+  	color: #fff;
+}
+
+.fa-3x {
+	font-size: 0.85rem;
+}
+
+.fa-fw {
+	width: auto;
 }

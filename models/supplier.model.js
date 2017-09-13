@@ -97,7 +97,7 @@ module.exports.getSuppliers = function(username, callback){
 			return callback(err, null);
 		}
 		if (suppliers.length == 0)
-			return callback(null,results);
+			return callback(null,result);
 		suppliers.forEach((supplier)=>{
 			client.hgetall('user:' + username + ':' + supplier, (err, supplierInfo)=>{
 				if(err){
