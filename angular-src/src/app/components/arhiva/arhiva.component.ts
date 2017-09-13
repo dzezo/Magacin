@@ -11,7 +11,7 @@ import { ItemService } from '../../services/neo4j/item.service';
 export class ArhivaComponent implements OnInit {
 
     // User
-    user: any
+    user: any;
     // Arrays
     arhArtikli: Array<any>;
 
