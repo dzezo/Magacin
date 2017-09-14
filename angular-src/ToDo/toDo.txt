@@ -1,10 +1,6 @@
 TO KNOW
-	-user.username, username jedinstveni kljuc za korisnika
-	-nesto.id je za artikle i fakture
+	- user.username, username jedinstveni kljuc za korisnika
+	- nesto.id je za artikle i fakture
 
 *Misc
 	- Error msg redo
-
-*Magacin
-	- GET
-	

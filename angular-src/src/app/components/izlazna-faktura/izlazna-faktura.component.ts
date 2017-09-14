@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IzlaznaFakturaComponent implements OnInit {
 
+		invNumber: String = "invNumberPH";
+		total: String = "sumNumberPH";
+
   constructor() { }
 
   ngOnInit() {

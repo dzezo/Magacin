@@ -2,7 +2,50 @@
   <div class="row">
     <app-navigacija></app-navigacija>
     <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Izlazna faktura works</h1>
+      <h1>Izlazna faktura br. {{invNumber}}</h1>
+      <div class = "rowWraper okvir spread pl-3 pr-3 pt-2">
+      	<div class="columWraper">
+	      	<label>Naručilac:</label>
+	      	<p>PH</p>
+      	</div>
+      	<div class="columWraper">
+	      	<label>Datum izdavanja:</label>
+	      	<p>PH</p>
+      	</div>
+      </div>
+<!-- Tabela artikli u fakturi -->
+      <h3>Artikli</h3>
+      <div class="table-responsive">
+        <table class="table table-hover" id="table_id">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Šifra</th>
+              <th>Ime</th>
+              <th>Količina</th>
+              <th>Prodajna cena</th>
+            </tr>
+          </thead>
+          <colgroup>  
+             <col style="width: 14.25%;">
+             <col style="width: 40%;">
+             <col style="width: 14.25%;">
+             <col style="width: 27.25%;">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td>ph</td>
+              <td>ph</td>
+              <td>ph</td>
+              <td>ph</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container desno">
+        <div class="row">
+          <label>Suma: {{total}}</label>
+        </div>
+      </div>
     </main>
   </div>
 </div>

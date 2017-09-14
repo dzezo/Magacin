@@ -17,18 +17,18 @@
             </tr>
           </thead>
           <colgroup>  
-             <col style="width: 18.4%;">
-             <col style="width: 18.4%;">
-             <col style="width: 18.4%;">
-             <col style="width: 18.4%;">
-             <col style="width: 18.4%;">
+             <col style="width: 10%;">
+             <col style="width: 30%;">
+             <col style="width: 16%;">
+             <col style="width: 18%;">
+             <col style="width: 18%;">
              <col style="width: 4%;">
              <col style="width: 4%;">
           </colgroup>
           <tbody>
             <tr *ngFor = "let artikl of artikli">
               <td>{{artikl.code}}</td>
-              <td><a (click)="getArtikl(artikl.id)">{{artikl.name}}</a></td>
+              <td><a (click)="getArtikl(artikl.id)" class="artikl-ime">{{artikl.name}}</a></td>
               <td>{{artikl.quantity}}</td>
               <td>{{artikl.purchaseP}}</td>
               <td>{{artikl.sellingP}}</td>

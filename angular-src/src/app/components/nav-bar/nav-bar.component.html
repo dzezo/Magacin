@@ -1,5 +1,5 @@
  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <a class="navbar-brand" [routerLink]="['']">Magacin</a>
+  <a class="navbar-brand">Magacin</a>
   <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -11,8 +11,8 @@
       <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
         <a [routerLink]="['/login']" class="nav-link">Ulaz</a>
       </li>
-      <li *ngIf="authService.loggedIn()">
-          <a (click)="onLogoutClick()">Izlaz</a>
+      <li *ngIf="authService.loggedIn()" class="nav-item">
+        <a (click)="onLogoutClick()" [routerLink]="['/login']" class="nav-link">Izlaz</a>
       </li>
     </ul>
   </div>

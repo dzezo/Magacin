@@ -16,6 +16,16 @@ h1 {
   color: #007bff;
 }
 
+.artikl-ime {
+  cursor: pointer;
+  color: #fff !important;
+}
+
+.artikl-ime:hover {
+    color: #007bff !important;
+}
+
+
 /*
  * Modal START
  */
