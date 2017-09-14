@@ -21,3 +21,12 @@ h1 {
 .okvir p {
 	font-weight: bold;
 }
+
+.invoice-number {
+	cursor: pointer;
+	color: #fff !important;
+}
+
+.invoice-number:hover {
+  	color: #007bff !important;
+}

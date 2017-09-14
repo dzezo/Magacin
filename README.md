@@ -291,47 +291,43 @@ Izlaz
     "success": true,
     "item": {
         "details": {
-            "code": 1780,
-            "quantity": 9,
-            "purchaseP": 2000,
-            "name": "NOKIA 1780",
-            "sellingP": 3000
+            "code": 100,
+            "quantity": 74,
+            "purchaseP": 30,
+            "name": "BATERIJA GP AAA",
+            "sellingP": 50
         },
         "inputs": [
             {
                 "in": {
-                    "quantity": 10,
-                    "purchaseP": 2000,
-                    "sellingP": 3000,
+                    "quantity": 100,
+                    "purchaseP": 30,
+                    "sellingP": 50,
                     "timestamp": {
-                        "low": 1418473206,
+                        "low": 2097451602,
                         "high": 350
                     }
                 },
                 "details": {
-                    "total": 20000,
-                    "refNumber": "97 54 11080017",
-                    "invNumber": "FAOS-11080-0/17",
-                    "taxId": "100171520",
-                    "supplier": "VITEL 3",
-                    "recvDate": "2017-10-21T00:00:00Z",
-                    "expDate": "2017-11-20T00:00:00Z"
+                    "id": "45",
+                    "supplier": "GP",
+                    "invNumber": "GP-P001"
                 }
-            }
+            }, itd ...
         ],
         "outputs": [
             {
                 "out": {
-                    "quantity": 1,
-                    "sellingP": 3500
+                    "quantity": 2,
+                    "sellingP": 50
                 },
                 "details": {
-                    "total": 3500,
-                    "invNumber": "ISECAK002",
-                    "purchaser": "KUPAC 1",
-                    "issueDate": "2017-08-20T00:00:00Z"
+                    "id": "128",
+                    "purchaser": "RADNJA1",
+                    "invNumber": "ISECAK004",
+                    "issueDate": "2017-09-05T00:00:00Z"
                 }
-            }
+            }, itd...
         ]
     }
 }
