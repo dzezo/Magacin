@@ -69,48 +69,26 @@ export class UlazneFaktureComponent implements OnInit {
     this.disableDelete(invoiceId);
     // Dobavi detalje fakture
     this.invoiceSvc.getInputInvoice(invoiceId).subscribe(reply => {
-        if(reply.success){
-          // Undo supplier (redis)
-          this.supplierSvc.undoSupplier(this.user.username, reply.invoice.supplier).subscribe(reply => {}, err =>{console.log(err);});
-          // Undo warehouse (redis)
-          reply.invoice.items.forEach((item)=>{
-            this.warehouseSvc.undoItem(this.user.username, item.name).subscribe(reply => {}, err =>{console.log(err);});
-          });
-          // Undo input invoice (neo4j)
-          this.invoiceSvc.undoInput(invoiceId).subscribe(reply => {
-            if(reply.success){
-              // Update view
-              for(var i=0; i<this.invoices.length; i++){
-                if(this.invoices[i].details.id == invoiceId){
-                  this.invoices.splice(i,1);
-                }
-              }
-              this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
-            }
+        if(reply.success)
+          this.sendToRedis(reply.invoice.supplier, reply.invoice.items, (success)=>{
+            if(success)
+              this.sendToNeo(invoiceId);
             else{
               // Ukljuci link
               this.enableDelete(invoiceId);
-              this.flashMessage.show(reply.msg, {cssClass: 'alert-danger', timeout: 3000});
               return false;
             }
-          }, err =>{
-            // Ukljuci link
-            this.enableDelete(invoiceId);
-            console.log(err);
-            return false;
           });
-        }
-        else{
-          // Ukljuci link
-          this.enableDelete(invoiceId);
-          return false;
-        }
     }, err => {
         // Ukljuci link
         this.enableDelete(invoiceId);
         console.log(err);
         return false;
     });
+
+    // Local storage
+    localStorage.removeItem('inputInvoice');
+    localStorage.removeItem('artikl');
   }
 
   // Ostale metode
@@ -128,6 +106,50 @@ export class UlazneFaktureComponent implements OnInit {
     this.invoices.forEach((invoice)=>{
       if(invoice.details.id == invoiceId)
         invoice.active = false;
+    });
+  }
+
+  sendToRedis(supplierName, itemsArr, callback){
+    this.supplierSvc.undoSupplier(this.user.username, supplierName).subscribe(reply => {
+      if(reply.success){
+        // Pakovanje 
+        var items = { items: itemsArr };
+        this.warehouseSvc.undoItems(this.user.username, items).subscribe(reply => {
+          return callback(reply.success);
+        }, err =>{
+          console.log(err);
+          return callback(false);
+        });
+      }
+      else
+        return callback(false);
+    }, err =>{
+      console.log(err);
+      return callback(false);
+    });
+  }
+
+  sendToNeo(invoiceId){
+    this.invoiceSvc.undoInput(invoiceId).subscribe(reply => {
+      if(reply.success){
+        // Update view
+        for(var i=0; i<this.invoices.length; i++){
+          if(this.invoices[i].details.id == invoiceId){
+            this.invoices.splice(i,1);
+          }
+        }
+        this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
+      }
+      else{
+        this.enableDelete(invoiceId);
+        this.flashMessage.show(reply.msg, {cssClass: 'alert-danger', timeout: 3000});
+        return false;
+      }
+    }, err =>{
+      // Ukljuci link
+      this.enableDelete(invoiceId);
+      console.log(err);
+      return false;
     });
   }
 

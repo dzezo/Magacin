@@ -656,7 +656,7 @@ izlaz
 
 ```
 * poziv kada se ponistava artikal
-(DELETE) /warehouses/undo/:name/user/:username
+(PUT) /warehouses/undo/user/:username
 
 izlaz
 { success: false }

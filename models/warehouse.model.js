@@ -97,30 +97,31 @@ module.exports.deleteItem = function(username, itemName, callback) {
 	});
 }
 
-module.exports.undoItem = function(username, itemName, callback) {
-	client.sismember('user:' + username + ':warehouse', itemName, (err, exists)=>{
-		if(exists)
-			client.hincrby('user:' + username + ':' + itemName, 'count', -1, (err, reply)=>{
-				if(err){
-					console.log(err);
-					callback(err);
-				}
-				if(reply == 0){
-					deleteItem(username, itemName, (err)=>{
-						if(err)
-							callback(err);
-						callback(null);
-					});
-				}
-				else
-					callback(null);
-			});
-		else
-			callback("ERR - Not found");
-	});
-}
-
 // PUT
+
+module.exports.undoItems = function(username, items, callback) {
+	items.forEach((item)=>{
+		client.sismember('user:' + username + ':warehouse', item.name, (err, exists)=>{
+			if(exists)
+				client.hincrby('user:' + username + ':' + item.name, 'count', -1, (err, reply)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					if(reply == 0){
+						deleteItem(username, item.name, (err)=>{
+							if(err)
+								return callback(err);
+						});
+					}
+				});
+			else
+				return callback("ERR - Not found");
+		});
+	});
+	// NO ERROR
+	return callback(null);
+}
 
 module.exports.updateItem = function(username, itemName, update, callback) {
 	// delete from set

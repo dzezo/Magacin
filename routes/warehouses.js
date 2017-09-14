@@ -47,9 +47,9 @@ router.delete('/delete/:name/user/:username', function(req, res, next) {
 	});
 });
 
-// Undo Item
-router.delete('/undo/:name/user/:username', function(req, res, next) {
-	Warehouse.undoItem(req.params.username, req.params.name, (err)=>{
+// Undo Items
+router.put('/undo/user/:username', function(req, res, next) {
+	Warehouse.undoItems(req.params.username, req.body.items, (err)=>{
 		if(err)
 			return res.json({ success: false });
 		res.json({ success: true });

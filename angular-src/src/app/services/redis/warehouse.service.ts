@@ -38,14 +38,16 @@ export class WarehouseService {
 	// DELETE
 	// SEND ITEM TO ARCHIVE
 	sendToArchive(username, itemName){
-	return this.http.delete('http://localhost:3000/warehouses/delete/' + itemName + '/user/' + username)
-		.map(res => res.json());
+		return this.http.delete('http://localhost:3000/warehouses/delete/' + itemName + '/user/' + username)
+			.map(res => res.json());
 	}
 
-	// UNDO ITEM WITH INVOICE
-	undoItem(username, itemName){
-	return this.http.delete('http://localhost:3000/warehouses/undo/' + itemName + '/user/' + username)
-		.map(res => res.json());
+	// UNDO ITEMS WITH INVOICE
+	undoItems(username, items){
+		var headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		return this.http.put('http://localhost:3000/warehouses/undo/user/' + username, JSON.stringify(items), {headers: headers})
+			.map(res => res.json());
 	}
 
 }

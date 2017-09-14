@@ -373,41 +373,54 @@ export class UlazComponent implements OnInit {
 			items: this.rowData
 		};
 		// Slanje
-		this.invoiceSvc.addInputInvoice(this.user.username, newInvoice).subscribe(reply => {
-			if(reply.success){
-				// Redis
-				this.supplierSvc.invAddSupplier(this.user.username, newSupplier).subscribe(reply =>{
-					if(reply.success){
-						this.warehouseSvc.addItems(this.user.username, newItems).subscribe(reply =>{
-							if(reply.success){
-								// redirect
-								this.router.navigate(['/ulaznefakture']);
-							}
-							else
-								return false;
-						},err=>{
-							console.log(err);
-							return false;
-						});
-					}
-					else
-						return false;
-				},err=>{
-					console.log(err);
-					return false;
-				});
-				// Neo4j success
-				this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
-			}
+		this.sendToRedis(newSupplier, newItems, (success)=>{
+			if(success)
+				this.sendToNeo(newInvoice);
 			else{
-				this.flashMessage.show(reply.msg, {cssClass: 'alert-danger', timeout: 3000});
-				// Ukljuci dugme za ponovni submit
+				// Ukljuci dugme
 				this.submited = false;
 				return false;
 			}
+		});
+	}
+
+	sendToRedis(newSupplier, newItems, callback){
+		this.supplierSvc.invAddSupplier(this.user.username, newSupplier).subscribe(reply =>{
+			if(reply.success){
+				this.warehouseSvc.addItems(this.user.username, newItems).subscribe(reply =>{
+					return callback(reply.success);
+				},err=>{
+					console.log(err);
+					return callback(false);
+				});
+			}
+			else
+				return callback(false);
+		},err=>{
+			console.log(err);
+			return callback(false);
+		});
+	}
+
+	sendToNeo(newInvoice){
+		this.invoiceSvc.addInputInvoice(this.user.username, newInvoice).subscribe(reply => {
+			if(reply.success){
+				this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
+				// redirect
+				this.router.navigate(['/ulaznefakture']);
+			}
+			else{
+				// Ukljuci dugme
+				this.submited = false;
+				this.flashMessage.show(reply.msg, {cssClass: 'alert-danger', timeout: 3000});
+				return false;
+			}
 		}, err => {
+			// Ukljuci dugme
+			this.submited = false;
 			console.log(err);
 			return false;
 		});
 	}
+
 }

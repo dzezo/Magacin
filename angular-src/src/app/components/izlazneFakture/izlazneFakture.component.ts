@@ -85,6 +85,9 @@ export class IzlazneFaktureComponent implements OnInit {
       console.log(err);
       return false;
     });
+
+    // Local storage
+    localStorage.removeItem('outputInvoice');
   }
 
   // Ostale metode
