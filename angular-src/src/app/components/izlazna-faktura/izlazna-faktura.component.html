@@ -6,11 +6,11 @@
       <div class = "rowWraper okvir spread pl-3 pr-3 pt-2">
       	<div class="columWraper">
 	      	<label>Naručilac:</label>
-	      	<p>PH</p>
+	      	<p>{{purchaser}}</p>
       	</div>
       	<div class="columWraper">
 	      	<label>Datum izdavanja:</label>
-	      	<p>PH</p>
+	      	<p>{{issueDate}}</p>
       	</div>
       </div>
 <!-- Tabela artikli u fakturi -->
@@ -32,11 +32,11 @@
              <col style="width: 27.25%;">
           </colgroup>
           <tbody>
-            <tr>
-              <td>ph</td>
-              <td>ph</td>
-              <td>ph</td>
-              <td>ph</td>
+            <tr *ngFor = "let Artikl of Artikli">
+              <td>{{Artikl.code}}</td>
+              <td>{{Artikl.name}}</td>
+              <td>{{Artikl.quantity}}</td>
+              <td>{{Artikl.sellingP}}</td>
             </tr>
           </tbody>
         </table>
