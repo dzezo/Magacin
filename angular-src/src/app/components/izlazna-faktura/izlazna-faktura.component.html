@@ -1,51 +1,166 @@
 <div class="container-fluid">
-  <div class="row">
-    <app-navigacija></app-navigacija>
-    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Izlazna faktura br. {{invNumber}}</h1>
-      <div class = "rowWraper okvir spread pl-3 pr-3 pt-2">
-      	<div class="columWraper">
-	      	<label>Naručilac:</label>
-	      	<p>{{purchaser}}</p>
-      	</div>
-      	<div class="columWraper">
-	      	<label>Datum izdavanja:</label>
-	      	<p>{{issueDate}}</p>
-      	</div>
-      </div>
-<!-- Tabela artikli u fakturi -->
-      <h3>Artikli</h3>
-      <div class="table-responsive">
-        <table class="table table-hover" id="table_id">
-          <thead class="thead-inverse">
-            <tr>
-              <th>Šifra</th>
-              <th>Ime</th>
-              <th>Količina</th>
-              <th>Prodajna cena</th>
-            </tr>
-          </thead>
-          <colgroup>  
-             <col style="width: 14.25%;">
-             <col style="width: 40%;">
-             <col style="width: 14.25%;">
-             <col style="width: 27.25%;">
-          </colgroup>
-          <tbody>
-            <tr *ngFor = "let Artikl of Artikli">
-              <td>{{Artikl.code}}</td>
-              <td>{{Artikl.name}}</td>
-              <td>{{Artikl.quantity}}</td>
-              <td>{{Artikl.sellingP}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="container desno">
-        <div class="row">
-          <label>Suma: {{total}}</label>
-        </div>
-      </div>
-    </main>
-  </div>
+  	<div class="row">
+	    <app-navigacija></app-navigacija>
+	    <!-- VIEW MODE START -->
+	    <div [hidden]="editMode" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+		    <div class="head-wrapper">
+				<h1>Izlazna faktura</h1>
+				<div class="head-action-wrapper">
+					<button (click)="undoInvoice()" class="btn btn-primary" [disabled]="undoButton">Poništi</button>
+					<button (click)="switchMode()" class="btn btn-primary" [disabled]="editButton">Izmeni</button>
+				</div>
+	    	</div>
+			<!-- INVOICE INFO START -->
+			<div class="info-wrapper">
+				<form class="col-md-6" style="padding: 10px 15px;">
+				  <div class="form-group">
+				    <!-- PURCHASER NAME -->
+				    <label for="view-name">Naručilac: </label>
+				    <input class="form-control" type="text" id="view-name" value={{invDetails.purchaser}} disabled>
+				  </div>
+				</form>
+				<form class="col-md-6" style="padding: 10px 15px;">
+					<div class="form-group">
+						<label for="view-invNumber">Broj fakture: </label>
+						<input class="form-control" type="text" id="view-invNumber" value={{invDetails.invNumber}} disabled>
+					</div>
+					<div class="form-group">
+						<!-- ISSUE DATE -->
+						<label for="view-date">Datum izdavanja: </label>
+						<div id="view-date" class="input-group">
+						 	<input id="view-issueDate" class="form-control" type="text" value="{{invDetails.issueDate | date:'MM/dd/yyyy'}}" disabled>
+						 	<div class="input-group-addon disabled">
+						  		<span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+						 	</div>
+						</div>
+						<!-- ISSUE DATE ENDS -->
+					</div>
+				</form>
+			</div>
+		    <!-- INVOICE INFO END -->
+			<!-- INVOICE ITEMS START -->
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+				  	<th style="width:15%;">Šifra</th>
+				  	<th style="width:35%;">Ime</th>
+		 		 	<th style="width:15%;">Količina</th>
+				  	<th style="width:25%;">Prodajna cena</th>
+				 	<th style="width:10%;"></th>
+				</thead>
+				<tbody>
+				  	<tr *ngFor='let row of invRowData'>
+				    	<td style="width:15%;"><input value={{row.code}} disabled></td>
+				    	<td style="width:35%;"><input value={{row.name}} disabled></td>
+					    <td style="width:15%;"><input value={{row.quantity}} disabled></td>
+					    <td style="width:25%;"><input value={{row.sellingP}} disabled></td>
+					    <td style="width:10%;"></td>
+				  	</tr>
+				</tbody>
+			</table>
+			<hr>
+			<!-- INVOICE ITEMS END -->
+	      	<div class="actions">
+		        <div class="sum">
+		          	<label>Suma: {{invDetails.total}}</label>
+		        </div>
+	      	</div>
+		</div>
+	    <!-- VIEW MODE ENDS -->
+
+	    <!-- EDIT MODE START -->
+	    <div [hidden]="!editMode" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+	    	<div class="head-wrapper">
+				<h1>Izlazna faktura</h1>
+				<div class="head-action-wrapper">
+					<button (click)="switchMode()" class="btn btn-primary" [disabled]="cancelButton">Otkaži</button>
+				</div>
+	    	</div>
+	      	<!-- INVOICE INFO START -->
+	      	<div class="info-wrapper">
+	        	<form class="col-md-6" style="padding: 10px 15px;">
+	          		<div class="form-group">
+	            	<!-- PURCHASER NAME -->
+	            	<label for="edit-name">Naručilac: </label>
+	            	<input #name class="form-control" type="text" id="edit-name">
+	          	</div>
+		        </form>
+		        <form class="col-md-6" style="padding: 10px 15px;">
+					<div class="form-group">
+						<label for="edit-invNumber">Broj fakture: </label>
+						<input #invNumber class="form-control" type="text" id="edit-invNumber">
+					</div>
+		          	<div class="form-group">
+		            	<!-- ISSUE DATE -->
+		            	<label for="issueDate">Datum izdavanja: </label>
+		            	<div id="issueDate" class="input-group date">
+		             		<input #issueDate id="edit-issueDate" class="form-control" type="text">
+		             		<div class="input-group-addon">
+		              			<span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+		             		</div>
+		            	</div>
+		            	<!-- ISSUE DATE ENDS -->
+		          	</div>
+		        </form>
+	      	</div>
+	      	<!-- INVOICE INFO END -->
+	      	<!-- INVOICE ITEMS START -->
+	      	<table class="table table-hover">
+	        	<thead class="thead-inverse">
+	          		<th style="width:15%;">Šifra</th>
+	          		<th style="width:35%;">Ime</th>
+	      			<th style="width:15%;">Količina</th>
+	         		<th style="width:25%;">Prodajna cena</th>
+	          		<th style="width:10%;"></th>
+	        	</thead>
+	        	<tbody>
+	          		<tr *ngFor='let row of rowData'>
+	            		<td style="width:15%;"><input #code (keyup.enter)="getItemByCode(code.value, row.id)" [(ngModel)]="row.code" name="row.code"></td>
+	            		<td style="width:35%;">
+			              	<div style="position: relative;">
+				                <input clickOutside #itemName 
+				                (keyup)="searchItem(itemName.value, row.id ,$event)" 
+				                (clickOutside)="hideItemDropdown(row.id)" 
+				                (keydown.Tab)="hideItemDropdown(row.id)" 
+				                [(ngModel)]="row.name" name="row.name" id="item-name-{{row.id}}">
+				                <!-- ITEM DROPDOWN START -->
+				                <div *ngIf="row.showDropdown" id="item-dropdown-{{row.id}}" class="dropdown">
+									<div class="dropdown-element" 
+									(click)="selectItem(item, row.id)" *ngFor='let item of items'>{{item}}</div>
+				                </div>
+				                <!-- ITEM DROPDOWN END -->
+			              	</div>
+	            		</td>
+			        	<td style="width:15%;">
+				        	<input 
+				            (focusout)="sumInvoice()" 
+				            (keyup.enter)="sumInvoice()"
+				            [(ngModel)]="row.quantity" name="row.quantity">
+			            </td>
+	            		<td style="width:25%;">
+		            		<input 
+				            (focusout)="sumInvoice()" 
+				            (keyup.enter)="sumInvoice()"
+				            [(ngModel)]="row.sellingP" name="row.sellingP">
+			            </td>
+	            		<td style="width:10%;">
+	            			<a (click)="removeRow(row.id)"><span class="fa fa-trash"></span></a>
+	        			</td>
+	          		</tr>
+	       		</tbody>
+		        <!-- ADD ITEM -->
+		        <button (click)="addRow(rowId)" id="add-row-button" class="btn btn-primary" [disabled]="addItemButton">Novi Artikal</button>
+	      	</table>
+	      	<!-- INVOICE ITEMS END -->
+	      	<hr>
+	      	<!-- SUBMIT START -->
+	      	<div class="actions">
+	        	<button (click)="submitInvoice(name.value, invNumber.value, issueDate.value)" class="btn btn-primary" type="submit" [disabled]="submitButton">Sačuvaj</button>
+		        <div class="sum">
+		          	<label>Suma: {{sum}}</label>
+		        </div>
+	      	</div>
+	      	<!-- SUBMIT END -->
+	    </div>
+	    <!-- EDIT MODE ENDS -->
+  	</div>
 </div>

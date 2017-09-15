@@ -235,7 +235,6 @@ export class IzlazComponent implements OnInit {
       if( !this.rowData[i].name || 
           !this.rowData[i].code || isNaN(this.rowData[i].code) || 
           !this.rowData[i].quantity || isNaN(this.rowData[i].quantity) || 
-          !this.rowData[i].purchaseP || isNaN(this.rowData[i].purchaseP) || 
           !this.rowData[i].sellingP || isNaN(this.rowData[i].sellingP) )
       {
         this.flashMessage.show('Popunjavanje artikala neispravno', {cssClass: 'alert-danger', timeout: 3000});
