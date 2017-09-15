@@ -2,27 +2,147 @@
  * Typography
  */
 
-h1 {
+.head-wrapper {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 15px;
-  padding-bottom: 7px;
+    padding-bottom: 7px;
 }
 
-.row label {
-  color: #fff; 
-  font-size: 20px;
+.head-wrapper .head-action-wrapper{
+  display: inherit;
 }
 
-.okvir {
+.head-wrapper .head-action-wrapper button {
+  margin-left: 15px;
+  min-width: 100px;
+}
+
+/* View mode (date button) */
+.disabled:hover, .disabled:active{
+  background-color: #e9ecef !important;
+}
+
+/* Dropdown */
+.dropdown{
+  position: absolute;
+  z-index: 10;
+  
+  width: 100%;
+  min-height: 20px;
+  max-height: 260px;
+  
+  background: white;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+
+  overflow: hidden;
+
+  margin-top: 1px;
+}
+
+.dropdown-element{
+  color: black;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+}
+
+.dropdown-element:hover{
+  background: #007bff;
+  border-radius: 0.25rem;
+  color: #fff;
+}
+
+/* Keyboard navigation */
+.selected {
+  background: #007bff;
+  border-radius: 0.25rem;
+  color: #fff;
+}
+
+/* Detalji */
+.info-wrapper{
+  display: inline-flex;
+    width: 100%;
+    margin-bottom: 20px;
     border-top: 1px solid #e9ecef;
     border-bottom: 1px solid #e9ecef;
     background-color: #212529;
-    justify-content: space-around;
 }
 
-.okvir label {
-	font-size: 15px;
+.form-group{
+  position: relative;
 }
 
-.okvir p {
-	font-weight: bold;
+.form-group .form-control {
+  border: 0;
+}
+
+.form-group .input-group .input-group-addon{
+  border-left: 1px solid #8e8e8e;
+  padding: 0;
+}
+
+.form-group .input-group .input-group-addon:hover{
+  background-color: #ceccc8;
+}
+
+.form-group .input-group .input-group-addon:active{
+  background-color: #dfd7ca;
+}
+
+
+/* Tabela */
+table
+{
+    table-layout: fixed !important;
+}
+
+table tbody tr td input {
+  width: 100%;
+  border-radius: .25rem;
+}
+
+table tbody tr td a:hover {
+  color: #007bff;
+}
+
+table button {
+  margin-top: 16px;
+  min-width: 135px;
+  padding: 8px 10px;
+}
+
+/* Tranzicija */
+
+hr {
+  border: 1px solid #e9ecef;
+}
+
+/* Akcije */
+
+.actions{
+  display: inline-flex;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 50px;
+}
+
+.actions button {
+  min-width: 135px;
+  padding: 8px 10px;
+}
+
+.sum {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%
+}
+
+.sum label{
+  margin: 0;
+    color: #ffffff;
+    font-size: 20px;
 }
