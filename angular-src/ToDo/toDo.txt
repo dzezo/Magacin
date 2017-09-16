@@ -4,3 +4,6 @@ TO KNOW
 
 *Misc
 	- Error msg redo
+	- Lore
+	- Nakon LogIn-a zabraniti povratak na home
+	- Slepi linkovi da vode na neki default

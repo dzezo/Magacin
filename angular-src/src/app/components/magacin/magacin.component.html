@@ -33,16 +33,24 @@
               <td>{{artikl.purchaseP}}</td>
               <td>{{artikl.sellingP}}</td>
               <td><a (click)="clickedItem(artikl.id, artikl.code, artikl.name)" data-toggle="modal" data-target="#edit-artikl-modal"><span class="fa fa-pencil"></span></a></td>
-              <td><a (click)="archiveArtikl(artikl.id)"><span class="fa fa-trash"></span></a></td>
+              <td>
+                <a (click)="archiveArtikl(artikl.id, artikl.name)"><span class="fa fa-trash"></span></a>
+                <!-- a (click)="archiveArtikl(artikl.id)" *ngIf="artikl.active"><span class="fa fa-trash"></span></a -->
+                <!-- LINK NOT ACTIVE -->
+                <!-- a *ngIf="!artikl.active"><span class="inactive fa fa-spinner fa-spin fa-3x fa-fw"></span></a -->
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Ukupno: {{ukupnoPoN}}</td>
+              <td>Ukupno: {{ukupnoPoProd}}</td>
+              <td></td>
+              <td></td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <div class="container desno">
-        <div class="row">
-          <label class="pr-3">Ukupno po nabavnoj ceni: {{ukupnoPoN}}</label>
-          <label class="pl-3">Ukupno po prodajnoj ceni: {{ukupnoPoProd}}</label>
-        </div>
       </div>
     </main>
   </div>

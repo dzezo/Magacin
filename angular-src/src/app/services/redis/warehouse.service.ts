@@ -42,6 +42,15 @@ export class WarehouseService {
 			.map(res => res.json());
 	}
 
+	// PUT
+	// UPDATE
+	updateItem(username, itemName){
+		var headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		return this.http.put('http://localhost:3000/warehouses/update/' + itemName + '/user/' + username, JSON.stringify(itemName), {headers: headers})
+			.map(res => res.json());
+	}
+
 	// UNDO ITEMS WITH INVOICE
 	undoItems(username, items){
 		var headers = new Headers();
@@ -49,5 +58,4 @@ export class WarehouseService {
 		return this.http.put('http://localhost:3000/warehouses/undo/user/' + username, JSON.stringify(items), {headers: headers})
 			.map(res => res.json());
 	}
-
 }

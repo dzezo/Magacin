@@ -35,16 +35,16 @@ import { WarehouseService } from './services/redis/warehouse.service';
 const appRoutes: Routes = [
 {path: '', component: HomeComponent},
 {path: 'login', component: LogInComponent},
-{path: 'ulaznefakture', component: UlazneFaktureComponent},
-{path: 'arhiva', component: ArhivaComponent},
-{path: 'magacin', component: MagacinComponent},
-{path: 'ulaz', component: UlazComponent},
-{path: 'izlaz', component: IzlazComponent},
-{path: 'izlaznefakture', component: IzlazneFaktureComponent},
-{path: 'dobavljaci', component: DobavljaciComponent},
-{path: 'izlaznafaktura', component: IzlaznaFakturaComponent},
-{path: 'ulaznafaktura', component: UlaznaFakturaComponent},
-{path: 'artikl', component: ArtikalComponent}
+{path: 'ulaznefakture', component: UlazneFaktureComponent, canActivate: [AuthGuard]},
+{path: 'arhiva', component: ArhivaComponent, canActivate: [AuthGuard]},
+{path: 'magacin', component: MagacinComponent, canActivate: [AuthGuard]},
+{path: 'ulaz', component: UlazComponent, canActivate: [AuthGuard]},
+{path: 'izlaz', component: IzlazComponent, canActivate: [AuthGuard]},
+{path: 'izlaznefakture', component: IzlazneFaktureComponent, canActivate: [AuthGuard]},
+{path: 'dobavljaci', component: DobavljaciComponent, canActivate: [AuthGuard]},
+{path: 'izlaznafaktura', component: IzlaznaFakturaComponent, canActivate: [AuthGuard]},
+{path: 'ulaznafaktura', component: UlaznaFakturaComponent, canActivate: [AuthGuard]},
+{path: 'artikl', component: ArtikalComponent, canActivate: [AuthGuard]}
 ]
 
 @NgModule({

@@ -7,14 +7,17 @@ h1 {
   padding-bottom: 7px;
 }
 
-.row label {
-  color: #fff; 
-  font-size: 20px;
+hr {
+  border: 1px solid #e9ecef;
 }
 
 .fa:focus, .fa:hover {
   color: #007bff;
 }
+
+/*
+ * Delete btn START
+ */
 
 .artikl-ime {
   cursor: pointer;
@@ -25,6 +28,29 @@ h1 {
     color: #007bff !important;
 }
 
+a .active {
+  color: #fff;
+}
+
+a .active:hover {
+    color: #007bff;
+}
+
+a .inactive:hover {
+    color: #fff;
+}
+
+.fa-3x {
+  font-size: 0.85rem;
+}
+
+.fa-fw {
+  width: auto;
+}
+
+/*
+ * Delete btn END
+ */
 
 /*
  * Modal START
@@ -34,23 +60,19 @@ h1 {
   max-width: 450px;
 }
 
-.modal-content{
-  border-color: #001029 !important;
-}
-
 .modal-header{
-  background-color: #001029 !important;
-  border-color: #001029 !important;
-  color: #007bff !important;
+  background-color: #3d7bff !important;
+  color: white !important;
 }
 
 .modal-header .close{
-  color: #007bff !important;
+  color: white;
   opacity: 1;
+  text-shadow: none;
 }
 
 .modal-header .close:hover{
-  color: #ffffff !important;
+  color: #dedede !important;
   opacity: 1;
 }
 
