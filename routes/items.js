@@ -24,7 +24,7 @@ router.get('/get/warehouse/:username', function (req, res, next) {
 router.get('/get/archive/:username', function (req, res, next) {
 	Item.getArchivedItems(req.params.username, (err, result)=>{
 		if(err)
-			return res.json({ success: false, msg:"Dobavljanje arhiviranih artikala neušpesno" });
+			return res.json({ success: false, msg:"Dobavljanje arhiviranih artikala neuspešno" });
 		res.json({ success: true, items: result });
 	});
 });
