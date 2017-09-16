@@ -70,9 +70,9 @@ export class UlazneFaktureComponent implements OnInit {
     // Dobavi detalje fakture
     this.invoiceSvc.getInputInvoice(invoiceId).subscribe(reply => {
         if(reply.success)
-          this.sendToRedis(reply.invoice.supplier, reply.invoice.items, (success)=>{
+          this.undoRedis(reply.invoice.supplier, reply.invoice.items, (success)=>{
             if(success)
-              this.sendToNeo(invoiceId);
+              this.undoNeo(invoiceId);
             else{
               // Ukljuci link
               this.enableDelete(invoiceId);
@@ -109,7 +109,7 @@ export class UlazneFaktureComponent implements OnInit {
     });
   }
 
-  sendToRedis(supplierName, itemsArr, callback){
+  undoRedis(supplierName, itemsArr, callback){
     this.supplierSvc.undoSupplier(this.user.username, supplierName).subscribe(reply => {
       if(reply.success){
         // Pakovanje 
@@ -129,7 +129,7 @@ export class UlazneFaktureComponent implements OnInit {
     });
   }
 
-  sendToNeo(invoiceId){
+  undoNeo(invoiceId){
     this.invoiceSvc.undoInput(invoiceId).subscribe(reply => {
       if(reply.success){
         // Update view

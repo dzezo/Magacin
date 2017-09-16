@@ -1,66 +1,204 @@
 <div class="container-fluid">
   <div class="row">
     <app-navigacija></app-navigacija>
-    <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-      <h1>Ulazna faktura br. {{invNumber}}</h1>
-      <div class = "rowWraper okvir spread pl-3 pr-3 pt-2">
-      	<div class="columWraper">
-	      	<label>Dobavljač:</label>
-	      	<p>{{expDate}}</p>
-      	</div>
-      	<div class="columWraper">
-	      	<label>PIB:</label>
-	      	<p>{{taxId}}</p>
-      	</div>
-      	<div class="columWraper">
-	      	<label>Poziv na broj:</label>
-	      	<p>{{refNumber}}</p>
-      	</div>
-      	<div class="columWraper">
-	      	<label>Datum dospeća:</label>
-	      	<p>{{recvDate}}</p>
-      	</div>
-      	<div class="columWraper">
-	      	<label>Datum isteka:</label>
-	      	<p>{{expDate}}</p>
-      	</div>
-      </div>
-<!-- Tabela artikli u fakturi -->
-      <h3>Artikli</h3>
-      <div class="table-responsive">
-        <table class="table table-hover" id="table_id">
-          <thead class="thead-inverse">
-            <tr>
-              <th>Šifra</th>
-              <th>Ime</th>
-              <th>Količina</th>
-              <th>Nabavna cena</th>
-              <th>Prodajna cena</th>
-            </tr>
-          </thead>
-          <colgroup>  
-             <col style="width: 10%;">
-             <col style="width: 34%;">
-             <col style="width: 10%;">
-             <col style="width: 23%;">
-             <col style="width: 23%;">
-          </colgroup>
-          <tbody>
-            <tr *ngFor = "let Artikl of Artikli">
-              <td>{{Artikl.code}}</td>
-              <td>{{Artikl.name}}</td>
-              <td>{{Artikl.quantity}}</td>
-              <td>{{Artikl.purchaseP}}</td>
-              <td>{{Artikl.sellingP}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="container desno">
-        <div class="row">
-          <label>Suma: {{total}}</label>
+    <!-- VIEW MODE START -->
+    <div [hidden]="editMode" class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3">
+      <div class="head-wrapper">
+        <h1>Izlazna faktura</h1>
+        <div class="head-action-wrapper">
+          <button (click)="undoInvoice()" class="btn btn-primary" [disabled]="undoButton">Poništi</button>
+          <button (click)="switchMode()" class="btn btn-primary" [disabled]="editButton">Izmeni</button>
         </div>
       </div>
-    </main>
+      <!-- INVOICE INFO START -->
+      <div class="info-wrapper">
+        <form class="col-md-6" style="padding: 10px 15px;">
+          <div class="form-group">
+            <!-- SUPPLIER NAME -->
+            <label for="view-supplier">Dobavljač: </label>
+            <input id="view-supplier" class="form-control" type="text" value={{invDetails.supplier}} disabled>
+            <!-- TAXID -->
+            <label for="view-taxId">PIB: </label>
+            <input id="view-taxId" class="form-control" type="text" value={{invDetails.taxId}} disabled>
+          </div>
+        </form>
+        <form class="col-md-6" style="padding: 10px 15px;">
+          <div class="form-group">
+            <label for="view-refNum">Poziv na broj: </label>
+            <input id="view-refNum" class="form-control" type="text" value={{invDetails.refNumber}} disabled>
+            <label for="view-invNum">Broj fakture: </label>
+            <input id="view-invNum" class="form-control" type="text" value={{invDetails.invNumber}} disabled>
+          </div>
+          <div class="form-group">
+            <!-- RECIEVE DATE -->
+            <label for="view-rDate">Datum dospeća: </label>
+            <div id="view-rDate" class="input-group">
+              <input id="view-recvDate" class="form-control" type="text" value="{{invDetails.recvDate | date:'MM/dd/yyyy'}}" disabled>
+              <div class="input-group-addon disabled">
+                <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+              </div>
+            </div>
+            <!-- RECIEVE DATE ENDS -->
+            <!-- EXPIRATION DATE -->
+            <label for="view-eDate">Datum isteka: </label>
+            <div id="view-eDate" class="input-group">
+              <input id="view-expDate" class="form-control" type="text" value="{{invDetails.expDate | date:'MM/dd/yyyy'}}" disabled>
+              <div class="input-group-addon disabled">
+                <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+              </div>
+            </div>
+            <!-- EXIPIRATION DATE ENDS -->
+          </div>
+        </form>
+      </div>
+      <!-- INVOICE INFO END -->
+      <!-- INVOICE ITEMS START -->
+      <table class="table table-hover">
+        <thead class="thead-inverse">
+          <th style="width:10%;">Šifra</th>
+          <th style="width:30%;">Ime</th>
+          <th style="width:10%;">Količina</th>
+          <th style="width:20%;">Nabavna cena</th>
+          <th style="width:20%;">Prodajna cena</th>
+          <th style="width:10%;"></th>
+        </thead>
+        <tbody>
+          <tr *ngFor='let row of invRowData'>
+            <td style="width:10%;"><input value={{row.code}} disabled></td>
+            <td style="width:30%;"><input value={{row.name}} disabled></td>
+            <td style="width:10%;"><input value={{row.quantity}} disabled></td>
+            <td style="width:20%;"><input value={{row.purchaseP}} disabled></td>
+            <td style="width:20%;"><input value={{row.sellingP}} disabled></td>
+            <td style="width:10%;"></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- INVOICE ITEMS END -->
+      <hr>
+      <div class="actions">
+        <div class="sum">
+          <label>Suma: {{invDetails.total}}</label>
+        </div>
+      </div>
+    </div>
+    <!-- VIEW MODE ENDS -->
+
+    <!-- EDIT MODE START -->
+    <div [hidden]="!editMode" class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3">
+      <div class="head-wrapper">
+        <h1>Izlazna faktura</h1>
+        <div class="head-action-wrapper">
+          <button (click)="switchMode()" class="btn btn-primary" [disabled]="cancelButton">Otkaži</button>
+        </div>
+      </div>
+      <!-- INVOICE INFO START -->
+      <div class="info-wrapper">
+        <form class="col-md-6" style="padding: 10px 15px;">
+          <div class="form-group">
+            <!-- SUPPLIER NAME -->
+            <label for="edit-supplier">Dobavljač: </label>
+            <input clickOutside #supplierName 
+              (keyup)="searchSupplier(supplierName.value, $event)" 
+              (clickOutside)="hideSupplierDropdown()"
+              class="form-control" type="text" id="edit-supplier" autocomplete="off">
+            <!-- SUPPLIER DROPDOWN START -->
+            <div *ngIf="supplierDropdown" id="suppliers-dropdown" class="dropdown">
+              <div class="dropdown-element" (click)="selectSupplier(supplier)" *ngFor='let supplier of suppliers'>{{supplier}}</div>
+            </div>
+            <!-- SUPPLIER DROPDOWN END -->
+            <!-- TAXID -->
+            <label for="edit-taxId">PIB: </label>
+            <input #supplierTaxId class="form-control" type="text" id="edit-taxId">
+          </div>
+        </form>
+        <form class="col-md-6" style="padding: 10px 15px;">
+          <div class="form-group">
+            <label for="edit-refNum">Poziv na broj: </label>
+            <input #refNum class="form-control" type="text" id="edit-refNum">
+            <label for="edit-invNum">Broj fakture: </label>
+            <input #invNum class="form-control" type="text" id="edit-invNum">
+          </div>
+          <div class="form-group">
+            <!-- RECIEVE DATE -->
+            <label for="edit-rDate">Datum dospeća: </label>
+            <div id="edit-rDate" class="input-group date">
+              <input #recvDate id="edit-recvDate" class="form-control" type="text"/>
+              <div class="input-group-addon">
+                <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+              </div>
+            </div>
+            <!-- RECIEVE DATE ENDS -->
+            <!-- EXPIRATION DATE -->
+            <label for="edit-eDate">Datum isteka: </label>
+            <div id="edit-eDate" class="input-group date">
+              <input #expDate id="edit-expDate" class="form-control" type="text"/>
+              <div class="input-group-addon">
+                <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
+              </div>
+            </div>
+            <!-- EXIPIRATION DATE ENDS -->
+          </div>
+        </form>
+      </div>
+      <!-- INVOICE INFO END -->
+      <!-- INVOICE ITEMS START -->
+      <table class="table table-hover">
+        <thead class="thead-inverse">
+          <th style="width:10%;">Šifra</th>
+          <th style="width:30%;">Ime</th>
+          <th style="width:10%;">Količina</th>
+          <th style="width:20%;">Nabavna cena</th>
+          <th style="width:20%;">Prodajna cena</th>
+          <th style="width:10%;"></th>
+        </thead>
+        <tbody>
+          <tr *ngFor='let row of rowData'>
+            <td style="width:10%;">
+              <input #code (keyup.enter)="getItemByCode(code.value, row.id)" [(ngModel)]="row.code" name="row.code"></td>
+            <td style="width:30%;">
+              <div style="position: relative;">
+                <input clickOutside #itemName 
+                  (keyup)="searchItem(itemName.value, row.id ,$event)" 
+                  (clickOutside)="hideItemDropdown(row.id)" 
+                  (keydown.Tab)="hideItemDropdown(row.id)"
+                  [(ngModel)]="row.name" name="row.name" id="item-name-{{row.id}}">
+                <!-- ITEM DROPDOWN START -->
+                <div *ngIf="row.showDropdown" id="item-dropdown-{{row.id}}" class="dropdown">
+                  <div class="dropdown-element" (click)="selectItem(item, row.id)" *ngFor='let item of items'>{{item}}</div>
+                </div>
+                <!-- ITEM DROPDOWN END -->
+              </div>
+            </td>
+            <td style="width:10%;">
+              <input (focusout)="sumInvoice()" 
+                (keyup.enter)="sumInvoice()"
+                [(ngModel)]="row.quantity" name="row.quantity">
+            </td>
+            <td style="width:20%;"><input [(ngModel)]="row.purchaseP" name="row.purchaseP"></td>
+            <td style="width:20%;">
+              <input (focusout)="sumInvoice()" 
+                (keyup.enter)="sumInvoice()"
+                [(ngModel)]="row.sellingP" name="row.sellingP">
+            </td>
+            <td style="width:10%;">
+              <a (click)="removeRow(row.id)"><span class="fa fa-trash"></span></a>
+            </td>
+          </tr>
+        </tbody>
+        <!-- ADD ITEM -->
+        <button (click)="addRow(rowId)" id="add-row-button" class="btn btn-primary" [disabled]="addItemButton">Novi Artikal</button>
+      </table>
+      <!-- INVOICE ITEMS END -->
+      <hr>
+      <!-- SUBMIT START -->
+      <div class="actions">
+        <button (click)="submitInvoice(supplierName.value, supplierTaxId.value, refNum.value, invNum.value, recvDate.value, expDate.value)" class="btn btn-primary" type="submit" [disabled]="submitButton">Sačuvaj</button>
+        <div class="sum">
+          <label>Suma: {{sum}}</label>
+        </div>
+      </div>
+      <!-- SUBMIT END -->
+    </div>
+    <!-- EDIT MODE ENDS -->
   </div>
 </div>

@@ -72,7 +72,7 @@ export class IzlaznaFakturaComponent implements OnInit {
   		this.invNumberEdit = $(this.elRef.nativeElement).find('#edit-invNumber');
   		this.issueDateEdit = $(this.elRef.nativeElement).find('#edit-issueDate');
   		// DATE PLUG-IN INIT
-  		this.issueDate = $(this.elRef.nativeElement).find('#issueDate');
+  		this.issueDate = $(this.elRef.nativeElement).find('#edit-iDate');
 	    this.issueDate.datepicker();
 	    // ADD ROW BUTTON
 	    this.addRowButton = document.getElementById('add-row-button');
@@ -121,7 +121,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 	      	};
 	      	if(reply.invoice.items)
 	      		reply.invoice.items.forEach((item)=>{
-	      			this.invRowData.push({
+	      			this.invRowData.unshift({
 				      id: this.rowId,
 				      showDropdown: false,
 				      code: item.code,
@@ -391,7 +391,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 				this.invoiceSvc.addOutputInvoice(this.user.username, newInvoice).subscribe(reply => {
 					if(reply.success){
 						this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
-						// Local storage
+						// Izbaci stari id
 						localStorage.removeItem('outputInvoice');
 						this.router.navigate(['/izlaznefakture']);	
 					}
