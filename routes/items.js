@@ -6,7 +6,7 @@ var Item = require('../models/item.model');
 router.get('/get/item/:itemId', function (req, res, next) {
 	Item.getItem(req.params.itemId, (err, result)=>{
 		if(err)
-			return res.json({ success: false, msg:"Dobavljanje neuspesno" });
+			return res.json({ success: false, msg:"Dobavljanje neuspešno" });
 		res.json({ success: true, item: result });
 	});
 });
@@ -15,7 +15,7 @@ router.get('/get/item/:itemId', function (req, res, next) {
 router.get('/get/warehouse/:username', function (req, res, next) {
 	Item.getItems(req.params.username, (err, result)=>{
 		if(err)
-			return res.json({ success: false, msg:"Dobavljanje artikala neuspesno" });
+			return res.json({ success: false, msg:"Dobavljanje artikala neuspešno" });
 		res.json({ success: true, items: result });
 	});
 });
@@ -24,7 +24,7 @@ router.get('/get/warehouse/:username', function (req, res, next) {
 router.get('/get/archive/:username', function (req, res, next) {
 	Item.getArchivedItems(req.params.username, (err, result)=>{
 		if(err)
-			return res.json({ success: false, msg:"Dobavljanje arhiviranih artikala neuspesno" });
+			return res.json({ success: false, msg:"Dobavljanje arhiviranih artikala neušpesno" });
 		res.json({ success: true, items: result });
 	});
 });
@@ -33,8 +33,8 @@ router.get('/get/archive/:username', function (req, res, next) {
 router.delete('/archive/item/:itemId', function (req, res, next) {
 	Item.moveToArchive(req.params.itemId, (err)=>{
 		if(err)
-			return res.json({ success: false, msg:"Arhiviranje neuspesno" });
-		res.json({ success: true, msg:"Arhiviranje uspesno" });
+			return res.json({ success: false, msg:"Arhiviranje neuspešno" });
+		res.json({ success: true, msg:"Arhiviranje uspešno" });
 	});
 });
 
@@ -46,8 +46,8 @@ router.put('/update/item/:itemId', function (req, res, next) {
 	}
 	Item.updateItem(req.params.itemId, update, (err, updatedItem)=>{
 		if(err)
-			return res.json({ success: false, msg:"Azuriranje neuspesno" });
-		res.json({ success: true, msg:"Azuriranje uspesno", item: updatedItem });
+			return res.json({ success: false, msg:"Ažuriranje neuspešno" });
+		res.json({ success: true, msg:"Ažuriranje uspešno", item: updatedItem });
 	});
 });
 

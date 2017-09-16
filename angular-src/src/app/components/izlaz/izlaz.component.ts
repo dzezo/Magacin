@@ -226,7 +226,7 @@ export class IzlazComponent implements OnInit {
     this.submited = true;
     // Proveravanje gresaka
     if(!name || !invNum || !issueDate ){
-      this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-success', timeout: 3000});
+      this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-danger', timeout: 3000});
       // Ukljuci dugme za ponovni submit
       this.submited = false;
       return false;

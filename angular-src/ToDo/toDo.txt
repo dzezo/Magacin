@@ -1,9 +1,7 @@
-TO KNOW
-	- user.username, username jedinstveni kljuc za korisnika
-	- nesto.id je za artikle i fakture
 
-*Misc
 	- Error msg redo
 	- Lore
 	- Nakon LogIn-a zabraniti povratak na home
 	- Slepi linkovi da vode na neki default
+	- Zasto se ICON izgubi kad se pokrene backend?
+	

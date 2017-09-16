@@ -326,7 +326,7 @@ export class UlazComponent implements OnInit {
 		this.submited = true;
 		// Proveravanje gresaka
 		if(!supplierName || !taxId || !refNum || !invNum || !recvDate || !expDate ){
-			this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-success', timeout: 3000});
+			this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-danger', timeout: 3000});
 			// Ukljuci dugme za ponovni submit
 			this.submited = false;
 			return false;
