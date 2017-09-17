@@ -1,7 +1,5 @@
 
 	- Error msg redo
-	- Lore
 	- Nakon LogIn-a zabraniti povratak na home
 	- Slepi linkovi da vode na neki default
-	- Zasto se ICON izgubi kad se pokrene backend?
 	
