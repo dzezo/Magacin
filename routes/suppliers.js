@@ -41,7 +41,7 @@ router.get('/search/:search/user/:username', function(req, res, next) {
 router.get('/get/:name/user/:username', function(req, res, next) {
 	Supplier.getSupplier(req.params.username, req.params.name, (err, supplier)=>{
 		if(err)
-			return res.json({ success: false, msg: "Dobavljanje neuspesno" });
+			return res.json({ success: false, msg: "Dobavljanje neuspešno" });
 		res.json({ success: true, supplier: supplier });
 	});
 });
@@ -50,7 +50,7 @@ router.get('/get/:name/user/:username', function(req, res, next) {
 router.get('/user/:username', function(req, res, next) {
 	Supplier.getSuppliers(req.params.username, (err, suppliers)=>{
 		if(err)
-			return res.json({ success: false, msg: "Dobavljanje neuspesno" });
+			return res.json({ success: false, msg: "Dobavljanje neuspešno" });
 		res.json({ success: true, suppliers: suppliers });
 	});
 });
@@ -59,8 +59,8 @@ router.get('/user/:username', function(req, res, next) {
 router.delete('/delete/:name/user/:username', function(req, res, next) {
 	Supplier.deleteSupplier(req.params.username, req.params.name, (err)=>{
 		if(err)
-			return res.json({ success: false, msg: "Brisanje neuspesno" });
-		res.json({ success: true, msg: "Brisanje uspesno" });
+			return res.json({ success: false, msg: "Brisanje neuspešno" });
+		res.json({ success: true, msg: "Brisanje uspešno" });
 	});
 });
 

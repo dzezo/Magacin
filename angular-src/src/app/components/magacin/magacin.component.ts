@@ -105,7 +105,7 @@ export class MagacinComponent implements OnInit {
 			newCode: code,
 			newName: name			
 		};
-		this.warehouseSvc.updateItem(this.user.username, this.artiklIme).subscribe(reply => {
+		this.warehouseSvc.updateItem(this.user.username, this.artiklIme, newItem).subscribe(reply => {
 	      	if(reply.success){
 	      		// START Ugnjezden Neo4j
 	      		this.itemSvc.updateItem(this.artiklId, newItem).subscribe(Response =>{

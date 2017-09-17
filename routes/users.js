@@ -30,7 +30,7 @@ router.post('/authenticate', function (req, res, next) {
 
 	User.getUserByUsername(username, function (user) {
 		if(!user){
-			return res.json({ success: false, msg: 'Korisnik nije pronadjen.' });
+			return res.json({ success: false, msg: 'Korisnik nije pronađen.' });
 		}
 
 		User.comparePassword(password, user.properties.password, function (err, isMatch) {
@@ -52,8 +52,8 @@ router.post('/authenticate', function (req, res, next) {
 					}
 				});
 			}
-			else {
-				return res.json({ success: false, msg: 'Pogrešna Lozinka.' });
+			else{
+				return res.json({ success: false, msg: 'Pogrešna lozinka.' });
 			}
 		})
 	});
