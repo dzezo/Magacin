@@ -4,6 +4,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { DateService } from '../../services/date.service';
 import { WarehouseService } from '../../services/redis/warehouse.service';
 import { InvoiceService } from '../../services/neo4j/invoice.service';
+import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
@@ -23,6 +24,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 	itemName = "";
 	// Autocomplete dropdown item
 	itemNameInput: any;
+	active = null; // pomeraj aktivnog inputa
 	// Autocomplete dropdown pokazivaci
 	next = 0;
 	prev = 0;
@@ -57,7 +59,8 @@ export class IzlaznaFakturaComponent implements OnInit {
 				private elRef: ElementRef,
 				private dateSvc: DateService,
 				private warehouseSvc: WarehouseService,
-				private invoiceSvc: InvoiceService) { }
+				private invoiceSvc: InvoiceService,
+				private dataSvc: DataService) { }
 
   	ngOnInit() {
   		// INIT
@@ -177,17 +180,33 @@ export class IzlaznaFakturaComponent implements OnInit {
 
   	// Metode za dropdown
   	showItemDropdown(rowId){
-	    for(var i=0; i<this.rowData.length; i++)
-	      if(this.rowData[i].id == rowId)
-	        this.rowData[i].showDropdown = true;
+		// Ako postoji aktvni
+		if(this.active){
+			// Iskljuci stari
+			this.rowData[this.active].showDropdown = false;
+			// Ukljuci novi
+			for(var i=0; i<this.rowData.length; i++)
+				if(this.rowData[i].id == rowId){
+					this.rowData[i].showDropdown = true;
+					this.active = i;
+				}
+		}
+		else{
+			for(var i=0; i<this.rowData.length; i++)
+				if(this.rowData[i].id == rowId){
+					this.rowData[i].showDropdown = true;
+					this.active = i;
+				}
+		}
 	}
-
-	hideItemDropdown(rowId){
-		this.items = [];
-		this.itemName = "";
-		for(var i=0; i<this.rowData.length; i++)
-	  		if(this.rowData[i].id == rowId)
-	   			this.rowData[i].showDropdown = false;
+	hideItemDropdown(){
+	// Ako postoji aktivni, onda iskljuci
+	if(this.active !== null){
+	this.items = [];
+	this.itemName = "";
+	this.rowData[this.active].showDropdown = false;
+	this.active = null;
+	}
 	}
 
 	selectItem(item, rowId){
@@ -260,7 +279,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 		        		if (reply.suggestion.length > 0)
 		          			this.showItemDropdown(rowId);
 		        		else
-		          			this.hideItemDropdown(rowId);
+		          			this.hideItemDropdown();
 		        		this.next = 0;
 		        		this.prev = 0;
 		      		}
@@ -272,7 +291,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 		  	// prazno
 		  	else{
 		    	this.itemName = itemName;
-		    	this.hideItemDropdown(rowId);
+		    	this.hideItemDropdown();
 		  	}
 		}
 		else{
@@ -349,32 +368,15 @@ export class IzlaznaFakturaComponent implements OnInit {
 		// Iskljuci 
 		this.disableEditButtons();
 		// Proveravanje gresaka
-		if(!name || !invNumber || !issueDate ){
-			this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-success', timeout: 3000});
-			// Ukljuci 
-			this.enableEditButtons();
-			return false;
-		}
-		for(var i=0; i<this.rowData.length; i++){
-			if( !this.rowData[i].name || 
-				!this.rowData[i].code || isNaN(this.rowData[i].code) || 
-				!this.rowData[i].quantity || isNaN(this.rowData[i].quantity) || 
-				!this.rowData[i].sellingP || isNaN(this.rowData[i].sellingP) )
-			{
-				this.flashMessage.show('Popunjavanje artikala neispravno', {cssClass: 'alert-danger', timeout: 3000});
-				// Ukljuci
-				this.enableEditButtons();
-				return false;
-			}
-			// reformat if no error
-			else
-			{
-				this.rowData[i].code = parseInt(this.rowData[i].code);
-				this.rowData[i].quantity = parseInt(this.rowData[i].quantity);
-				this.rowData[i].purchaseP = parseInt(this.rowData[i].purchaseP);
-				this.rowData[i].sellingP = parseInt(this.rowData[i].sellingP);
-			}
-		}
+		var invDetails = {
+	      purchaser: name,
+	      invNum: invNumber,
+	      issueDate: issueDate
+	    };
+	    if(!this.dataSvc.checkOutputInvoice(invDetails, this.rowData)){
+	      this.enableEditButtons();
+	      return false;
+	    }
 		// Pakovanje
 		// Neo4j faktura
 		var newInvoice = {

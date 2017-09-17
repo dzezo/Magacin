@@ -119,8 +119,8 @@
 			              	<div style="position: relative;">
 				                <input clickOutside #itemName 
 				                (keyup)="searchItem(itemName.value, row.id ,$event)" 
-				                (clickOutside)="hideItemDropdown(row.id)" 
-				                (keydown.Tab)="hideItemDropdown(row.id)" 
+				                (clickOutside)="hideItemDropdown()" 
+				                (keydown.Tab)="hideItemDropdown()" 
 				                [(ngModel)]="row.name" name="row.name" id="item-name-{{row.id}}">
 				                <!-- ITEM DROPDOWN START -->
 				                <div *ngIf="row.showDropdown" id="item-dropdown-{{row.id}}" class="dropdown">

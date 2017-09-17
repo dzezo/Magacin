@@ -5,6 +5,7 @@ import { DateService } from '../../services/date.service';
 import { SupplierService } from '../../services/redis/supplier.service';
 import { WarehouseService } from '../../services/redis/warehouse.service';
 import { InvoiceService } from '../../services/neo4j/invoice.service';
+import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
@@ -23,13 +24,13 @@ export class UlazComponent implements OnInit {
 	// Pocetni zahtev za dobavljaca
 	supplierName = "";
 	itemName = "";
-	// Autocomplete dropdown
 	// Autocomplete dropdown supplier
 	supplierDropdown = false;
 	supplierInput: any;
 	taxIdInput: any;
 	// Autocomplete dropdown item
 	itemNameInput: any;
+	active = null; // pomeraj aktivnog inputa
 	// Autocomplete dropdown pokazivaci
 	next = 0;
 	prev = 0;
@@ -50,7 +51,8 @@ export class UlazComponent implements OnInit {
 				private dateSvc: DateService,
 				private supplierSvc: SupplierService,
 				private warehouseSvc: WarehouseService,
-				private invoiceSvc: InvoiceService) { }
+				private invoiceSvc: InvoiceService,
+				private dataSvc: DataService) { }
 
 	ngOnInit() {
 		this.user = JSON.parse(localStorage.getItem('user'));
@@ -90,17 +92,35 @@ export class UlazComponent implements OnInit {
 	}
 	// Item
 	showItemDropdown(rowId){
+		// Ako postoji aktvni
+		if(this.active){
+			// Iskljuci stari
+			this.rowData[this.active].showDropdown = false;
+			// Ukljuci novi
+			for(var i=0; i<this.rowData.length; i++)
+				if(this.rowData[i].id == rowId){
+					this.rowData[i].showDropdown = true;
+					this.active = i;
+				}
+		}
+		else{
 		for(var i=0; i<this.rowData.length; i++)
-			if(this.rowData[i].id == rowId)
+			if(this.rowData[i].id == rowId){
 				this.rowData[i].showDropdown = true;
+				this.active = i;
+			}
+		}
 	}
-	hideItemDropdown(rowId){
-		this.items = [];
-		this.itemName = "";
-		for(var i=0; i<this.rowData.length; i++)
-			if(this.rowData[i].id == rowId)
-				this.rowData[i].showDropdown = false;
+	hideItemDropdown(){
+		// Ako postoji aktivni, onda iskljuci
+		if(this.active !== null){
+			this.items = [];
+			this.itemName = "";
+			this.rowData[this.active].showDropdown = false;
+			this.active = null;
+		}
 	}
+
 	selectItem(item, rowId){
 		// Dobavi detalje
 		this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(item)).subscribe(reply => {
@@ -194,18 +214,20 @@ export class UlazComponent implements OnInit {
 			}
 			else if((event.key == "Enter") && supplierName){
 				var selectedName = $(supplierDropdownEl[this.prev]).text();
-				// Dobavi pib
-				this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(selectedName)).subscribe(reply => {
-					if(reply.success){
-						this.taxIdInput.val(reply.supplier.taxId);
-						// Dodaj u input
-						this.supplierInput.val(selectedName);
-						this.hideSupplierDropdown();
-					}
-				}, err => {
-					console.log(err);
-					return false;
-				});
+				if(selectedName){
+					// Dobavi pib
+					this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(selectedName)).subscribe(reply => {
+						if(reply.success){
+							this.taxIdInput.val(reply.supplier.taxId);
+							// Dodaj u input
+							this.supplierInput.val(selectedName);
+							this.hideSupplierDropdown();
+						}
+					}, err => {
+						console.log(err);
+						return false;
+					});
+				}
 			}
 		}
 	}
@@ -221,7 +243,7 @@ export class UlazComponent implements OnInit {
 						if (reply.suggestion.length > 0)
 							this.showItemDropdown(rowId);
 						else
-							this.hideItemDropdown(rowId);
+							this.hideItemDropdown();
 						this.next = 0;
 						this.prev = 0;
 					}
@@ -233,7 +255,7 @@ export class UlazComponent implements OnInit {
 			// prazno
 			else{
 				this.itemName = itemName;
-				this.hideItemDropdown(rowId);
+				this.hideItemDropdown();
 			}
 		}
 		else{
@@ -325,31 +347,18 @@ export class UlazComponent implements OnInit {
 		// Iskljuci dugme
 		this.submited = true;
 		// Proveravanje gresaka
-		if(!supplierName || !taxId || !refNum || !invNum || !recvDate || !expDate ){
-			this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-danger', timeout: 3000});
+		var invDetails = {
+			supplier: supplierName,
+			taxId: taxId,
+			refNum: refNum,
+			invNum: invNum,
+			recvDate: recvDate,
+			expDate: expDate
+		};
+		if(!this.dataSvc.checkInputInvoice(invDetails, this.rowData)){
 			// Ukljuci dugme za ponovni submit
 			this.submited = false;
 			return false;
-		}
-		for(var i=0; i<this.rowData.length; i++){
-			if( !this.rowData[i].name || 
-				!this.rowData[i].code || isNaN(this.rowData[i].code) || 
-				!this.rowData[i].quantity || isNaN(this.rowData[i].quantity) || 
-				!this.rowData[i].purchaseP || isNaN(this.rowData[i].purchaseP) || 
-				!this.rowData[i].sellingP || isNaN(this.rowData[i].sellingP) )
-			{
-				this.flashMessage.show('Popunjavanje artikala neispravno', {cssClass: 'alert-danger', timeout: 3000});
-				// Ukljuci dugme za ponovni submit
-				this.submited = false;
-				return false;
-			}
-			// reformat if no error
-			else{
-				this.rowData[i].code = parseInt(this.rowData[i].code);
-				this.rowData[i].quantity = parseInt(this.rowData[i].quantity);
-				this.rowData[i].purchaseP = parseInt(this.rowData[i].purchaseP);
-				this.rowData[i].sellingP = parseInt(this.rowData[i].sellingP);
-			}
 		}
 		// Pakovanje
 		// Neo4j faktura

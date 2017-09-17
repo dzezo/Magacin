@@ -101,28 +101,55 @@ module.exports.deleteItem = function(username, itemName, callback) {
 
 module.exports.undoItems = function(username, items, callback) {
 	if(items){
+		var removed = 0; // Count returned items
+		var errors = 0
 		items.forEach((item)=>{
-			client.sismember('user:' + username + ':warehouse', item.name, (err, exists)=>{
-				if(exists)
-					client.hincrby('user:' + username + ':' + item.name, 'count', -1, (err, reply)=>{
-						if(err){
-							console.log(err);
-							return callback(err);
-						}
-						if(reply == 0){
-							deleteItem(username, item.name, (err)=>{
-								if(err)
-									return callback(err);
-							});
-						}
-					});
-				else
-					return callback("ERR - Not found");
+			undo(username, item.name, (err)=>{
+				++removed;
+				if(err){
+					++errors;
+				}
+				// If all items returned check for error
+				if(removed === items.length){
+					if(errors)
+						callback(err);
+					else
+						callback(null);
+				}
 			});
 		});
 	}
-	// NO ERROR OR NO ITEMS
-	return callback(null);
+	else{
+		// NO ITEMS
+		return callback(null);
+	}
+}
+
+function undo(username, itemName, callback){
+	client.sismember('user:' + username + ':warehouse', itemName, (err, exists)=>{
+		if(err)
+			callback(err);
+		if(exists){
+			// Disconnect input invoice
+			client.hincrby('user:' + username + ':' + itemName, 'count', -1, (err, reply)=>{
+				if(err)
+					callback(err);
+				// If there is no other input invoice connected to item then delete item
+				if(reply == 0){
+					deleteItem(username, itemName, (err)=>{
+						if(err)
+							callback(err);
+						else
+							callback(null);
+					});
+				}
+				else
+					callback(null)
+			});
+		}
+		else
+			callback(null);
+	});
 }
 
 module.exports.updateItem = function(username, itemName, update, callback) {

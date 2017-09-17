@@ -4,6 +4,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { DateService } from '../../services/date.service';
 import { WarehouseService } from '../../services/redis/warehouse.service';
 import { InvoiceService } from '../../services/neo4j/invoice.service';
+import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
@@ -22,6 +23,7 @@ export class IzlazComponent implements OnInit {
   itemName = "";
   // Autocomplete dropdown item
   itemNameInput: any;
+  active = null; // pomeraj aktivnog inputa
   // Autocomplete dropdown pokazivaci
   next = 0;
   prev = 0;
@@ -40,7 +42,8 @@ export class IzlazComponent implements OnInit {
               private elRef: ElementRef,
               private dateSvc: DateService,
               private warehouseSvc: WarehouseService,
-              private invoiceSvc: InvoiceService) { }
+              private invoiceSvc: InvoiceService,
+              private dataSvc: DataService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -54,17 +57,35 @@ export class IzlazComponent implements OnInit {
   // Metode za dropdown
   // Item
   showItemDropdown(rowId){
-    for(var i=0; i<this.rowData.length; i++)
-      if(this.rowData[i].id == rowId)
-        this.rowData[i].showDropdown = true;
+    // Ako postoji aktvni
+    if(this.active){
+      // Iskljuci stari
+      this.rowData[this.active].showDropdown = false;
+      // Ukljuci novi
+      for(var i=0; i<this.rowData.length; i++)
+        if(this.rowData[i].id == rowId){
+          this.rowData[i].showDropdown = true;
+          this.active = i;
+        }
+    }
+    else{
+      for(var i=0; i<this.rowData.length; i++)
+        if(this.rowData[i].id == rowId){
+          this.rowData[i].showDropdown = true;
+          this.active = i;
+        }
+    }
   }
-  hideItemDropdown(rowId){
-    this.items = [];
-    this.itemName = "";
-    for(var i=0; i<this.rowData.length; i++)
-      if(this.rowData[i].id == rowId)
-        this.rowData[i].showDropdown = false;
+  hideItemDropdown(){
+    // Ako postoji aktivni, onda iskljuci
+    if(this.active !== null){
+      this.items = [];
+      this.itemName = "";
+      this.rowData[this.active].showDropdown = false;
+      this.active = null;
+    }
   }
+
   selectItem(item, rowId){
     // Dobavi detalje
     this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(item)).subscribe(reply => {
@@ -136,7 +157,7 @@ export class IzlazComponent implements OnInit {
             if (reply.suggestion.length > 0)
               this.showItemDropdown(rowId);
             else
-              this.hideItemDropdown(rowId);
+              this.hideItemDropdown();
             this.next = 0;
             this.prev = 0;
           }
@@ -148,7 +169,7 @@ export class IzlazComponent implements OnInit {
       // prazno
       else{
         this.itemName = itemName;
-        this.hideItemDropdown(rowId);
+        this.hideItemDropdown();
       }
     }
     else{
@@ -225,30 +246,15 @@ export class IzlazComponent implements OnInit {
     // Iskljuci dugme
     this.submited = true;
     // Proveravanje gresaka
-    if(!name || !invNum || !issueDate ){
-      this.flashMessage.show('Popunjavanje detalja neispravno', {cssClass: 'alert-danger', timeout: 3000});
+    var invDetails = {
+      purchaser: name,
+      invNum: invNum,
+      issueDate: issueDate
+    };
+    if(!this.dataSvc.checkOutputInvoice(invDetails, this.rowData)){
       // Ukljuci dugme za ponovni submit
       this.submited = false;
       return false;
-    }
-    for(var i=0; i<this.rowData.length; i++){
-      if( !this.rowData[i].name || 
-          !this.rowData[i].code || isNaN(this.rowData[i].code) || 
-          !this.rowData[i].quantity || isNaN(this.rowData[i].quantity) || 
-          !this.rowData[i].sellingP || isNaN(this.rowData[i].sellingP) )
-      {
-        this.flashMessage.show('Popunjavanje artikala neispravno', {cssClass: 'alert-danger', timeout: 3000});
-        // Ukljuci dugme za ponovni submit
-        this.submited = false;
-        return false;
-      }
-      // reformat if no error
-      else{
-        this.rowData[i].code = parseInt(this.rowData[i].code);
-        this.rowData[i].quantity = parseInt(this.rowData[i].quantity);
-        this.rowData[i].purchaseP = parseInt(this.rowData[i].purchaseP);
-        this.rowData[i].sellingP = parseInt(this.rowData[i].sellingP);
-      }
     }
     // Pakovanje
     // Neo4j faktura

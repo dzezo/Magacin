@@ -30,6 +30,7 @@ import { InvoiceService } from './services/neo4j/invoice.service';
 import { ItemService } from './services/neo4j/item.service';
 import { SupplierService } from './services/redis/supplier.service';
 import { WarehouseService } from './services/redis/warehouse.service';
+import { DataService } from './services/data.service';
 
 
 const appRoutes: Routes = [
@@ -81,6 +82,7 @@ const appRoutes: Routes = [
     ItemService,
     SupplierService,
     WarehouseService,
+    DataService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

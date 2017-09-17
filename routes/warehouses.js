@@ -41,8 +41,10 @@ router.get('/name/:name/user/:username', function(req, res, next) {
 // Delete Item
 router.delete('/delete/:name/user/:username', function(req, res, next) {
 	Warehouse.deleteItem(req.params.username, req.params.name, (err)=>{
-		if(err)
+		if(err){
+			console.log(err);
 			return res.json({ success: false });
+		}
 		res.json({ success: true });
 	});
 });
@@ -50,8 +52,10 @@ router.delete('/delete/:name/user/:username', function(req, res, next) {
 // Undo Items
 router.put('/undo/user/:username', function(req, res, next) {
 	Warehouse.undoItems(req.params.username, req.body.items, (err)=>{
-		if(err)
+		if(err){
+			console.log(err);
 			return res.json({ success: false });
+		}
 		res.json({ success: true });
 	});
 });
