@@ -44,10 +44,10 @@ export class WarehouseService {
 
 	// PUT
 	// UPDATE
-	updateItem(username, itemName){
+	updateItem(username, itemName, newItem){
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.put('http://localhost:3000/warehouses/update/' + itemName + '/user/' + username, JSON.stringify(itemName), {headers: headers})
+		return this.http.put('http://localhost:3000/warehouses/update/' + itemName + '/user/' + username, JSON.stringify(newItem), {headers: headers})
 			.map(res => res.json());
 	}
 
