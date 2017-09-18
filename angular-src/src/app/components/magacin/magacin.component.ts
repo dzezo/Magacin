@@ -24,6 +24,10 @@ export class MagacinComponent implements OnInit {
 	// Placeholders
 	ukupnoPoN: number;
 	ukupnoPoProd: number;		
+	// Error flags
+	submited = false;
+	errorCode = false;
+	errorName = false;
 
   constructor(private router: Router,
   			  private itemSvc: ItemService,
@@ -48,7 +52,7 @@ export class MagacinComponent implements OnInit {
 	getItems(){
       this.itemSvc.getItems(this.user.username).subscribe(artikli => {
         if(artikli.success){
-          this.artikli = artikli.items;
+	      this.artikli = artikli.items;
           // Azuriranje suma
           this.sum();
         }
@@ -98,29 +102,53 @@ export class MagacinComponent implements OnInit {
 		this.artiklId = artiklID;
 		this.artiklIme = ime;
 		this.artiklSifra = sifra;
+		// Submit check
+		this.submited = false;
+		//resetErrorFlags
+		this.errorCode = false;
+		this.errorName = false;
 	}
 
 	updateArtikl(code, name){
+		// Submit check
+		if(this.submited)
+			return false;
+		this.submited = true;
+		// Error handle
+		if(!code){
+			this.errorCode = true; 
+			this.submited = false; // Omoguci ponovni submit
+			return false;
+		}
+		else{
+			this.errorCode = false;
+		}
+		if(!name){
+			this.errorName = true;
+			this.submited = false; // Omoguci ponovni submit
+			return false;
+		}
+		else{
+			this.errorName = false;
+		}
+		// Pakovanje
 		var newItem = {
 			newCode: code,
 			newName: name			
 		};
+		this.editModal.modal('hide');
 		this.warehouseSvc.updateItem(this.user.username, this.artiklIme, newItem).subscribe(reply => {
 	      	if(reply.success){
 	      		// START Ugnjezden Neo4j
 	      		this.itemSvc.updateItem(this.artiklId, newItem).subscribe(Response =>{
 				if(Response.success){
-					this.editModal.modal('hide');
 					for(var i=0; i<this.artikli.length; i++){
 						if(this.artikli[i].id == this.artiklId)
 							this.artikli[i] = Response.item;
-							// Azuriranje suma
-							this.sum();
 					}
 					this.flashMessage.show(Response.msg, {cssClass: 'alert-success', timeout: 2000});
 				}
-				else {
-					this.editModal.modal('hide');
+				else {					
 					this.flashMessage.show(Response.msg, {cssClass: 'alert-danger', timeout: 2000});
 			        return false;
 				}
@@ -149,8 +177,14 @@ export class MagacinComponent implements OnInit {
 			var quantity = this.artikli[i].quantity;
 			var purchaseP = this.artikli[i].purchaseP;
 			var sellingP = this.artikli[i].sellingP;
-			this.ukupnoPoProd += quantity * sellingP;
-			this.ukupnoPoN += quantity * purchaseP;
+			if(quantity>0){
+				this.ukupnoPoProd += quantity * sellingP;
+				this.ukupnoPoN += quantity * purchaseP;
+			}
+			else{
+				this.ukupnoPoProd += 0;
+				this.ukupnoPoN += 0;
+			}
 		}
 	}
 }

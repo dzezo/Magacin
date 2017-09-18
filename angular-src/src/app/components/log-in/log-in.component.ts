@@ -32,7 +32,7 @@ export class LogInComponent implements OnInit {
   	this.authService.authenticateUser(user).subscribe(data =>{
   		if(data.success){
   			this.authService.storeUserData(data.token, data.user);
-  			this.router.navigate(['/ulaznefakture']);
+  			this.router.navigate(['/magacin']);
   		}
   		else {
         this.errorMsg = data.msg;
