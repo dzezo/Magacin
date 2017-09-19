@@ -5,14 +5,39 @@ var client = redis.getClient();
 // POST
 
 module.exports.AddItems = function(username, items, callback) {
+	var added = 0; // Count returned items
+	var errors = 0
 	items.forEach((item)=>{
-		// user:name:warehouse itemName
-		client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+		add(username, item, (err)=>{
+			++added;
 			if(err){
-				console.log(err);
-				return callback(err);
+				++errors;
 			}
-			if(newItem){
+			// If all items returned check for error
+			if(added === items.length){
+				if(errors)
+					callback(err);
+				else
+					callback(null);
+			}
+		});
+	});
+}
+
+function add(username, item, callback){
+	// Returns nil or itemName
+	client.hget('user:' + username + ':codes', item.code, (err, oldName)=>{
+		if(err){
+			console.log(err);
+			return callback(err);
+		}
+		// New item
+		if(!oldName){
+			client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+				if(err){
+					console.log(err);
+					return callback(err);
+				}
 				// user:name:codes itemCode itemName
 				client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
 					if(err){
@@ -31,21 +56,81 @@ module.exports.AddItems = function(username, items, callback) {
 							console.log(err);
 							return callback(err);
 						}
+						else
+							return callback(null);
 					});
 				});
-			}
-			else{
-				client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+			});
+		}
+		else if(item.name == oldName){
+			client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+				if(err){
+					console.log(err);
+					return callback(err);
+				}
+				// Update item
+				client.hmset('user:' + username + ':' + item.name, [
+					'purchaseP', item.purchaseP, 
+					'sellingP', item.sellingP,
+				], (err, reply)=>{
 					if(err){
 						console.log(err);
 						return callback(err);
 					}
+					else
+						return callback(null);
 				});
-			}
-		});
+			});
+		}
+		// Name change
+		else{
+			client.srem('user:' + username + ':warehouse', oldName, (err,reply)=>{
+				if(err){
+					console.log(err);
+					return callback(err);
+				}
+				// Update codes
+				client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+						if(err){
+							console.log(err);
+							return callback(err);
+						}
+						// Renaming item hash
+						client.rename('user:' + username + ':' + oldName, 'user:' + username + ':' + item.name, (err, reply)=>{
+							if(err){
+								console.log(err);
+								return callback(err);
+							}
+							client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+								if(err){
+									console.log(err);
+									return callback(err);
+								}
+								// Update item
+								client.hmset('user:' + username + ':' + item.name, [
+									'name', item.name,
+									'purchaseP', item.purchaseP, 
+									'sellingP', item.sellingP,
+								], (err, reply)=>{
+									if(err){
+										console.log(err);
+										return callback(err);
+									}
+									else
+										return callback(null);
+								});
+							});
+						});
+					});
+				});
+			});
+		}
 	});
-	// RETURN
-	return callback(null);
 }
 
 // GET

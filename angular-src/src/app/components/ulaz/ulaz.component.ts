@@ -79,7 +79,7 @@ export class UlazComponent implements OnInit {
 	}
 	selectSupplier(supplier){
 		// Dobavi pib
-		this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(supplier)).subscribe(reply => {
+		this.supplierSvc.getSupplier(this.user.username, supplier).subscribe(reply => {
 			if(reply.success){
 				this.taxIdInput.val(reply.supplier.taxId);
 				this.supplierInput.val(supplier);
@@ -123,7 +123,7 @@ export class UlazComponent implements OnInit {
 
 	selectItem(item, rowId){
 		// Dobavi detalje
-		this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(item)).subscribe(reply => {
+		this.warehouseSvc.getItemName(this.user.username, item).subscribe(reply => {
 			if(reply.success){
 				this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);
 				this.itemNameInput.val(reply.item.name);
@@ -171,7 +171,7 @@ export class UlazComponent implements OnInit {
 		if(this.supplierName != supplierName){
 			if(supplierName){
 				this.supplierName = supplierName; // Novi zahtev
-				this.supplierSvc.searchSupplier(this.user.username, encodeURIComponent(supplierName)).subscribe(reply => {
+				this.supplierSvc.searchSupplier(this.user.username, supplierName).subscribe(reply => {
 					if(reply.success){
 						this.suppliers = reply.suggestion.slice(0,4);
 						if (reply.suggestion.length > 0)
@@ -216,7 +216,7 @@ export class UlazComponent implements OnInit {
 				var selectedName = $(supplierDropdownEl[this.prev]).text();
 				if(selectedName){
 					// Dobavi pib
-					this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(selectedName)).subscribe(reply => {
+					this.supplierSvc.getSupplier(this.user.username, selectedName).subscribe(reply => {
 						if(reply.success){
 							this.taxIdInput.val(reply.supplier.taxId);
 							// Dodaj u input
@@ -237,7 +237,7 @@ export class UlazComponent implements OnInit {
 		if(this.itemName != itemName){
 			if(itemName){
 				this.itemName = itemName; // Novi zahtev
-				this.warehouseSvc.searchItem(this.user.username, encodeURIComponent(itemName)).subscribe(reply => {
+				this.warehouseSvc.searchItem(this.user.username, itemName).subscribe(reply => {
 					if(reply.success){
 						this.items = reply.suggestion.slice(0,4);
 						if (reply.suggestion.length > 0)
@@ -281,7 +281,7 @@ export class UlazComponent implements OnInit {
 			else if((event.key == "Enter") && itemName){
 				var selectedItem = $(itemDropdownEl[this.prev]).text();
 				// Dobavi pib
-				this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(selectedItem)).subscribe(reply => {
+				this.warehouseSvc.getItemName(this.user.username, selectedItem).subscribe(reply => {
 					if(reply.success){
 						// Dodaj u input
 						this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);

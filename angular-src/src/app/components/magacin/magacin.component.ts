@@ -26,7 +26,8 @@ export class MagacinComponent implements OnInit {
 	ukupnoPoProd: number;		
 	// Error flags
 	submited = false;
-	errorCode = false;
+	errorCode1 = false;
+	errorCode2 = false;
 	errorName = false;
 
   constructor(private router: Router,
@@ -105,7 +106,8 @@ export class MagacinComponent implements OnInit {
 		// Submit check
 		this.submited = false;
 		//resetErrorFlags
-		this.errorCode = false;
+		this.errorCode1 = false;
+		this.errorCode2 = false;
 		this.errorName = false;
 	}
 
@@ -116,13 +118,20 @@ export class MagacinComponent implements OnInit {
 		this.submited = true;
 		// Error handle
 		if(!code){
-			this.errorCode = true; 
+			this.errorCode1 = true; 
+			this.submited = false; // Omoguci ponovni submit
+			return false;
+		}
+		else if(isNaN(code)){
+			this.errorCode2 = true; 
 			this.submited = false; // Omoguci ponovni submit
 			return false;
 		}
 		else{
-			this.errorCode = false;
+			this.errorCode1 = false;
+			this.errorCode2 = false;
 		}
+
 		if(!name){
 			this.errorName = true;
 			this.submited = false; // Omoguci ponovni submit
@@ -131,9 +140,10 @@ export class MagacinComponent implements OnInit {
 		else{
 			this.errorName = false;
 		}
+
 		// Pakovanje
 		var newItem = {
-			newCode: code,
+			newCode: parseInt(code),
 			newName: name			
 		};
 		this.editModal.modal('hide');
@@ -146,6 +156,7 @@ export class MagacinComponent implements OnInit {
 						if(this.artikli[i].id == this.artiklId)
 							this.artikli[i] = Response.item;
 					}
+					this.getItems();
 					this.flashMessage.show(Response.msg, {cssClass: 'alert-success', timeout: 2000});
 				}
 				else {					
@@ -157,10 +168,8 @@ export class MagacinComponent implements OnInit {
 				return false;
 			});
 	      		// END Ugnjezden Neo4j
-	      		console.log('Redis je prosao!');
 	      		}
 	      	else {
-	      		console.log('Redis NIJE je prosao!');
 	      		return false;
 	      	}
       	}, err =>{

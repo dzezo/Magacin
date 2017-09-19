@@ -273,6 +273,32 @@ Izlaz
 { success: true, msg:"Ukidanje izlazne fakture uspesno" }
 ```
 
+```
+(PUT) /invoices/update/input/invoice/:invoiceId
+
+Ulaz
+{
+    supplier: "Ime dobavljaca",
+    taxId: "PIB",
+    refNumber: "Poziv na broj",
+    invNumber: "Broj fakture",
+    recvDate: "2017-08-20T00:00:00Z",
+    expDate: "2017-08-20T00:00:00Z",
+    total: 10000,
+    items: [{
+                "name": "MONITOR",
+                "quantity": 1,
+                "code": 2,
+                "purchaseP": 10000,
+                "sellingP": 15000
+            },...]
+}
+
+Izlaz
+{ success: false, msg:"Ažuriranje fakture neuspešno" }
+{ success: true, msg:"Ažuriranje fakture uspešno" }
+```
+
 
 
 

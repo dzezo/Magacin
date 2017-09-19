@@ -25,6 +25,7 @@ import { IzlaznaFakturaComponent } from './components/izlazna-faktura/izlazna-fa
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { AppGuard } from './guards/app.guard';
 import { DateService } from './services/date.service';
 import { InvoiceService } from './services/neo4j/invoice.service';
 import { ItemService } from './services/neo4j/item.service';
@@ -34,8 +35,8 @@ import { DataService } from './services/data.service';
 
 
 const appRoutes: Routes = [
-{path: '', component: HomeComponent},
-{path: 'login', component: LogInComponent},
+{path: '', component: HomeComponent, canActivate: [AppGuard]},
+{path: 'login', component: LogInComponent, canActivate: [AppGuard]},
 {path: 'ulaznefakture', component: UlazneFaktureComponent, canActivate: [AuthGuard]},
 {path: 'arhiva', component: ArhivaComponent, canActivate: [AuthGuard]},
 {path: 'magacin', component: MagacinComponent, canActivate: [AuthGuard]},
@@ -83,7 +84,8 @@ const appRoutes: Routes = [
     SupplierService,
     WarehouseService,
     DataService,
-    AuthGuard
+    AuthGuard,
+    AppGuard
   ],
   bootstrap: [AppComponent]
 })

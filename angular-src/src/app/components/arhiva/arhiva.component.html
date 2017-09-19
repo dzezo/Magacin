@@ -24,7 +24,7 @@
           <tbody>
             <tr *ngFor = "let arhArtikl of arhArtikli">
               <td>{{arhArtikl.code}}</td>
-              <td><a (click)="getArtikl(arhArtikl.id)">{{arhArtikl.name}}</a></td>
+              <td><a (click)="getArtikl(arhArtikl.id)" class="artikl-ime">{{arhArtikl.name}}</a></td>
               <td>{{arhArtikl.quantity}}</td>
               <td>{{arhArtikl.purchaseP}}</td>
               <td>{{arhArtikl.sellingP}}</td>

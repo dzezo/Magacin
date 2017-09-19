@@ -20,18 +20,13 @@ export class UlaznaFakturaComponent implements OnInit {
 	invoiceId: any;
 	// Autocomplete predlozi
 	suppliers = [];
-	items = [];
 	// Pretrazi ako se promeni zahtev
 	// Pocetni zahtev za dobavljaca
 	supplierName = "";
-	itemName = "";
 	// Autocomplete dropdown supplier
 	supplierDropdown = false;
 	supplierInput: any;
 	taxIdInput: any;
-	// Autocomplete dropdown item
-	itemNameInput: any;
-	active = null; // pomeraj aktivnog inputa
 	// Autocomplete dropdown pokazivaci
 	next = 0;
 	prev = 0;
@@ -39,17 +34,13 @@ export class UlaznaFakturaComponent implements OnInit {
 	rowData = [];
 	rowId = 0;
 	sum = 0;
-	addRowButton: any;
 	// Datumi
 	recvDate: any;
 	expDate: any;
-	// Datumi
-	issueDate: any;
 	// Disabled
 	undoButton = false;
 	editButton = false;
 	cancelButton = false;
-	addItemButton = false;
 	submitButton = false;
 	// Rezim prikaza
 	editMode = false;
@@ -108,8 +99,6 @@ export class UlaznaFakturaComponent implements OnInit {
 		this.expDate = $(this.elRef.nativeElement).find('#edit-eDate');
 		this.recvDate.datepicker();
 		this.expDate.datepicker();
-		// ADD ROW BUTTON
-		this.addRowButton = document.getElementById('add-row-button');
 	}
 
 	switchMode(){
@@ -162,7 +151,6 @@ export class UlaznaFakturaComponent implements OnInit {
   				callback(false, 'Ukidanje ulazne fakture neuspesno');
   		});
   	}
-
 
 	// VIEW MODE METODE
   	enableViewButtons(){
@@ -233,13 +221,11 @@ export class UlaznaFakturaComponent implements OnInit {
 	//EDIT MODE METODE
 	enableEditButtons(){
   		this.cancelButton = false;
-		this.addItemButton = false;
 		this.submitButton = false;
   	}
 
   	disableEditButtons(){
   		this.cancelButton = true;
-		this.addItemButton = true;
 		this.submitButton = true;
   	}
 
@@ -254,7 +240,7 @@ export class UlaznaFakturaComponent implements OnInit {
 	}
 	selectSupplier(supplier){
 		// Dobavi pib
-		this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(supplier)).subscribe(reply => {
+		this.supplierSvc.getSupplier(this.user.username, supplier).subscribe(reply => {
 			if(reply.success){
 				this.taxIdInput.val(reply.supplier.taxId);
 				this.supplierInput.val(supplier);
@@ -265,80 +251,6 @@ export class UlaznaFakturaComponent implements OnInit {
 			return false;
 		});
 	}
-	// Item
-	showItemDropdown(rowId){
-		// Ako postoji aktvni
-		if(this.active){
-			// Iskljuci stari
-			this.rowData[this.active].showDropdown = false;
-			// Ukljuci novi
-			for(var i=0; i<this.rowData.length; i++)
-				if(this.rowData[i].id == rowId){
-					this.rowData[i].showDropdown = true;
-					this.active = i;
-				}
-		}
-		else{
-			for(var i=0; i<this.rowData.length; i++)
-				if(this.rowData[i].id == rowId){
-					this.rowData[i].showDropdown = true;
-					this.active = i;
-				}
-		}
-	}
-	hideItemDropdown(){
-		// Ako postoji aktivni, onda iskljuci
-		if(this.active !== null){
-			this.items = [];
-			this.itemName = "";
-			this.rowData[this.active].showDropdown = false;
-			this.active = null;
-		}
-	}
-
-	selectItem(item, rowId){
-		// Dobavi detalje
-		this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(item)).subscribe(reply => {
-			if(reply.success){
-				this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);
-				this.itemNameInput.val(reply.item.name);
-				// Popuni red
-				for(var i=0; i<this.rowData.length; i++){
-					if(this.rowData[i].id == rowId){
-						this.rowData[i].code = reply.item.code;
-						this.rowData[i].name = reply.item.name;
-						this.rowData[i].purchaseP = reply.item.purchaseP;
-						this.rowData[i].sellingP = reply.item.sellingP;
-						// iskljuci dropdown
-						this.rowData[i].showDropdown = false;
-					}
-				}
-			}
-		}, err => {
-			console.log(err);
-			return false;
-		});
-	}
-
-	// Metode za tabelu
-	// Svaki red po kreiranju dobija id 
-	addRow(id){
-		this.addRowButton.scrollIntoView();
-		this.rowData.push({
-			id: id,
-			showDropdown: false
-		});
-		this.rowId++;
-	}
-
-	removeRow(id){
-		for(var i=0; i<this.rowData.length; i++){
-			if(this.rowData[i].id == id)
-				this.rowData.splice(i,1);
-		}
-		// Azuriraj sumu
-		this.sumInvoice();
-	}
 
 	// Metode za fakturu
 	// Nadji dobavljaca
@@ -346,7 +258,7 @@ export class UlaznaFakturaComponent implements OnInit {
 		if(this.supplierName != supplierName){
 			if(supplierName){
 				this.supplierName = supplierName; // Novi zahtev
-				this.supplierSvc.searchSupplier(this.user.username, encodeURIComponent(supplierName)).subscribe(reply => {
+				this.supplierSvc.searchSupplier(this.user.username, supplierName).subscribe(reply => {
 					if(reply.success){
 						this.suppliers = reply.suggestion.slice(0,4);
 						if (reply.suggestion.length > 0)
@@ -391,7 +303,7 @@ export class UlaznaFakturaComponent implements OnInit {
 				var selectedName = $(supplierDropdownEl[this.prev]).text();
 				if(selectedName){
 					// Dobavi pib
-					this.supplierSvc.getSupplier(this.user.username, encodeURIComponent(selectedName)).subscribe(reply => {
+					this.supplierSvc.getSupplier(this.user.username, selectedName).subscribe(reply => {
 						if(reply.success){
 							this.taxIdInput.val(reply.supplier.taxId);
 							// Dodaj u input
@@ -404,101 +316,6 @@ export class UlaznaFakturaComponent implements OnInit {
 					});
 				}
 			}
-		}
-	}
-
-	// Nadji artikal
-	searchItem(itemName, rowId, event){
-		if(this.itemName != itemName){
-			if(itemName){
-				this.itemName = itemName; // Novi zahtev
-				this.warehouseSvc.searchItem(this.user.username, encodeURIComponent(itemName)).subscribe(reply => {
-					if(reply.success){
-						this.items = reply.suggestion.slice(0,4);
-						if (reply.suggestion.length > 0)
-							this.showItemDropdown(rowId);
-						else
-							this.hideItemDropdown();
-						this.next = 0;
-						this.prev = 0;
-					}
-				}, err => {
-					console.log(err);
-					return false;
-				});
-			}
-			// prazno
-			else{
-				this.itemName = itemName;
-				this.hideItemDropdown();
-			}
-		}
-		else{
-			var itemDropdownEl = $(this.elRef.nativeElement).find('#item-dropdown-' + rowId).children();
-			if((event.key == "ArrowDown") && (this.next != itemDropdownEl.length)){
-				if(this.next == this.prev){
-					$(itemDropdownEl[this.prev]).addClass('selected');
-					this.next++;
-				}
-				else{
-					$(itemDropdownEl[this.prev]).removeClass('selected');
-					$(itemDropdownEl[this.next]).addClass('selected');
-					this.prev++;
-					this.next++;
-				}
-			}
-			else if((event.key == "ArrowUp") && (this.prev != 0)){
-				this.prev--;
-				this.next--;
-				$(itemDropdownEl[this.next]).removeClass('selected');
-				$(itemDropdownEl[this.prev]).addClass('selected');
-			}
-			else if((event.key == "Enter") && itemName){
-				var selectedItem = $(itemDropdownEl[this.prev]).text();
-				// Dobavi pib
-				this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(selectedItem)).subscribe(reply => {
-					if(reply.success){
-						// Dodaj u input
-						this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);
-						this.itemNameInput.val(selectedItem);
-						// Popuni red
-						for(var i=0; i<this.rowData.length; i++){
-							if(this.rowData[i].id == rowId){
-								this.rowData[i].code = reply.item.code;
-								this.rowData[i].name = reply.item.name;
-								this.rowData[i].purchaseP = reply.item.purchaseP;
-								this.rowData[i].sellingP = reply.item.sellingP;
-								// iskljuci dropdown
-								this.rowData[i].showDropdown = false;
-							}
-						}
-					}
-				}, err => {
-					console.log(err);
-					return false;
-				});
-			}
-		}
-	}
-
-	// Dobavi artikal po kodu
-	getItemByCode(code, rowId){
-		if(! isNaN(code)){
-			this.warehouseSvc.getItemCode(this.user.username, parseInt(code)).subscribe(reply => {
-				if(reply.success && (reply.item != null)){
-					for(var i=0; i<this.rowData.length; i++){
-						if(this.rowData[i].id == rowId){
-							this.rowData[i].code = reply.item.code;
-							this.rowData[i].name = reply.item.name;
-							this.rowData[i].purchaseP = reply.item.purchaseP;
-							this.rowData[i].sellingP = reply.item.sellingP;
-						}
-					}
-				}
-			}, err => {
-				console.log(err);
-				return false;
-			});
 		}
 	}
 
@@ -555,12 +372,12 @@ export class UlaznaFakturaComponent implements OnInit {
 			items: this.rowData
 		};
 		// Ponistavanje stare
-		this.undo((success, msg)=>{
+		this.undoRedis((success)=>{
 			if(success){
 				// Slanje nove
-				this.sendToRedis(newSupplier, newItems, (success)=>{
+				this.updateRedis(newSupplier, newItems, (success)=>{
 					if(success)
-						this.sendToNeo(newInvoice);
+						this.updateNeo(newInvoice);
 					else{
 						this.enableEditButtons();
 						return false;
@@ -568,14 +385,14 @@ export class UlaznaFakturaComponent implements OnInit {
 				});
 			}
 			else{
-				this.flashMessage.show(msg, {cssClass: 'alert-danger', timeout: 3000});
+				this.flashMessage.show('Ažuriranje fakture neuspešno', {cssClass: 'alert-danger', timeout: 3000});
 				this.enableEditButtons();
 				return false;
 			}
 		});
 	}
 
-	sendToRedis(newSupplier, newItems, callback){
+	updateRedis(newSupplier, newItems, callback){
 		this.supplierSvc.invAddSupplier(this.user.username, newSupplier).subscribe(reply =>{
 			if(reply.success){
 				this.warehouseSvc.addItems(this.user.username, newItems).subscribe(reply =>{
@@ -593,8 +410,8 @@ export class UlaznaFakturaComponent implements OnInit {
 		});
 	}
 
-	sendToNeo(newInvoice){
-		this.invoiceSvc.addInputInvoice(this.user.username, newInvoice).subscribe(reply => {
+	updateNeo(newInvoice){
+		this.invoiceSvc.updateInputInvoice(this.invoiceId, newInvoice).subscribe(reply => {
 			if(reply.success){
 				this.flashMessage.show(reply.msg, {cssClass: 'alert-success', timeout: 3000});
 				// Izbaci stari id

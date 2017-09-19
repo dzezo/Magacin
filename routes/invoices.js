@@ -95,4 +95,14 @@ router.delete('/undo/output/invoice/:invoiceId', function(req, res, next) {
 	});
 });
 
+// Update Input Invoice
+router.put('/update/input/invoice/:invoiceId', function(req, res, next) {
+	Invoice.updateInputInvoice(req.params.invoiceId, req.body, (err) => {
+		if(err)
+			return res.json({ success: false, msg:"Ažuriranje fakture neuspešno" })
+		res.json({ success: true, msg:"Ažuriranje fakture uspešno" })
+	});
+});
+
+
 module.exports = router;

@@ -148,7 +148,8 @@ module.exports.updateItem = function(itemId, update, callback){
 		.run(
 			'MATCH (itm:Item) WHERE ID(itm)=$itemId ' +
 			'SET itm.code = $newCode, itm.name = $newName ' +
-			'RETURN itm',
+			'WITH {id: toString(ID(itm)), code: itm.code, name: itm.name, quantity: itm.quantity, purchaseP: itm.purchaseP, sellingP: itm.sellingP} AS ITEM ' +
+			'RETURN ITEM',
 			{
 				itemId: neo4j.int(itemId),
 				newCode: update.newCode,
@@ -158,7 +159,7 @@ module.exports.updateItem = function(itemId, update, callback){
 		.then((result)=>{
 			session.close();
 			var updatedItem = result.records[0].get(0);
-			callback(null, updatedItem.properties);
+			callback(null, updatedItem);
 		})
 		.catch((err)=>{
 			session.close();

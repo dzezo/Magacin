@@ -62,5 +62,14 @@ export class InvoiceService {
 		.map(res => res.json());
 	}
 
+	// PUT
+	// UPDATE INPUT INVOICE
+	updateInputInvoice(invoiceId, updatedInvoice) {
+		var headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		return this.http.put('http://localhost:3000/invoices/update/input/invoice/' + invoiceId, JSON.stringify(updatedInvoice), {headers: headers})
+      		.map(res => res.json());
+	}
+
 
 }

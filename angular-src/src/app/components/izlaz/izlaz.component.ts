@@ -88,7 +88,7 @@ export class IzlazComponent implements OnInit {
 
   selectItem(item, rowId){
     // Dobavi detalje
-    this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(item)).subscribe(reply => {
+    this.warehouseSvc.getItemName(this.user.username, item).subscribe(reply => {
       if(reply.success){
         this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);
         this.itemNameInput.val(reply.item.name);
@@ -151,7 +151,7 @@ export class IzlazComponent implements OnInit {
     if(this.itemName != itemName){
       if(itemName){
         this.itemName = itemName; // Novi zahtev
-        this.warehouseSvc.searchItem(this.user.username, encodeURIComponent(itemName)).subscribe(reply => {
+        this.warehouseSvc.searchItem(this.user.username, itemName).subscribe(reply => {
           if(reply.success){
             this.items = reply.suggestion.slice(0,4);
             if (reply.suggestion.length > 0)
@@ -195,7 +195,7 @@ export class IzlazComponent implements OnInit {
       else if((event.key == "Enter") && itemName){
         var selectedItem = $(itemDropdownEl[this.prev]).text();
         // Dobavi pib
-        this.warehouseSvc.getItemName(this.user.username, encodeURIComponent(selectedItem)).subscribe(reply => {
+        this.warehouseSvc.getItemName(this.user.username, selectedItem).subscribe(reply => {
           if(reply.success){
             // Dodaj u input
             this.itemNameInput = $(this.elRef.nativeElement).find('#item-name-' + rowId);

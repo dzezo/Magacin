@@ -69,8 +69,11 @@
           <div class="form-group">
             <label for="modal-name">Šifra: </label>
             <input #modSifra type="text" class="form-control" id="modal-sifra" value={{artiklSifra}} placeholder="Šifra">
-            <label *ngIf="errorCode" for="modal-name" style="color: red; float: right; font-size: 10px;">
+            <label *ngIf="errorCode1" for="modal-name" style="color: red; float: right; font-size: 10px;">
             Popunite polje!
+            </label>
+            <label *ngIf="errorCode2" for="modal-name" style="color: red; float: right; font-size: 10px;">
+            Šifra mora biti broj!
             </label>
           </div>
           <div class="form-group">

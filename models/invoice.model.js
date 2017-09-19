@@ -113,8 +113,8 @@ module.exports.getOutputInvoice = function (invoiceId, callback){
 module.exports.addInputInvoice = function (username, newInvoice, callback) {
 	session
 		.run(
-			'MATCH (a: User {username: $username}) ' +
-			'CREATE (b: Invoice {supplier: $supplier, taxId: $taxId, refNumber: $refNumber, invNumber: $invNumber, recvDate: $recvDate, expDate: $expDate, total: $total}) ' +
+			'MATCH (a:User {username: $username}) ' +
+			'CREATE (b:Invoice {supplier: $supplier, taxId: $taxId, refNumber: $refNumber, invNumber: $invNumber, recvDate: $recvDate, expDate: $expDate, total: $total}) ' +
 			'MERGE (a)-[r:INPUT]-(b) ' +
 			'RETURN b',
 			{
@@ -140,7 +140,7 @@ module.exports.addInputInvoice = function (username, newInvoice, callback) {
 						'MATCH (inv:Invoice) WHERE ID(inv)=$invId ' +
 						'MERGE (u)-[:WAREHOUSE]-(itm:Item {code: $code}) ' +
 						'ON CREATE SET itm.name= $name, itm.quantity= $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
-						'ON MATCH SET itm.quantity = itm.quantity + $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
+						'ON MATCH SET itm.name= $name, itm.quantity= itm.quantity + $quantity, itm.purchaseP= $purchaseP, itm.sellingP= $sellingP ' +
 						'MERGE (inv)-[r:IN {quantity: $quantity, purchaseP: $purchaseP, sellingP: $sellingP}]-(itm) ' +
 						'ON CREATE SET r.timestamp = timestamp()',
 						{
@@ -181,8 +181,8 @@ module.exports.addInputInvoice = function (username, newInvoice, callback) {
 module.exports.addOutputInvoice = function (username, newInvoice, callback) {
 	session
 		.run(
-			'MATCH (a: User {username: $username}) ' +
-			'CREATE (b: Invoice {purchaser: $purchaser, invNumber: $invNumber, issueDate: $issueDate, total: $total}) ' +
+			'MATCH (a:User {username: $username}) ' +
+			'CREATE (b:Invoice {purchaser: $purchaser, invNumber: $invNumber, issueDate: $issueDate, total: $total}) ' +
 			'MERGE (a)-[r:OUTPUT]-(b) ' +
 			'RETURN b',
 			{
@@ -301,7 +301,8 @@ function undoInputItems(items){
 			// DELETE ITEM
 			session
 				.run(
-					'MATCH (itm:Item)-[r]-() WHERE ID(itm)=$itmId DELETE r,itm', { itmId: item.id }
+					'MATCH (itm:Item)-[r]-() WHERE ID(itm)=$itmId AND NOT (itm)-[:OUT]-() ' +
+					'delete r,itm', { itmId: item.id }
 				)
 				.then((result)=>{
 					session.close();
@@ -334,6 +335,63 @@ module.exports.undoOutputInvoice = function (invoiceId, callback){
 		.catch((err)=>{
 			session.close();
 			console.log(err);
+			callback(err);
+		});
+}
+
+// PUT
+module.exports.updateInputInvoice = function (invoiceId, newInvoice, callback) {
+	session
+		.run(
+			'MATCH (b:Invoice) WHERE ID(b)=$invId ' +
+			'SET b.supplier= $supplier, b.taxId= $taxId, b.refNumber= $refNumber, b.invNumber= $invNumber, b.recvDate= $recvDate, b.expDate= $expDate, b.total= $total',
+			{
+				// INVOICE NODE
+				invId: neo4j.int(invoiceId),
+				supplier: newInvoice.supplier,
+				taxId: newInvoice.taxId,
+				refNumber: newInvoice.refNumber,
+				invNumber: newInvoice.invNumber,
+				recvDate: newInvoice.recvDate,
+				expDate: newInvoice.expDate,
+				total: newInvoice.total,
+			}
+		)
+		.then((result)=>{
+			session.close();
+			newInvoice.items.forEach((item)=>{
+				session
+					.run(
+						'MATCH (inv:Invoice)-[r:IN]-(itm:Item {code: $code}) WHERE ID(inv)=$invId ' +
+						'SET itm.name= $name, itm.quantity= itm.quantity + $quantity, r.quantity= $quantity, r.purchaseP= $purchaseP, r.sellingP= $sellingP',
+						{
+							// INVOICE NODE
+							invId: neo4j.int(invoiceId),
+							// ITEM NODE
+							code: item.code,
+							name: item.name,
+							quantity: item.quantity, 
+							purchaseP: item.purchaseP, 
+							sellingP: item.sellingP
+						}
+					)
+					.then((result)=>{
+						session.close();
+					})
+					.catch((err)=>{
+						session.close();
+						console.log(err);
+
+						callback(err);
+					});
+			});
+
+			callback(null);
+		})
+		.catch((err)=>{
+			session.close();
+			console.log(err);
+
 			callback(err);
 		});
 }

@@ -4,7 +4,7 @@
     <!-- VIEW MODE START -->
     <div [hidden]="editMode" class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3">
       <div class="head-wrapper">
-        <h1>Izlazna faktura</h1>
+        <h1>Ulazna faktura</h1>
         <div class="head-action-wrapper">
           <button (click)="undoInvoice()" class="btn btn-primary" [disabled]="undoButton">Poništi</button>
           <button (click)="switchMode()" class="btn btn-primary" [disabled]="editButton">Izmeni</button>
@@ -86,7 +86,7 @@
     <!-- EDIT MODE START -->
     <div [hidden]="!editMode" class="col-sm-9 ml-sm-auto col-md-10 ml-md-auto pt-3">
       <div class="head-wrapper">
-        <h1>Izlazna faktura</h1>
+        <h1>Ulazna faktura</h1>
         <div class="head-action-wrapper">
           <button (click)="switchMode()" class="btn btn-primary" [disabled]="cancelButton">Otkaži</button>
         </div>
@@ -154,39 +154,20 @@
         <tbody>
           <tr *ngFor='let row of rowData'>
             <td style="width:10%;">
-              <input #code (keyup.enter)="getItemByCode(code.value, row.id)" [(ngModel)]="row.code" name="row.code"></td>
+              <input #code [(ngModel)]="row.code" name="row.code" disabled></td>
             <td style="width:30%;">
-              <div style="position: relative;">
-                <input clickOutside #itemName 
-                  (keyup)="searchItem(itemName.value, row.id ,$event)" 
-                  (clickOutside)="hideItemDropdown()" 
-                  (keydown.Tab)="hideItemDropdown()"
-                  [(ngModel)]="row.name" name="row.name" id="item-name-{{row.id}}">
-                <!-- ITEM DROPDOWN START -->
-                <div *ngIf="row.showDropdown" id="item-dropdown-{{row.id}}" class="dropdown">
-                  <div class="dropdown-element" (click)="selectItem(item, row.id)" *ngFor='let item of items'>{{item}}</div>
-                </div>
-                <!-- ITEM DROPDOWN END -->
-              </div>
+              <input #itemName [(ngModel)]="row.name" name="row.name" >
             </td>
             <td style="width:10%;">
-              <input (focusout)="sumInvoice()" 
-                (keyup.enter)="sumInvoice()"
-                [(ngModel)]="row.quantity" name="row.quantity">
+              <input (focusout)="sumInvoice()" (keyup.enter)="sumInvoice()" [(ngModel)]="row.quantity" name="row.quantity">
             </td>
             <td style="width:20%;"><input [(ngModel)]="row.purchaseP" name="row.purchaseP"></td>
             <td style="width:20%;">
-              <input (focusout)="sumInvoice()" 
-                (keyup.enter)="sumInvoice()"
-                [(ngModel)]="row.sellingP" name="row.sellingP">
+              <input (focusout)="sumInvoice()" (keyup.enter)="sumInvoice()" [(ngModel)]="row.sellingP" name="row.sellingP">
             </td>
-            <td style="width:10%;">
-              <a (click)="removeRow(row.id)"><span class="fa fa-trash"></span></a>
-            </td>
+            <td style="width:10%;"></td>
           </tr>
         </tbody>
-        <!-- ADD ITEM -->
-        <button (click)="addRow(rowId)" id="add-row-button" class="btn btn-primary" [disabled]="addItemButton">Novi Artikal</button>
       </table>
       <!-- INVOICE ITEMS END -->
       <hr>
