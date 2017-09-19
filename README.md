@@ -277,6 +277,7 @@ Izlaz
 (PUT) /invoices/update/input/invoice/:invoiceId
 
 Ulaz
+
 {
     supplier: "Ime dobavljaca",
     taxId: "PIB",
@@ -287,7 +288,8 @@ Ulaz
     total: 10000,
     items: [{
                 "name": "MONITOR",
-                "quantity": 1,
+                "oldQuantity": 1,
+                "quantity": 0,
                 "code": 2,
                 "purchaseP": 10000,
                 "sellingP": 15000

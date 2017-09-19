@@ -343,8 +343,11 @@ module.exports.undoOutputInvoice = function (invoiceId, callback){
 module.exports.updateInputInvoice = function (invoiceId, newInvoice, callback) {
 	session
 		.run(
-			'MATCH (b:Invoice) WHERE ID(b)=$invId ' +
-			'SET b.supplier= $supplier, b.taxId= $taxId, b.refNumber= $refNumber, b.invNumber= $invNumber, b.recvDate= $recvDate, b.expDate= $expDate, b.total= $total',
+			'MATCH (inv:Invoice)-[in:IN]-(itm:Item) WHERE ID(inv)=$invId ' +
+			'OPTIONAL MATCH (oinv:Invoice)-[oin:IN]-(itm) WHERE ID(oinv)<>$invId ' +
+			'WITH inv, {code: itm.code, rel: in, orels: COLLECT(oin)} AS items ' +
+			'SET inv.supplier= $supplier, inv.taxId= $taxId, inv.refNumber= $refNumber, inv.invNumber= $invNumber, inv.recvDate= $recvDate, inv.expDate= $expDate, inv.total= $total ' +
+			'RETURN COLLECT(DISTINCT items)',
 			{
 				// INVOICE NODE
 				invId: neo4j.int(invoiceId),
@@ -359,20 +362,49 @@ module.exports.updateInputInvoice = function (invoiceId, newInvoice, callback) {
 		)
 		.then((result)=>{
 			session.close();
-			newInvoice.items.forEach((item)=>{
-				session
+			var items = result.records[0].get(0);
+			items.forEach((item)=>{
+				// GET ITEM FROM NEWINVOICE
+				var updatedItem;
+				newInvoice.items.forEach((invoiceItem)=>{
+					if(item.code == invoiceItem.code)
+						updatedItem = invoiceItem;
+				});
+
+				var arrOfRels = item.orels, // other relationships
+				 	oldRel = item.rel.properties, // old relationship that needs update
+					isLatest = false;
+
+				// FIND IF OLD IS LATEST RELATIONSHIP
+				if(arrOfRels){
+					// FIND LATEST RELATIONSHIP
+					var latest = arrOfRels[0].properties;
+					for(var i=1; i<arrOfRels.length; i++){
+						if(latest.timestamp < arrOfRels[i].properties.timestamp)
+							latest = arrOfRels[i].properties;
+					}
+					if(oldRel.timestamp > latest.timestamp)
+						isLatest = true;
+				}
+				else
+					isLatest = true;
+
+				if(isLatest){
+					session
 					.run(
 						'MATCH (inv:Invoice)-[r:IN]-(itm:Item {code: $code}) WHERE ID(inv)=$invId ' +
-						'SET itm.name= $name, itm.quantity= itm.quantity + $quantity, r.quantity= $quantity, r.purchaseP= $purchaseP, r.sellingP= $sellingP',
+						'SET itm.name= $name, itm.quantity= itm.quantity + $quantity - $oldQuantity , itm.sellingP = $sellingP, itm.purchaseP = $purchaseP, ' +
+						' r.quantity= $quantity, r.purchaseP= $purchaseP, r.sellingP= $sellingP',
 						{
 							// INVOICE NODE
 							invId: neo4j.int(invoiceId),
 							// ITEM NODE
-							code: item.code,
-							name: item.name,
-							quantity: item.quantity, 
-							purchaseP: item.purchaseP, 
-							sellingP: item.sellingP
+							code: updatedItem.code,
+							name: updatedItem.name,
+							quantity: updatedItem.quantity, 
+							oldQuantity: updatedItem.oldQuantity,
+							purchaseP: updatedItem.purchaseP, 
+							sellingP: updatedItem.sellingP
 						}
 					)
 					.then((result)=>{
@@ -384,6 +416,34 @@ module.exports.updateInputInvoice = function (invoiceId, newInvoice, callback) {
 
 						callback(err);
 					});
+				}
+				else{
+					session
+					.run(
+						'MATCH (inv:Invoice)-[r:IN]-(itm:Item {code: $code}) WHERE ID(inv)=$invId ' +
+						'SET itm.name= $name, itm.quantity= itm.quantity + $quantity - $oldQuantity, r.quantity= $quantity, r.purchaseP= $purchaseP, r.sellingP= $sellingP',
+						{
+							// INVOICE NODE
+							invId: neo4j.int(invoiceId),
+							// ITEM NODE
+							code: updatedItem.code,
+							name: updatedItem.name,
+							quantity: updatedItem.quantity, 
+							oldQuantity: updatedItem.oldQuantity,
+							purchaseP: updatedItem.purchaseP, 
+							sellingP: updatedItem.sellingP
+						}
+					)
+					.then((result)=>{
+						session.close();
+					})
+					.catch((err)=>{
+						session.close();
+						console.log(err);
+
+						callback(err);
+					});
+				}
 			});
 
 			callback(null);

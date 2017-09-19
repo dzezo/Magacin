@@ -18,6 +18,8 @@ export class DataService {
   // Ispitjue podatke na ulaznoj fakturi
   checkInputInvoice(details, items){
   	try{
+      if(!items.length) throw "Greška! Faktura je prazna.";
+
   		if(!details.supplier) throw "Greška! Unesite dobavljača";
   		if(!details.taxId) throw "Greška! Unesite PIB";
   		if(!details.refNum) throw "Greška! Unesite poziv na broj";
@@ -58,6 +60,8 @@ export class DataService {
   // Ispituje podatke na izlaznoj fakturi
   checkOutputInvoice(details, items){
   	try{
+      if(!items.length) throw "Greška! Faktura je prazna.";
+      
   		if(!details.purchaser) throw "Greška! Unesite dobavljača";
   		if(!details.invNum) throw "Greška! Unesite broj fakture";
   		if(!details.issueDate) throw "Greška! Unesite datum dospeća";
