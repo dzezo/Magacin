@@ -25,97 +25,41 @@ module.exports.AddItems = function(username, items, callback) {
 }
 
 function add(username, item, callback){
-	// Returns nil or itemName
-	client.hget('user:' + username + ':codes', item.code, (err, oldName)=>{
-		if(err){
-			console.log(err);
-			return callback(err);
-		}
-		// New item
-		if(!oldName){
-			client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
-				if(err){
-					console.log(err);
-					return callback(err);
-				}
-				// user:name:codes itemCode itemName
-				client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
+	// Add can be called after undo which means that archived items can be on the list, and if so ignore them
+	// If its not called after undo then argument oldName is undefined
+	if(item.oldName){
+		client.sismember('user:' + username + ':archive', item.oldName, (err, exists)=>{
+			if(err){
+				console.log(err);
+				return callback(err);
+			}
+			else if(!exists){
+				// Returns nil or itemName
+				client.hget('user:' + username + ':codes', item.code, (err, oldName)=>{
 					if(err){
 						console.log(err);
 						return callback(err);
 					}
-					// user:name:itemName code itemCode name itemName purchaseP itemPurchaseP sellingP itemSellingP count 1
-					client.hmset('user:' + username + ':' + item.name, [
-						'code', item.code,
-						'name', item.name, 
-						'purchaseP', item.purchaseP, 
-						'sellingP', item.sellingP,
-						'count', 1
-					], (err, reply)=>{
-						if(err){
-							console.log(err);
-							return callback(err);
-						}
-						else
-							return callback(null);
-					});
-				});
-			});
-		}
-		else if(item.name == oldName){
-			client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
-				if(err){
-					console.log(err);
-					return callback(err);
-				}
-				// Update item
-				client.hmset('user:' + username + ':' + item.name, [
-					'purchaseP', item.purchaseP, 
-					'sellingP', item.sellingP,
-				], (err, reply)=>{
-					if(err){
-						console.log(err);
-						return callback(err);
-					}
-					else
-						return callback(null);
-				});
-			});
-		}
-		// Name change
-		else{
-			client.srem('user:' + username + ':warehouse', oldName, (err,reply)=>{
-				if(err){
-					console.log(err);
-					return callback(err);
-				}
-				// Update codes
-				client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
-					if(err){
-						console.log(err);
-						return callback(err);
-					}
-					client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
-						if(err){
-							console.log(err);
-							return callback(err);
-						}
-						// Renaming item hash
-						client.rename('user:' + username + ':' + oldName, 'user:' + username + ':' + item.name, (err, reply)=>{
+					// New item
+					else if(!oldName){
+						client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
 							if(err){
 								console.log(err);
 								return callback(err);
 							}
-							client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+							// user:name:codes itemCode itemName
+							client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
 								if(err){
 									console.log(err);
 									return callback(err);
 								}
-								// Update item
+								// user:name:itemName code itemCode name itemName purchaseP itemPurchaseP sellingP itemSellingP count 1
 								client.hmset('user:' + username + ':' + item.name, [
-									'name', item.name,
+									'code', item.code,
+									'name', item.name, 
 									'purchaseP', item.purchaseP, 
 									'sellingP', item.sellingP,
+									'count', 1
 								], (err, reply)=>{
 									if(err){
 										console.log(err);
@@ -126,11 +70,198 @@ function add(username, item, callback){
 								});
 							});
 						});
+					}
+					else if(item.name == oldName){
+						client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+							if(err){
+								console.log(err);
+								return callback(err);
+							}
+							// Update item
+							client.hmset('user:' + username + ':' + item.name, [
+								'purchaseP', item.purchaseP, 
+								'sellingP', item.sellingP,
+							], (err, reply)=>{
+								if(err){
+									console.log(err);
+									return callback(err);
+								}
+								else
+									return callback(null);
+							});
+						});
+					}
+					// Name change
+					else{
+						client.srem('user:' + username + ':warehouse', oldName, (err,reply)=>{
+							if(err){
+								console.log(err);
+								return callback(err);
+							}
+							// Update codes
+							client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
+								if(err){
+									console.log(err);
+									return callback(err);
+								}
+								client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+									if(err){
+										console.log(err);
+										return callback(err);
+									}
+									// Renaming item hash
+									client.rename('user:' + username + ':' + oldName, 'user:' + username + ':' + item.name, (err, reply)=>{
+										if(err){
+											console.log(err);
+											return callback(err);
+										}
+										client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+											if(err){
+												console.log(err);
+												return callback(err);
+											}
+											// Update item
+											client.hmset('user:' + username + ':' + item.name, [
+												'name', item.name,
+												'purchaseP', item.purchaseP, 
+												'sellingP', item.sellingP,
+											], (err, reply)=>{
+												if(err){
+													console.log(err);
+													return callback(err);
+												}
+												else
+													return callback(null);
+											});
+										});
+									});
+								});
+							});
+						});
+					}
+				});
+			}
+			else if(exists){
+				// Remove from tmp archive=
+				client.srem('user:' + username + ':archive', item.oldName, (err,reply)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					else
+						callback(null);
+				});				
+			}
+		});
+	}
+	else{
+		// Returns nil or itemName
+		client.hget('user:' + username + ':codes', item.code, (err, oldName)=>{
+			if(err){
+				console.log(err);
+				return callback(err);
+			}
+			// New item
+			else if(!oldName){
+				client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					// user:name:codes itemCode itemName
+					client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
+						if(err){
+							console.log(err);
+							return callback(err);
+						}
+						// user:name:itemName code itemCode name itemName purchaseP itemPurchaseP sellingP itemSellingP count 1
+						client.hmset('user:' + username + ':' + item.name, [
+							'code', item.code,
+							'name', item.name, 
+							'purchaseP', item.purchaseP, 
+							'sellingP', item.sellingP,
+							'count', 1
+						], (err, reply)=>{
+							if(err){
+								console.log(err);
+								return callback(err);
+							}
+							else
+								return callback(null);
+						});
 					});
 				});
-			});
-		}
-	});
+			}
+			else if(item.name == oldName){
+				client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					// Update item
+					client.hmset('user:' + username + ':' + item.name, [
+						'purchaseP', item.purchaseP, 
+						'sellingP', item.sellingP,
+					], (err, reply)=>{
+						if(err){
+							console.log(err);
+							return callback(err);
+						}
+						else
+							return callback(null);
+					});
+				});
+			}
+			// Name change
+			else{
+				client.srem('user:' + username + ':warehouse', oldName, (err,reply)=>{
+					if(err){
+						console.log(err);
+						return callback(err);
+					}
+					// Update codes
+					client.hset('user:' + username + ':codes', item.code, item.name, (err, reply)=>{
+						if(err){
+							console.log(err);
+							return callback(err);
+						}
+						client.sadd('user:' + username + ':warehouse', item.name, (err, newItem)=>{
+							if(err){
+								console.log(err);
+								return callback(err);
+							}
+							// Renaming item hash
+							client.rename('user:' + username + ':' + oldName, 'user:' + username + ':' + item.name, (err, reply)=>{
+								if(err){
+									console.log(err);
+									return callback(err);
+								}
+								client.hincrby('user:' + username + ':' + item.name, 'count', 1, (err, reply)=>{
+									if(err){
+										console.log(err);
+										return callback(err);
+									}
+									// Update item
+									client.hmset('user:' + username + ':' + item.name, [
+										'name', item.name,
+										'purchaseP', item.purchaseP, 
+										'sellingP', item.sellingP,
+									], (err, reply)=>{
+										if(err){
+											console.log(err);
+											return callback(err);
+										}
+										else
+											return callback(null);
+									});
+								});
+							});
+						});
+					});
+				});
+			}
+		});
+	}
 }
 
 // GET
@@ -232,8 +363,15 @@ function undo(username, itemName, callback){
 					callback(null)
 			});
 		}
-		else
-			callback(null);
+		// ARCHIVED ITEM
+		else{
+			client.sadd('user:' + username + ':archive', itemName, (err, reply)=>{
+				if(err)
+					callback(err);
+				else
+					callback(null);
+			});
+		}
 	});
 }
 

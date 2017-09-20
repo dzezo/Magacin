@@ -353,6 +353,7 @@ export class UlaznaFakturaComponent implements OnInit {
 		// Pakovanje
 		for(var i=0; i<this.invRowData.length; i++)
 		{
+			this.rowData[i].oldName = this.invRowData[i].name;
 			this.rowData[i].oldQuantity = this.invRowData[i].quantity;
 		}
 		// Neo4j faktura

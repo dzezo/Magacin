@@ -376,7 +376,7 @@ module.exports.updateInputInvoice = function (invoiceId, newInvoice, callback) {
 					isLatest = false;
 
 				// FIND IF OLD IS LATEST RELATIONSHIP
-				if(arrOfRels){
+				if(arrOfRels.length){
 					// FIND LATEST RELATIONSHIP
 					var latest = arrOfRels[0].properties;
 					for(var i=1; i<arrOfRels.length; i++){
