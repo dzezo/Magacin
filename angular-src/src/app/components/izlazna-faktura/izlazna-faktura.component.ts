@@ -8,6 +8,13 @@ import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
+interface OutputInvoiceDetails {
+    purchaser: any,
+	invNumber: any,
+	issueDate: any,
+	total: any
+}
+
 @Component({
   selector: 'app-izlazna-faktura',
   templateUrl: './izlazna-faktura.component.html',
@@ -44,7 +51,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 	// Rezim prikaza
 	editMode = false;
 	// Originalni podaci sa fakture
-	invDetails: any;
+	invDetails: OutputInvoiceDetails;
 	invRowData = [];
 	// Input group
 	nameView: any;

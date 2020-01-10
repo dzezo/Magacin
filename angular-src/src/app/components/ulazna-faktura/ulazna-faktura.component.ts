@@ -9,6 +9,16 @@ import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
+interface InputInvoiceDetails {
+    supplier: any,
+	taxId: any,
+	refNumber: any,
+	invNumber: any,
+	recvDate: any,
+	expDate: any,
+	total: any
+}
+
 @Component({
   selector: 'app-ulazna-faktura',
   templateUrl: './ulazna-faktura.component.html',
@@ -46,7 +56,7 @@ export class UlaznaFakturaComponent implements OnInit {
 	editMode = false;
 	// Originalni podaci sa fakture
 	invSupplier: any;
-	invDetails: any;
+	invDetails: InputInvoiceDetails;
 	invRowData = [];
 	// Input group view
 	supplierView: any;
