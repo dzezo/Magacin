@@ -1,15 +1,38 @@
  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <a class="navbar-brand">Magacin</a>
-  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse">
+  <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
+      <!-- LOGGED OUT ITEMS -->
       <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
         <a [routerLink]="['']" class="nav-link">Početna</a>
       </li>
       <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact: true}" class="nav-item">
         <a [routerLink]="['/login']" class="nav-link">Ulaz</a>
+      </li>
+      <!-- LOGGED IN ITEMS -->
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/magacin']" class="nav-link">Magacin</a>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/arhiva']" class="nav-link">Arhiva</a>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/ulaznefakture']" class="nav-link">Ulazne fakture</a>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/izlaznefakture']" class="nav-link">Izlazne fakture</a>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/dobavljaci']" class="nav-link">Dobavljači</a><hr>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/ulaz']" class="nav-link">Nova ulazna faktura</a>
+      </li>
+      <li *ngIf="authService.loggedIn()" class="nav-item d-sm-none">
+        <a [routerLink]="['/izlaz']" class="nav-link">Nova izlazna faktura</a><hr>
       </li>
       <li *ngIf="authService.loggedIn()" class="nav-item">
         <a (click)="onLogoutClick()" [routerLink]="['/login']" class="nav-link">Izlaz</a>
