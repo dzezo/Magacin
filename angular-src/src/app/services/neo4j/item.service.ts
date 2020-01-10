@@ -9,23 +9,23 @@ export class ItemService {
 
   	// GET
   	getItem(itemId){
-  		return this.http.get('http://localhost:3000/items/get/item/' + itemId)
+  		return this.http.get('items/get/item/' + itemId)
 			.map(res => res.json());
   	}
  		
 	getArchItems(username){
-		return this.http.get('http://localhost:3000/items/get/archive/' + username)
+		return this.http.get('items/get/archive/' + username)
 			.map(res => res.json());
 	}
 
 	getItems(username){
-		return this.http.get('http://localhost:3000/items/get/warehouse/' + username)
+		return this.http.get('items/get/warehouse/' + username)
 			.map(res => res.json());
 	}
 
 	// DELETE
 	archiveItem(itemId) {
-		return this.http.delete('http://localhost:3000/items/archive/item/' + itemId)
+		return this.http.delete('items/archive/item/' + itemId)
 			.map(res => res.json());
 	}
 
@@ -33,7 +33,7 @@ export class ItemService {
 	updateItem(itemId, newItem) {
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.put('http://localhost:3000/items/update/item/' + itemId, JSON.stringify(newItem), {headers: headers})
+		return this.http.put('items/update/item/' + itemId, JSON.stringify(newItem), {headers: headers})
       		.map(res => res.json());
 	}
 }

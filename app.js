@@ -15,7 +15,7 @@ var suppliers = require('./routes/suppliers');
 var warehouses = require('./routes/warehouses');
 
 // Port Number
-var port = 3000;
+var port = process.env.PORT || 8080;
 
 // CORS Middleware
 app.use(cors());
@@ -35,9 +35,9 @@ app.use('/invoices', invoices);
 app.use('/suppliers', suppliers);
 app.use('/warehouses', warehouses);
 
-// Index Route
-app.get('/', function (req, res) {
-	res.send('Invalid Endpoint');
+// Path Location Strategy
+app.get('/*', function(req, res){
+	res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Start Server

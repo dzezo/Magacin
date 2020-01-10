@@ -12,7 +12,7 @@ export class InvoiceService {
 	addInputInvoice(username, newInvoice){
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.post('http://localhost:3000/invoices/add/input/' + username, JSON.stringify(newInvoice), {headers: headers})
+		return this.http.post('invoices/add/input/' + username, JSON.stringify(newInvoice), {headers: headers})
 			.map(res => res.json());
 	}
 
@@ -20,45 +20,45 @@ export class InvoiceService {
 	addOutputInvoice(username, newInvoice){
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.post('http://localhost:3000/invoices/add/output/' + username, JSON.stringify(newInvoice), {headers: headers})
+		return this.http.post('invoices/add/output/' + username, JSON.stringify(newInvoice), {headers: headers})
 			.map(res => res.json());
 	}
 
 	// GET
 	// GET INPUT INVOICES
 	getInputInvoices(username){
-		return this.http.get('http://localhost:3000/invoices/get/input/' + username)
+		return this.http.get('invoices/get/input/' + username)
 			.map(res => res.json());
 	}
 
 	// GET OUTPUT INVOICES
 	getOutputInvoices(username){
-		return this.http.get('http://localhost:3000/invoices/get/output/' + username)
+		return this.http.get('invoices/get/output/' + username)
 			.map(res => res.json());
 	}
 
 	// GET INPUT INVOICE
 	getInputInvoice(invoiceId){
-		return this.http.get('http://localhost:3000/invoices/get/input/invoice/' + invoiceId)
+		return this.http.get('invoices/get/input/invoice/' + invoiceId)
 			.map(res => res.json());
 	}
 
 	// GET OUTPUT INVOICE
 	getOutputInvoice(invoiceId){
-		return this.http.get('http://localhost:3000/invoices/get/output/invoice/' + invoiceId)
+		return this.http.get('invoices/get/output/invoice/' + invoiceId)
 			.map(res => res.json());
 	}
 
 	// DELETE
 	// UNDO INPUT INVOICE
 	undoInput(invoiceId){
-	return this.http.delete('http://localhost:3000/invoices/undo/input/invoice/' + invoiceId)
+	return this.http.delete('invoices/undo/input/invoice/' + invoiceId)
 		.map(res => res.json());
 	}
 
 	// UNDO OUTPUT INVOICE
 	undoOutput(invoiceId){
-	return this.http.delete('http://localhost:3000/invoices/undo/output/invoice/' + invoiceId)
+	return this.http.delete('invoices/undo/output/invoice/' + invoiceId)
 		.map(res => res.json());
 	}
 
@@ -67,7 +67,7 @@ export class InvoiceService {
 	updateInputInvoice(invoiceId, updatedInvoice) {
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.put('http://localhost:3000/invoices/update/input/invoice/' + invoiceId, JSON.stringify(updatedInvoice), {headers: headers})
+		return this.http.put('invoices/update/input/invoice/' + invoiceId, JSON.stringify(updatedInvoice), {headers: headers})
       		.map(res => res.json());
 	}
 

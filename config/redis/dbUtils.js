@@ -1,7 +1,8 @@
 var redis = require('redis');
+var config = require('./dbConfig');
 
 // Redis client
-var client = redis.createClient();
+var client = redis.createClient(config);
 // Register a callback to know if connection was successful
 client.on('connect', function(){
 	console.log('Connected to redis')

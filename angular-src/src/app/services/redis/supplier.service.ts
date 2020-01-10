@@ -12,7 +12,7 @@ export class SupplierService {
 	addSupplier(username, newSupplier){
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.post('http://localhost:3000/suppliers/add/' + encodeURIComponent(username), JSON.stringify(newSupplier), {headers: headers})
+		return this.http.post('suppliers/add/' + encodeURIComponent(username), JSON.stringify(newSupplier), {headers: headers})
 			.map(res => res.json());
 	}
 
@@ -20,39 +20,39 @@ export class SupplierService {
 	invAddSupplier(username, newSupplier){
 		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
-		return this.http.post('http://localhost:3000/suppliers/invoice/add/' + encodeURIComponent(username), JSON.stringify(newSupplier), {headers: headers})
+		return this.http.post('suppliers/invoice/add/' + encodeURIComponent(username), JSON.stringify(newSupplier), {headers: headers})
 			.map(res => res.json());
 	}
 
 	// GET
 	// SEARCH FOR SUPPLIER
 	searchSupplier(username, search){
-	return this.http.get('http://localhost:3000/suppliers/search/' + encodeURIComponent(search) + '/user/' + encodeURIComponent(username))
+	return this.http.get('suppliers/search/' + encodeURIComponent(search) + '/user/' + encodeURIComponent(username))
 		.map(res => res.json());
 	}
 
 	// GET SPECIFIC SUPPLIER
 	getSupplier(username, supplierName){
-	return this.http.get('http://localhost:3000/suppliers/get/' + encodeURIComponent(supplierName) + '/user/' + encodeURIComponent(username))
+	return this.http.get('suppliers/get/' + encodeURIComponent(supplierName) + '/user/' + encodeURIComponent(username))
 		.map(res => res.json());
 	}
 
 	// GET ALL SUPPLIERS 
 	getSuppliers(username){
-	return this.http.get('http://localhost:3000/suppliers/user/' + encodeURIComponent(username))
+	return this.http.get('suppliers/user/' + encodeURIComponent(username))
 		.map(res => res.json());
 	}
 
 	// DELETE
 	// DELETE BY NAME
 	deleteSupplier(username, supplierName){
-	return this.http.delete('http://localhost:3000/suppliers/delete/' + encodeURIComponent(supplierName) + '/user/' + encodeURIComponent(username))
+	return this.http.delete('suppliers/delete/' + encodeURIComponent(supplierName) + '/user/' + encodeURIComponent(username))
 		.map(res => res.json());
 	}
 
 	// UNDO WITH INVOICE
 	undoSupplier(username, supplierName){
-	return this.http.delete('http://localhost:3000/suppliers/undo/' + encodeURIComponent(supplierName) +'/user/' + encodeURIComponent(username))
+	return this.http.delete('suppliers/undo/' + encodeURIComponent(supplierName) +'/user/' + encodeURIComponent(username))
 		.map(res => res.json());
 	}
 }
