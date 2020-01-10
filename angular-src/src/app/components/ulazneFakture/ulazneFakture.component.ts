@@ -7,8 +7,8 @@ import { InvoiceService } from '../../services/neo4j/invoice.service';
 
 @Component({
   selector: 'app-fakture',
-  templateUrl: './ulaznefakture.component.html',
-  styleUrls: ['./ulaznefakture.component.css']
+  templateUrl: './ulazneFakture.component.html',
+  styleUrls: ['./ulazneFakture.component.css']
 })
 export class UlazneFaktureComponent implements OnInit {
   // Referenca na korisnika
