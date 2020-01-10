@@ -44,7 +44,7 @@ export class IzlaznaFakturaComponent implements OnInit {
 	// Rezim prikaza
 	editMode = false;
 	// Originalni podaci sa fakture
-	invDetails = {};
+	invDetails: any;
 	invRowData = [];
 	// Input group
 	nameView: any;

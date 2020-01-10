@@ -46,7 +46,7 @@ export class UlaznaFakturaComponent implements OnInit {
 	editMode = false;
 	// Originalni podaci sa fakture
 	invSupplier: any;
-	invDetails = {};
+	invDetails: any;
 	invRowData = [];
 	// Input group view
 	supplierView: any;
@@ -174,7 +174,7 @@ export class UlaznaFakturaComponent implements OnInit {
 		        invNumber: reply.invoice.invNumber,
 		        recvDate: reply.invoice.recvDate,
 		        expDate: reply.invoice.expDate,
-		        total: reply.invoice.total,
+		        total: reply.invoice.total
 	      	};
 	      	if(reply.invoice.items)
 	      		reply.invoice.items.forEach((item)=>{
