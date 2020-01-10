@@ -63,14 +63,14 @@ export class UlaznaFakturaComponent implements OnInit {
 	recvDateEdit: any;
 	expDateEdit: any;
 
-	constructor(private router: Router,
-				private flashMessage: FlashMessagesService,
-				private elRef: ElementRef,
-				private dateSvc: DateService,
-				private supplierSvc: SupplierService,
-				private warehouseSvc: WarehouseService,
-				private invoiceSvc: InvoiceService,
-				private dataSvc: DataService) { }
+	constructor(public router: Router,
+				public flashMessage: FlashMessagesService,
+				public elRef: ElementRef,
+				public dateSvc: DateService,
+				public supplierSvc: SupplierService,
+				public warehouseSvc: WarehouseService,
+				public invoiceSvc: InvoiceService,
+				public dataSvc: DataService) { }
 
 	ngOnInit() {
 		// INIT

@@ -23,9 +23,9 @@ export class ArtikalComponent implements OnInit {
  	purchaseP: String;
  	sellingP: String;
 
-  	constructor(private router: Router,
-              	private flashMessage: FlashMessagesService,
-              	private itemSvc: ItemService) { }
+  	constructor(public router: Router,
+              	public flashMessage: FlashMessagesService,
+              	public itemSvc: ItemService) { }
 
 	ngOnInit() {
 		this.user = JSON.parse(localStorage.getItem('user'));

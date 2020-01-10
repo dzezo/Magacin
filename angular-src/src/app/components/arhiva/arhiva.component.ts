@@ -16,8 +16,8 @@ export class ArhivaComponent implements OnInit {
     arhArtikli: Array<any>;
 
 
-  constructor(private router: Router,
-              private itemSvc: ItemService) { }
+  constructor(public router: Router,
+              public itemSvc: ItemService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));

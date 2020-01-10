@@ -45,14 +45,14 @@ export class UlazComponent implements OnInit {
 	submited = false;
 	addRowButton: any;
 
-	constructor(private router: Router,
-				private flashMessage: FlashMessagesService,
-				private elRef: ElementRef,
-				private dateSvc: DateService,
-				private supplierSvc: SupplierService,
-				private warehouseSvc: WarehouseService,
-				private invoiceSvc: InvoiceService,
-				private dataSvc: DataService) { }
+	constructor(public router: Router,
+				public flashMessage: FlashMessagesService,
+				public elRef: ElementRef,
+				public dateSvc: DateService,
+				public supplierSvc: SupplierService,
+				public warehouseSvc: WarehouseService,
+				public invoiceSvc: InvoiceService,
+				public dataSvc: DataService) { }
 
 	ngOnInit() {
 		this.user = JSON.parse(localStorage.getItem('user'));

@@ -21,9 +21,9 @@ export class IzlazneFaktureComponent implements OnInit {
   */
   invoices = [];
 
-  constructor(private router: Router,
-              private flashMessage: FlashMessagesService,
-              private invoiceSvc: InvoiceService) { }
+  constructor(public router: Router,
+              public flashMessage: FlashMessagesService,
+              public invoiceSvc: InvoiceService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));

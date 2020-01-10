@@ -30,11 +30,11 @@ export class MagacinComponent implements OnInit {
 	errorCode2 = false;
 	errorName = false;
 
-  constructor(private router: Router,
-  			  private itemSvc: ItemService,
-  			  private warehouseSvc: WarehouseService,
-  			  private elRef: ElementRef,
-  			  private flashMessage: FlashMessagesService) { }
+  constructor(public router: Router,
+  			  public itemSvc: ItemService,
+  			  public warehouseSvc: WarehouseService,
+  			  public elRef: ElementRef,
+  			  public flashMessage: FlashMessagesService) { }
 
   ngOnInit() {
   	this.user = JSON.parse(localStorage.getItem('user'));

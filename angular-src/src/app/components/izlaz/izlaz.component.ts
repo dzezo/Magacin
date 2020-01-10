@@ -37,13 +37,13 @@ export class IzlazComponent implements OnInit {
   submited = false;
   addRowButton: any;
 
-  constructor(private router: Router,
-              private flashMessage: FlashMessagesService,
-              private elRef: ElementRef,
-              private dateSvc: DateService,
-              private warehouseSvc: WarehouseService,
-              private invoiceSvc: InvoiceService,
-              private dataSvc: DataService) { }
+  constructor(public router: Router,
+              public flashMessage: FlashMessagesService,
+              public elRef: ElementRef,
+              public dateSvc: DateService,
+              public warehouseSvc: WarehouseService,
+              public invoiceSvc: InvoiceService,
+              public dataSvc: DataService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));

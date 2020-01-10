@@ -18,9 +18,9 @@ export class HomeComponent implements OnInit {
 	error: Boolean = false;
 	errorMsg: String;
 
-  constructor(private validateService: ValidateService,
-  			  private authService: AuthService,
-  			  private router: Router) { }
+  constructor(public validateService: ValidateService,
+  			  public authService: AuthService,
+  			  public router: Router) { }
 
   ngOnInit() {
   }

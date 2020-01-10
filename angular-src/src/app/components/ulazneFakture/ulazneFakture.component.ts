@@ -23,11 +23,11 @@ export class UlazneFaktureComponent implements OnInit {
   */
   invoices = [];
 
-  constructor(private router: Router,
-              private flashMessage: FlashMessagesService,
-              private supplierSvc: SupplierService,
-              private warehouseSvc: WarehouseService,
-              private invoiceSvc: InvoiceService) { }
+  constructor(public router: Router,
+              public flashMessage: FlashMessagesService,
+              public supplierSvc: SupplierService,
+              public warehouseSvc: WarehouseService,
+              public invoiceSvc: InvoiceService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));

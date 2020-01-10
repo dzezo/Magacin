@@ -22,9 +22,9 @@ export class DobavljaciComponent implements OnInit, AfterViewInit {
 	// Onemoguci submit
 	submited = false;
 
-	constructor(private flashMessage: FlashMessagesService,
-				private supplierSvc: SupplierService,
-				private elRef: ElementRef) { }
+	constructor(public flashMessage: FlashMessagesService,
+				public supplierSvc: SupplierService,
+				public elRef: ElementRef) { }
 
 	// Lifecycle hooks
 	ngOnInit() {
