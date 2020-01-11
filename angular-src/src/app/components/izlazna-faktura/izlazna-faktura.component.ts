@@ -8,11 +8,11 @@ import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
-interface OutputInvoiceDetails {
-    purchaser: any,
-	invNumber: any,
-	issueDate: any,
-	total: any
+export class OutputInvoiceDetails {
+    purchaser: any;
+	invNumber: any;
+	issueDate: any;
+	total: any;
 }
 
 @Component({

@@ -16,24 +16,24 @@
           <div class="form-group">
             <!-- SUPPLIER NAME -->
             <label for="view-supplier">Dobavljač: </label>
-            <input id="view-supplier" class="form-control" type="text" value={{invDetails.supplier}} disabled>
+            <input id="view-supplier" class="form-control" type="text" value={{invDetails?.supplier}} disabled>
             <!-- TAXID -->
             <label for="view-taxId">PIB: </label>
-            <input id="view-taxId" class="form-control" type="text" value={{invDetails.taxId}} disabled>
+            <input id="view-taxId" class="form-control" type="text" value={{invDetails?.taxId}} disabled>
           </div>
         </form>
         <form class="col-md-6" style="padding: 10px 15px;">
           <div class="form-group">
             <label for="view-refNum">Poziv na broj: </label>
-            <input id="view-refNum" class="form-control" type="text" value={{invDetails.refNumber}} disabled>
+            <input id="view-refNum" class="form-control" type="text" value={{invDetails?.refNumber}} disabled>
             <label for="view-invNum">Broj fakture: </label>
-            <input id="view-invNum" class="form-control" type="text" value={{invDetails.invNumber}} disabled>
+            <input id="view-invNum" class="form-control" type="text" value={{invDetails?.invNumber}} disabled>
           </div>
           <div class="form-group">
             <!-- RECIEVE DATE -->
             <label for="view-rDate">Datum dospeća: </label>
             <div id="view-rDate" class="input-group">
-              <input id="view-recvDate" class="form-control" type="text" value="{{invDetails.recvDate | date:'MM/dd/yyyy'}}" disabled>
+              <input id="view-recvDate" class="form-control" type="text" value="{{invDetails?.recvDate | date:'MM/dd/yyyy'}}" disabled>
               <div class="input-group-addon disabled">
                 <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
               </div>
@@ -42,7 +42,7 @@
             <!-- EXPIRATION DATE -->
             <label for="view-eDate">Datum isteka: </label>
             <div id="view-eDate" class="input-group">
-              <input id="view-expDate" class="form-control" type="text" value="{{invDetails.expDate | date:'MM/dd/yyyy'}}" disabled>
+              <input id="view-expDate" class="form-control" type="text" value="{{invDetails?.expDate | date:'MM/dd/yyyy'}}" disabled>
               <div class="input-group-addon disabled">
                 <span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
               </div>
@@ -77,7 +77,7 @@
       <hr>
       <div class="actions">
         <div class="sum">
-          <label>Suma: {{invDetails.total}}</label>
+          <label>Suma: {{invDetails?.total}}</label>
         </div>
       </div>
     </div>

@@ -16,19 +16,19 @@
 				  <div class="form-group">
 				    <!-- PURCHASER NAME -->
 				    <label for="view-name">Naručilac: </label>
-				    <input class="form-control" type="text" id="view-name" value={{invDetails.purchaser}} disabled>
+				    <input class="form-control" type="text" id="view-name" value={{invDetails?.purchaser}} disabled>
 				  </div>
 				</form>
 				<form class="col-md-6" style="padding: 10px 15px;">
 					<div class="form-group">
 						<label for="view-invNumber">Broj fakture: </label>
-						<input class="form-control" type="text" id="view-invNumber" value={{invDetails.invNumber}} disabled>
+						<input class="form-control" type="text" id="view-invNumber" value={{invDetails?.invNumber}} disabled>
 					</div>
 					<div class="form-group">
 						<!-- ISSUE DATE -->
 						<label for="view-iDate">Datum izdavanja: </label>
 						<div id="view-iDate" class="input-group">
-						 	<input id="view-issueDate" class="form-control" type="text" value="{{invDetails.issueDate | date:'MM/dd/yyyy'}}" disabled>
+						 	<input id="view-issueDate" class="form-control" type="text" value="{{invDetails?.issueDate | date:'MM/dd/yyyy'}}" disabled>
 						 	<div class="input-group-addon disabled">
 						  		<span class="fa fa-calendar" style="padding: 0 15px;" aria-hidden="true"></span>
 						 	</div>
@@ -61,7 +61,7 @@
 			<!-- INVOICE ITEMS END -->
 	      	<div class="actions">
 		        <div class="sum">
-		          	<label>Suma: {{invDetails.total}}</label>
+		          	<label>Suma: {{invDetails?.total}}</label>
 		        </div>
 	      	</div>
 		</div>

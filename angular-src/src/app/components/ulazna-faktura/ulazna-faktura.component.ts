@@ -9,14 +9,14 @@ import { DataService } from '../../services/data.service';
 
 declare var $: any;
 
-interface InputInvoiceDetails {
-    supplier: any,
-	taxId: any,
-	refNumber: any,
-	invNumber: any,
-	recvDate: any,
-	expDate: any,
-	total: any
+export class InputInvoiceDetails {
+    supplier: any;
+	taxId: any;
+	refNumber: any;
+	invNumber: any;
+	recvDate: any;
+	expDate: any;
+	total: any;
 }
 
 @Component({
