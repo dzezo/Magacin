@@ -5,16 +5,17 @@ export class ValidateService {
 
   constructor() { }
 
-  validateRegister(user){
-	  if(user.name == undefined || user.username == undefined || user.email == undefined || user.password == undefined)
-	  	return false;
-	  else
-	  	return true;
-  }
-
-  validateEmail(email){
-  	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+  validateEntries(user){
+	  if(user.name == undefined || user.username == undefined || user.email == undefined || user.password == undefined){
+	  	return 'Popunite sva polja!';
+    }
+	  else{
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if(re.test(user.email))
+        return 'OK';
+      else
+        return 'E-mail adresa nije validna!';
+    }
   }
 
 }

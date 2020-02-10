@@ -27,7 +27,7 @@
                 <input [(ngModel)]="password" type="password" class="form-control" name="password" placeholder="Kreirajte šifru">
             </div>
             <div class="form">
-                <input type="submit" class="btn btn-primary btn-success btn-block btn-signUp" value="Kreiraj nalog"> 
+                <input type="submit" class="btn btn-primary btn-success btn-block btn-signUp" [disabled]="submitLock" value="Kreiraj nalog"> 
             </div>
         </form>
         <div>Ukoliko već imate nalog  <a [routerLink]="['/login']">uđite</a></div>

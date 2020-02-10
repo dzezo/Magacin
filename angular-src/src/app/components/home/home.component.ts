@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ValidateService } from '../../services/validate.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+	// User
 	name: String;
 	username: String;
 	email: String;
@@ -18,6 +20,8 @@ export class HomeComponent implements OnInit {
 	error: Boolean = false;
 	errorMsg: String;
 
+	submitLock: Boolean;
+
   constructor(public validateService: ValidateService,
   			  public authService: AuthService,
   			  public router: Router) { }
@@ -25,7 +29,12 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  onRegisterSubmit(){
+	onRegisterSubmit(){
+		if(this.submitLock) return;
+
+		// Lock submit button
+		this.submitLock = true;
+
 		const user = {
 			name: this.name,
 			username: this.username,
@@ -33,30 +42,46 @@ export class HomeComponent implements OnInit {
 			password: this.password
 		}
 
-		 // Required Fields
-		if(!this.validateService.validateRegister(user)){
+		// Validate Entries
+		let validationMsg = this.validateService.validateEntries(user);
+		if(validationMsg !== 'OK'){
 			this.error = true;
-			this.errorMsg = 'Popunite sva polja!';
-			return false;
+			this.errorMsg = validationMsg;
+			// Unlock submit button
+			this.submitLock = false;
 		}
-
-		// Validate Email
-		if(!this.validateService.validateEmail(user.email)){
-			this.error = true;
-			this.errorMsg = 'E-mail adresa nije validna!';
-			return false;
-		}
-
 		// Register User
-		this.authService.registerUser(user).subscribe((data) => {
-			if(data.success){
-				this.router.navigate(['/login']);
-			}
-			else{
-				this.error = true;
-				this.errorMsg = data.msg;
-				this.router.navigate(['']);
-			}
-		});
+		else{
+			this.authService.registerUser(user).subscribe(
+			(data) => {
+				// Data handle
+				if(data.success){
+					this.router.navigate(['/login']);
+				}
+				else{
+					this.error = true;
+					this.errorMsg = data.msg;
+					this.router.navigate(['']);
+				}
+
+				// Unlock submit button
+				this.submitLock = false;
+			},
+			(err) => {
+				// Error handle
+				if(err.status === 503){
+					this.error = true;
+					this.errorMsg = 'Server je nedostupan, molimo sačekajte.';
+					Observable.timer(60*1000).subscribe(()=>{
+						this.error = true;
+						this.errorMsg = 'Pokušajte ponovo.';
+
+						// Unlock submit button
+						this.submitLock = false;
+					});
+				}
+			});
+		}
+
 	}
 }
