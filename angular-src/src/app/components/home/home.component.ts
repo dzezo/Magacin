@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
 		// Register User
 		else{
 			this.authService.registerUser(user).subscribe(
-			(data) => {
+			data => {
 				// Data handle
 				if(data.success){
 					this.router.navigate(['/login']);
@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
 				// Unlock submit button
 				this.submitLock = false;
 			},
-			(err) => {
+			err => {
 				// Error handle
 				if(err.status === 503){
 					this.error = true;

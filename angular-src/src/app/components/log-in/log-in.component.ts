@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-log-in',
@@ -29,7 +30,8 @@ export class LogInComponent implements OnInit {
   		password: this.password
   	}
 
-  	this.authService.authenticateUser(user).subscribe(data =>{
+  	this.authService.authenticateUser(user).subscribe(
+    data =>{
   		if(data.success){
   			this.authService.storeUserData(data.token, data.user);
   			this.router.navigate(['/magacin']);
@@ -38,7 +40,18 @@ export class LogInComponent implements OnInit {
         this.errorMsg = data.msg;
         this.error = true;
   			this.router.navigate(['/login']);
-  		}
-  	});
+		  }
+	  },
+    err => {
+      // Error handle
+      if(err.status === 503){
+        this.error = true;
+        this.errorMsg = 'Server je nedostupan, molimo sačekajte.';
+        Observable.timer(60*1000).subscribe(()=>{
+          this.error = true;
+          this.errorMsg = 'Pokušajte ponovo.';
+        });
+      }
+    });
   }
 }
