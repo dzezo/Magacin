@@ -48,12 +48,9 @@
 
 .error-label{
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid;
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
-    border-radius: 4px;
+    color: #ff0000;
+    font-weight: 600;
+    text-align: center;
 }
 
 @media (max-width: 766px) {

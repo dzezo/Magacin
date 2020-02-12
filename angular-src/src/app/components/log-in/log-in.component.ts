@@ -14,8 +14,10 @@ export class LogInComponent implements OnInit {
 	password: String;
 
 	// Error
-  	error: Boolean = false;
-  	errorMsg: String;
+	error: Boolean = false;
+	errorMsg: String;
+
+  submitLock: Boolean;
 
   constructor(
   			public authService: AuthService,
@@ -25,6 +27,11 @@ export class LogInComponent implements OnInit {
   }
 
   onLoginSubmit(){
+    if(this.submitLock) return;
+
+    // Lock submit button
+    this.submitLock = true;
+
   	var user = {
   		username: this.username,
   		password: this.password
@@ -37,21 +44,35 @@ export class LogInComponent implements OnInit {
   			this.router.navigate(['/magacin']);
   		}
   		else {
-        this.errorMsg = data.msg;
-        this.error = true;
+        this.setErrorMessage(data.msg);
   			this.router.navigate(['/login']);
 		  }
+
+      // Unlock submit button
+      this.submitLock = false;
 	  },
     err => {
       // Error handle
       if(err.status === 503){
-        this.error = true;
-        this.errorMsg = 'Server je nedostupan, molimo sačekajte.';
+        this.setErrorMessage('Server je nedostupan, molimo sačekajte.');
         Observable.timer(60*1000).subscribe(()=>{
-          this.error = true;
-          this.errorMsg = 'Pokušajte ponovo.';
+          this.setErrorMessage('Pokušajte ponovo.');
+
+          // Unlock submit button
+          this.submitLock = false;
         });
       }
+      else{
+        this.setErrorMessage('Ulaz trenutno nije moguć.');
+
+        // Unlock submit button
+        this.submitLock = false;
+      }
     });
+  }
+
+  setErrorMessage(message: String){
+    this.errorMsg = message;
+    this.error = true;
   }
 }

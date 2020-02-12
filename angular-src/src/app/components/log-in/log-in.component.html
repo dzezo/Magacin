@@ -13,7 +13,10 @@
               <input [(ngModel)]="password" type="password" class="form-control" name="password" placeholder="Unesite Vašu šifru">
           </div>
           <div class="form">
-              <input type="submit" class="btn btn-primary btn-success btn-block btn-signUp" value="Ulaz"> 
+              <button type="submit" class="btn btn-primary btn-success btn-block btn-signUp" [disabled]="submitLock">
+                <span [hidden]="submitLock">Ulaz</span>
+                <span [hidden]="!submitLock"><i class="fa fa-refresh fa-spin"></i></span>
+              </button>
           </div>
       </form>
       <div>Ukoliko nemate nalog <a [routerLink]="['/']">kreirajte ga</a></div>

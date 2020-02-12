@@ -45,8 +45,8 @@ export class HomeComponent implements OnInit {
 		// Validate Entries
 		let validationMsg = this.validateService.validateEntries(user);
 		if(validationMsg !== 'OK'){
-			this.error = true;
-			this.errorMsg = validationMsg;
+			this.setErrorMessage(validationMsg);
+
 			// Unlock submit button
 			this.submitLock = false;
 		}
@@ -59,8 +59,7 @@ export class HomeComponent implements OnInit {
 					this.router.navigate(['/login']);
 				}
 				else{
-					this.error = true;
-					this.errorMsg = data.msg;
+					this.setErrorMessage(data.msg);
 					this.router.navigate(['']);
 				}
 
@@ -70,18 +69,27 @@ export class HomeComponent implements OnInit {
 			err => {
 				// Error handle
 				if(err.status === 503){
-					this.error = true;
-					this.errorMsg = 'Server je nedostupan, molimo sačekajte.';
+					this.setErrorMessage('Server je nedostupan, molimo sačekajte.');
 					Observable.timer(60*1000).subscribe(()=>{
-						this.error = true;
-						this.errorMsg = 'Pokušajte ponovo.';
+						this.setErrorMessage('Pokušajte ponovo.');
 
 						// Unlock submit button
 						this.submitLock = false;
 					});
 				}
+				else{
+					this.setErrorMessage('Registracija trenutno nije moguća.');
+
+					// Unlock submit button
+					this.submitLock = false;
+				}
 			});
 		}
 
+	}
+
+	setErrorMessage(message: String){
+		this.errorMsg = message;
+		this.error = true;
 	}
 }
