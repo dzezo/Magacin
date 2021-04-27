@@ -19,7 +19,7 @@
     "jsonwebtoken": "7.4.3",
     "body-parser": "1.18.0",
     "neo4j-driver": "1.4.0",
-    "redis": "2.8.0"
+    "redis": "3.1.1"
   },
   "author": "NBP Team",
   "license": "ISC"
