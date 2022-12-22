@@ -16,7 +16,7 @@
     "express": "4.15.4",
     "bcryptjs": "2.4.3",
     "cors": "2.8.4",
-    "jsonwebtoken": "7.4.3",
+    "jsonwebtoken": "9.0.0",
     "body-parser": "1.18.0",
     "neo4j-driver": "1.4.0",
     "redis": "2.8.0"
